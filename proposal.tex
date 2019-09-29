@@ -1,0 +1,120 @@
+\documentclass[10pt]{article}%
+
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[german, british]{babel}
+%\setlength{\topmargin}{0pt}
+\usepackage[margin=1.2in]{geometry}
+%\usepackage{mathtools}
+\usepackage{fancyhdr}
+\usepackage[super]{nth}
+
+
+
+
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\def\thesection{\Roman{section}}
+
+%\author{Me!}
+
+
+\rhead{Jonas Witmer, Salome Müller, Andreas Meier\\ \today} 
+\lhead{Modern Human Machine Interactions \\ Project Proposals}
+\pagestyle{fancy}
+\begin{document}
+\section{Annotation Competition}
+\subsection{Overview of Project Idea}
+
+We want to create an annotation competition based on a set of images. Two players are shown the same image for a short duration. During this time, the players have to provide tags for the image. The players get points for each tag that is provided by both players.
+
+We see this as a fun way to categorize pictures. The tags can be used to enhance search results or to bootstrap any machine learning algorithms.
+
+\subsection{Implementation}
+
+Browser-based UI. Backend on server, based on the CityStories image database. Database for storing tags and their frequencies.
+
+\subsection{Requirements}
+
+CityStories database, server. Project and code management
+
+\subsection{Schedule}
+\begin{itemize}
+\item 08th October Introductory Presentation, access to required material
+\item 10th November server prototype, simple interface
+\item rest of November: nicer user interface
+\item December: testing, quality assurance, user feedback
+\end{itemize}
+
+
+\subsection{Technology}
+
+Web-based client JavaScript/ECMAScript or similar, CityStories probably OpenJDK/Java, depends on existing APIs
+\subsection{Potential challenges}
+
+Little knowledge how CityStories works, integration in existing project
+
+\subsection{Responsibilities}
+
+Main responsibilities
+\begin{itemize}
+\item Server: Jonas
+\item Server-client communication: Andreas
+\item Game logic: Salome
+\item GUI/UX: Andreas
+\item Testing: Salome
+\item Data processing: Jonas
+\end{itemize}
+
+
+
+\newpage
+\section{GoFind AR Scavenger Hunt}
+
+\subsection{Overview of Project Idea}
+
+We want to create an alternate reality game scavenger hunt. The individual stations of the scavenger hunt have tasks, e.g. based on Basel or Basel's history. To improve the educational experience, the game provides additional information.
+The game aims to provide a new experience for local students, as well as tourists who are interested in some less known facts.
+If we don't run out of time, the game can be further extended with fun facts, additional trails, mini quizzes etc.
+
+\subsection{Implementation}
+
+An Android app displaying the game and AR information that communicates with a backend.
+
+\subsection{Requirements}
+
+Windows laptops with Unity, Android development tools (SDK), Android mobile devices, server for GoFind,  Project and code management.
+
+\subsection{Schedule}
+\begin{itemize}
+\item 08th October Introductory Presentation, access to required material
+\item 15th October first homebrew Android App deployed on mobile device («Hello World»)
+\item 10th November prototype AR game
+\item Rest of November: fleshing out AR game, more content
+\item December: testing, quality assurance, user feedback
+\end{itemize}
+
+
+\subsection{Technology}
+
+Extension of existing GoFind! based on Unity technology, Android app (OpenJDK/Java or Kotlin TBD)
+
+\subsection{Potential challenges}
+
+Little experience with Android development. 
+
+\subsection{Responsibilities}
+
+Main responsibilities
+\begin{itemize}
+\item Local knowledge: Jonas
+\item Game logic: Salome
+\item Android App: Jonas
+\item GUI/UX: Andreas
+\item Integration with GoFind!: Andreas
+\item Testing: Salome
+\end{itemize}
+
+\end{document}
+
