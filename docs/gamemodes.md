@@ -1,14 +1,13 @@
 # Entry quiz
 
-We are likely the first players who play this game. Our date is used to bootstrap
-the classic game mode. Players are shown an well annotated image to verify them
-selves as human and as a tutorial for the game play.
+We are likely the first players who play this game. Our data is used to bootstrap
+the classic game mode. Players are shown an well annotated image to verify themselves as human and as a tutorial for the gameplay.
 
 This first image is not scored.
 
 # User data
 
-The game prototype will be user session based. They can view a global high score,
+The game prototype will be user session based. Users can view a global high score,
 select their preferred game mode, read the documentation, access the whole
 dataset etc.
 
@@ -21,16 +20,16 @@ with only one player being online.
 
 ## Classic
 
-We will focus on this game mode.
+This game mode has the highest priority.
 
 A player is shown an image for a short duration. During this time they are asked
 to provide tags describing the image. The tags are optionally compared to a
 dictionary to validate them and then to the dataset.
-The player get points for the provided tags and is shown a new image which they
+The player get points for the provided tags based on a schoring scheme and is shown a new image which they
 haven't seen before.
 
 Images can be skipped without any penalty.
-If an image has been tagged by a specific amount of players, we consider the
+If an image has been tagged by a specific number of players, we consider the
 image well annotated.
 
 ### Tags
@@ -54,7 +53,7 @@ We evaluated the following constraints:
 - 1 point each new tag
 - 2 points existing tag
 
-#### Often tagged image
+#### Well tagged annotated
 - 2 points each tag
 - list of illegal (often mentioned) tags
 
@@ -68,7 +67,7 @@ They have to choose the corresponding image to get points.
 We can optionally implement jokers to eliminate certain wrong options or to
 show more tags. This should enhance the gameplay.
 We count the recognition rate per image and calculate the quality of the
-stored tags. This allows us to consider images with a low quality rate as
+stored tags. This allows us to consider images with a low quality rate 
 untagged.
 Images can be skipped without any penalty.
 
@@ -77,4 +76,4 @@ Images can be skipped without any penalty.
 *Subject of change*
 
 - points for each correct image (depends on time limit of classic mode)
-- optionally trade-off if joker was used
+- optionally fewer points if joker was used
