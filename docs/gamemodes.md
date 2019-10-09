@@ -36,6 +36,7 @@ image well annotated.
 
 ### Tags
 We evaluated the following constraints:
+
 - in dictionary (optional)
 - separated by newline
 - character limit (per tag)
