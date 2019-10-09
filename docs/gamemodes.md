@@ -32,6 +32,8 @@ Images can be skipped without any penalty.
 If an image has been tagged by a specific number of players, we consider the
 image well annotated.
 
+![Classic game flow](GM-classic.jpg)
+
 ### Tags
 We evaluated the following constraints:
 - in dictionary (optional)
@@ -70,6 +72,8 @@ We count the recognition rate per image and calculate the quality of the
 stored tags. This allows us to consider images with a low quality rate 
 untagged.
 Images can be skipped without any penalty.
+
+![Reverse Captcha game flow](GM-reverse.jpg)
 
 ### Scoring system
 
