@@ -1,5 +1,19 @@
 # Notes
 
+
+## 14 October '19
+5 min presentations excluding questions
+possibly include tinder captcha mode
+maybe include a picture in the slide (maybe just a few icons), easier to get people's attention
+we shouldn't worry about integration 
+it's possible to get computer-generated tags at any time
+backend: no experience with java servers, not sure which language/framework is appropriate/best here. django or flask would be possibilites, up to us. preexisting stuff uses python
+database: free to choose 
+
+further meetings if necessary, schedule via e-mail. communication via e-mail or skype
+next things: upload presentation today, presentation wednesday
+
+
 ## 07 October \'19
 
 ### Game Modes
