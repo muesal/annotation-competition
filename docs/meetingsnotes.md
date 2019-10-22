@@ -1,5 +1,12 @@
 # Notes
 
+## 22 October '19
+* We'll use Python and the Flask Framework (https://gitlab.com/55683-01/annotation-competition/issues/1)
+* We'll use an SQL/relational Database (https://gitlab.com/55683-01/annotation-competition/issues/2)
+  * Salome will start with the game logic
+  * Andreas will start with a prototype of the interface
+  * Jonas will start with database
+
 
 ## 14 October '19
 5 min presentations excluding questions
