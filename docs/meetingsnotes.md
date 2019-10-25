@@ -1,5 +1,7 @@
 # Notes
 
+## 16 October '19
+Do synonymsè!!!!JNWHQIHIZç"
 
 ## 14 October '19
 5 min presentations excluding questions
