@@ -22,14 +22,15 @@ class Image:
             for t in self.tags:
                 if t == tag:
                     in_list = True
+                    break
             if not in_list:
                 self.tags.append(tag)
                 self.levelUp()
             else:
                 if self.level == 1:
                     points = 2
-                elif self.level == 2 and tag not in self.forbiddenTags:
-                    points_level2 = 2
+                elif self.level == 2 and tag in self.forbiddenTags:
+                    points_level2 = 0
         return points if self.level < 2 else points_level2
 
     def printTags(self):
