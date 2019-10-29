@@ -20,21 +20,24 @@ class Image:
             if self.tags[i] == tag:
                 return i
         self.tags.append(tag)
+        self.tags.sort()
         self.levelUp()
-        return len(tag) - 1
+        return len(self.tags) - 1
 
     def addTag(self, tag: str) -> int:
         points = 1
-        val = self.validate(tag)
         lastTag = len(self.tags) - 1
+        val = self.validate(tag)
 
         if val < 0:
             return 0
-        elif val <= lastTag:
-            if self.level == 1:
+
+        if self.level == 1:
+            if val <= lastTag:
                 points = 2
-            elif self.level == 2:
-                points = 2 if tag not in self.forbiddenTags else 0
+        if self.level == 2:
+            points = 2 if tag not in self.forbiddenTags else 0
+
         return points
 
     def printTags(self):

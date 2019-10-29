@@ -10,49 +10,49 @@ class TestImage(TestCase):
 
     def test_levelUp1(self):
         image = Image(0)
-        image.tags = ['0', '1', '2']
+        image.tags = ['a', 'b', 'c']
         image.levelUp()
         self.assertTrue(image.level == 1)
 
     def test_levelUp2(self):
         image = Image(0)
-        image.tags = ['0', '1', '2', '3', '4']
+        image.tags = ['a', 'b', 'c', 'd', 'e']
         image.levelUp()
         self.assertTrue(image.level == 2)
 
     def test_addTag_first(self):
         image = Image(0)
-        self.assertTrue(image.addTag('first') == 1)
-        self.assertEqual(image.tags, ['first'])
+        self.assertTrue(image.addTag('a') == 1)
+        self.assertEqual(image.tags, ['a'])
 
     def test_addTag_second(self):
         image = Image(0)
-        self.assertTrue(image.addTag('first') == 1)
-        self.assertTrue(image.addTag('second') == 1)
-        self.assertEqual(image.tags, ['first', 'second'])
+        self.assertTrue(image.addTag('a') == 1)
+        self.assertTrue(image.addTag('b') == 1)
+        self.assertEqual(image.tags, ['a', 'b'])
 
     def test_addTag_sameTag(self):
         image = Image(0)
-        self.assertTrue(image.addTag('first') == 1)
-        self.assertTrue(image.addTag('second') == 1)
-        self.assertTrue(image.addTag('second') == 1)
-        self.assertEqual(image.tags, ['first', 'second'])
+        self.assertTrue(image.addTag('a') == 1)
+        self.assertTrue(image.addTag('b') == 1)
+        self.assertTrue(image.addTag('b') == 1)
+        self.assertEqual(image.tags, ['a', 'b'])
 
     def test_addTag_level1(self):
         image = Image(0)
-        image.tags = ['first', 'second']
-        self.assertTrue(image.addTag('third') == 1)
+        image.tags = ['a', 'b']
+        self.assertTrue(image.addTag('c') == 1)
         self.assertTrue(image.level == 1)
-        self.assertTrue(image.addTag('third') == 2)
-        self.assertTrue(image.addTag('fourth') == 1)
-        self.assertEqual(image.tags, ['first', 'second', 'third', 'fourth'])
+        self.assertTrue(image.addTag('c') == 2)
+        self.assertTrue(image.addTag('d') == 1)
+        self.assertEqual(image.tags, ['a', 'b', 'c', 'd'])
 
     def test_addTag_level2(self):
         image = Image(0)
-        image.tags = ['first', 'second', 'third', 'fourth']
-        self.assertTrue(image.addTag('fifth') == 2)
+        image.tags = ['a', 'b', 'c', 'd']
+        self.assertTrue(image.addTag('e') == 2)
         self.assertTrue(image.level == 2)
-        self.assertTrue(image.addTag('first') == 0)
-        self.assertTrue(image.addTag('third') == 2)
-        self.assertEqual(image.tags, ['first', 'second', 'third', 'fourth', 'fifth'])
-        self.assertEqual(image.forbiddenTags, ['first', 'second'])
+        self.assertTrue(image.addTag('a') == 0)
+        self.assertTrue(image.addTag('c') == 2)
+        self.assertEqual(image.tags, ['a', 'b', 'c', 'd', 'e'])
+        self.assertEqual(image.forbiddenTags, ['a', 'b'])
