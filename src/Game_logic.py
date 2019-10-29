@@ -12,26 +12,30 @@ class Image:
                 self.level = 2
                 self.forbiddenTags = self.tags[0:2]
 
-    def addTag(self, tag: str) -> int:
-        points = 1
-        points_level2 = 2
+    def validate(self, tag: str) -> int:
         if len(self.tags) == 0:
             self.tags.append(tag)
-        else:
-            in_list = False
-            for t in self.tags:
-                if t == tag:
-                    in_list = True
-                    break
-            if not in_list:
-                self.tags.append(tag)
-                self.levelUp()
-            else:
-                if self.level == 1:
-                    points = 2
-                elif self.level == 2 and tag in self.forbiddenTags:
-                    points_level2 = 0
-        return points if self.level < 2 else points_level2
+            return 0
+        for i in range(len(self.tags)):
+            if self.tags[i] == tag:
+                return i
+        self.tags.append(tag)
+        self.levelUp()
+        return len(tag) - 1
+
+    def addTag(self, tag: str) -> int:
+        points = 1
+        val = self.validate(tag)
+        lastTag = len(self.tags) - 1
+
+        if val < 0:
+            return 0
+        elif val <= lastTag:
+            if self.level == 1:
+                points = 2
+            elif self.level == 2:
+                points = 2 if tag not in self.forbiddenTags else 0
+        return points
 
     def printTags(self):
         for tag in self.tags:
