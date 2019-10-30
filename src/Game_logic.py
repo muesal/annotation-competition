@@ -1,6 +1,22 @@
 from spellchecker import SpellChecker
 
 
+class Tag:
+    def __init__(self, word: str, image_id: int):
+        self.word = word
+        self.imageID = image_id
+        self.frequency = 1
+
+    def mentioned(self):
+        self.frequency += 1
+
+    def getFrequency(self) -> int:
+        return self.frequency
+
+    def getWord(self) -> str:
+        return self.word
+
+
 class Image:
     def __init__(self, id: int):
         self.id = id
@@ -14,24 +30,29 @@ class Image:
             self.level = 1
             if len(self.tags) > 4:
                 self.level = 2
-                self.forbiddenTags = self.tags[0:2]
+                for i in range(2):
+                    self.forbiddenTags.append(self.tags[i].word)
 
-    def validate(self, tag: str) -> int:
-        wrong = self.spellcheck.unknown([tag])
+    def validate(self, word: str) -> int:
+        wrong = self.spellcheck.unknown([word])
         if len(wrong) > 0:
-            corrected = self.spellcheck.correction(tag)
-            if corrected == tag:
+            corrected = self.spellcheck.correction(word)
+            if corrected == word:
                 return -1
-            tag = corrected
+            word = corrected
+
+        if self.level == 2 and word in self.forbiddenTags:
+            return -1
 
         if len(self.tags) == 0:
-            self.tags.append(tag)
+            self.tags.append(Tag(word, self.id))
             return 0
         for i in range(len(self.tags)):
-            if self.tags[i] == tag:
+            if self.tags[i].word == word:
+                self.tags[i].mentioned()
                 return i
-        self.tags.append(tag)
-        self.tags.sort()
+        self.tags.append(Tag(word, self.id))
+        self.tags.sort(key=lambda x: x.word)
         self.levelUp()
         return len(self.tags) - 1
 
@@ -47,13 +68,19 @@ class Image:
             if val <= lastTag:
                 points = 2
         if self.level == 2:
-            points = 2 if tag not in self.forbiddenTags else 0
+            points = 2
 
         return points
 
+    def getTag(self, word: str) -> Tag:
+        for tag in self.tags:
+            if tag.word == word:
+                return tag
+        return None
+
     def printTags(self):
         for tag in self.tags:
-            print(tag, end=" ")
+            print(tag.word, end=" ")
         print()
 
 
