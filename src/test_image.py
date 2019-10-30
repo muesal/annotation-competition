@@ -69,6 +69,18 @@ class TestImage(TestCase):
         image = Image(0)
         self.assertTrue(image.validate('ertz') != -1)
 
+    def test_validate_uppercase(self):
+        image = Image(0)
+        image.addTag('SHERLOCK')
+        self.assertTrue(image.getTag('sherlock') != None)
+
+    def test_validate_twoWords(self):
+        image = Image(0)
+        self.assertTrue(image.addTag('Sherlock Holmes') == 1)
+        self.assertTrue(image.getTag('Sherlock Holmes') != None)
+        self.assertTrue(image.addTag('Sherlock Holmes and Watson') == 0)
+
+
     def test_getTag(self):
         image = Image(0)
         image.addTag('a')

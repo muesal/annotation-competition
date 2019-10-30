@@ -65,14 +65,21 @@ class Image:
 
             :return -1 if invalid, else position of the Tag in self.tags
         """
-        # if unknown to dictionary: correct if minor error, else Tag is invalid
-        # TODO: how to handle multiple words -> for-loop to check each? invalid at the moment
-        wrong = self.spellcheck.unknown([word])
+        # word should not consist of more than two words
+        word = word.split(" ")
+        if len(word) > 2:
+            return -1
+
+        # for each word in tag: if unknown to dictionary: correct if minor error, else Tag is invalid
+        wrong = list(self.spellcheck.unknown(word))
         if len(wrong) > 0:
-            corrected = self.spellcheck.correction(word)
-            if corrected == word:
-                return -1
-            word = corrected
+            for i in range(len(wrong)):
+                word[i] = self.spellcheck.correction(wrong[i])
+                if word[i] == wrong[i]:
+                    return -1
+
+        # should be one string again
+        word = (' '.join(word)).lower()
 
         # invalid if image is level 2 and Tag is forbidden
         if self.level == 2 and word in self.forbiddenTags:
@@ -122,6 +129,7 @@ class Image:
 
             :return the Tag, or None if a Tag matching this word doesn't exist
         """
+        word = word.lower()
         for tag in self.tags:
             if tag.word == word:
                 return tag
