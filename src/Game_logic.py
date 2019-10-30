@@ -1,9 +1,13 @@
+from spellchecker import SpellChecker
+
+
 class Image:
     def __init__(self, id: int):
         self.id = id
         self.tags = []
         self.forbiddenTags = []
         self.level = 0
+        self.spellcheck = SpellChecker(distance=1)
 
     def levelUp(self):
         if len(self.tags) > 2:
@@ -13,6 +17,13 @@ class Image:
                 self.forbiddenTags = self.tags[0:2]
 
     def validate(self, tag: str) -> int:
+        wrong = self.spellcheck.unknown([tag])
+        if len(wrong) > 0:
+            corrected = self.spellcheck.correction(tag)
+            if corrected == tag:
+                return -1
+            tag = corrected
+
         if len(self.tags) == 0:
             self.tags.append(tag)
             return 0

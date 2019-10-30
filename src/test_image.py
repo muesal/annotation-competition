@@ -56,3 +56,11 @@ class TestImage(TestCase):
         self.assertTrue(image.addTag('c') == 2)
         self.assertEqual(image.tags, ['a', 'b', 'c', 'd', 'e'])
         self.assertEqual(image.forbiddenTags, ['a', 'b'])
+
+    def test_validate_wrong(self):
+        image = Image(0)
+        self.assertTrue(image.validate('blublio') == -1)
+
+    def test_validate_misspelled(self):
+        image = Image(0)
+        self.assertTrue(image.validate('ertz') != -1)
