@@ -1,5 +1,5 @@
 from unittest import TestCase
-from Game_logic import Tag
+from acomp.Game_logic import Tag
 
 
 class TestTag(TestCase):

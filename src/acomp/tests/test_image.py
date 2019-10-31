@@ -1,5 +1,5 @@
 from unittest import TestCase
-from Game_logic import Image, Tag
+from acomp.Game_logic import Image, Tag
 
 
 class TestImage(TestCase):
@@ -98,3 +98,7 @@ class TestImage(TestCase):
     def test_getTag_invalid(self):
         image = Image(0)
         self.assertEqual(image.getTag('a'), None)
+
+
+if __name__ == "__main__":
+    unittest.main()

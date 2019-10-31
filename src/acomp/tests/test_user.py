@@ -1,5 +1,5 @@
 from unittest import TestCase
-from Game_logic import Image, User, Tag
+from acomp.Game_logic import Image, User, Tag
 
 
 class TestUser(TestCase):
