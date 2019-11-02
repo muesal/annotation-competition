@@ -1,8 +1,8 @@
-from flask import send_from_directory
+from flask import send_from_directory, render_template
 from acomp import app
 from acomp.models import Image, Tag, User
 
 
 @app.route('/')
 def index():
-    return send_from_directory("html/", 'index.html')
+    return render_template('index.html', source = '/static/test.png', width = 800, height = 600)
