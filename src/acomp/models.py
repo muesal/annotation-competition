@@ -40,8 +40,8 @@ class User(db.Model):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String, nullable=False)
-    score = db.Column(db.Integer, db.CheckConstraint('score >= 0'), nullable=False)
     secret = db.Column(db.String, nullable=True)
+    score = db.Column(db.Integer, db.CheckConstraint('score >= 0'), nullable=False)
     seen = db.relationship('Image', secondary='user_image', backref='seen')
 
     def __init__(self, username, secret, score=0, seen=None):
