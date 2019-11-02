@@ -13,6 +13,16 @@ First you have to create a file `src/acomp/config.py` that conatins
 a `SECRET_KEY` and a `SQLALCHEMY_DATABASE_URI` 
 (e.g. `SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/acomp.sqlite3'`).
 
+### Getting started
+
+Run the following commands in the `src` directory:
+
+1. `pip install -r requirements.txt`
+2. `flask db init`
+3. `flask db migrate`
+4. `flask db uprade`
+5. `flask run`
+
 ### Quick start using Docker
 
 Run the following commands in the root directory of this repository:
