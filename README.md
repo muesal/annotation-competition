@@ -23,6 +23,9 @@ Run the following commands in the `src` directory:
 4. `flask db uprade`
 5. `flask run`
 
+If you have any existing images to import you can run 
+`flask prefill /my/image/folder`.
+
 ### Quick start using Docker
 
 Run the following commands in the root directory of this repository:
