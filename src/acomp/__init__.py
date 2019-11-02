@@ -10,3 +10,4 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from acomp import routes
+from acomp import prefill

@@ -1,3 +1,5 @@
 DEBUG = False
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+ACOMP_ALLOWED_FILE_EXT = ['.jpg', '.png']
+ACOMP_OBJ_DIR = "static/images"
