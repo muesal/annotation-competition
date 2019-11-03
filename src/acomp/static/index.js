@@ -1,3 +1,6 @@
+// TODO
+//'use strict';
+
 var score = 0;
 var deadline = 60;
 const classicTimeLimit = 20;
@@ -6,11 +9,7 @@ setInterval(resetTimer, 60000);
 setInterval(displayTimer, 1000);
 setInterval(updateTimer, 1000);
 var mentionedTags = [];
-
-
-function myFunction() {
-    document.getElementById("demo").innerHTML = "Hello World";
-}
+var tagForm = document.getElementById("tagForm");
 
 function writeToMentionedTags(tag) {
     console.log("Write to tags called");
@@ -22,29 +21,28 @@ function writeToMentionedTags(tag) {
     console.log(mentionedTags);
 }
 
-function sendTag() {
-//TODO
+function sendTag() { //TODO
+
 }
 
 function updateScore(delta) {
     score += delta;
-    document.getElementById("score").innerHTML = "score: " + score.toString();
+    document.getElementById("score").value = score.toString();
 }
 
 function loadImage() { //TODO
 
-
 }
 
-function handleOutbound(out) {//TODO
+function handleOutbound(out) { //TODO
     myJson = JSON.stringify(out);
     console.log(myJson);
 }
 
-function handleInput(tag) {
-
+function handleInput(event) {
+    event.preventDefault();
+    var tag = document.getElementById("searchTxt").value;
     console.log("handleInput called");
-
 
     if (!isInputPermissible(tag)) {
         console.log("Input" + tag + " not permissible");
@@ -52,29 +50,22 @@ function handleInput(tag) {
     }
     writeToMentionedTags(tag);
     writeTagToJson(tag);
-
-
 }
 
 function displayTimer() {
     console.log("display timer called");
-    remaining = deadline;
+    var remaining = deadline;
     document.getElementById("timer").innerHTML = remaining + " s";
-
 }
 
 function updateTimer() {
     deadline--;
-
 }
 
 function writeTagToJson(tag) {
-
     var obj = {type: "Tag", content: tag};
     var myJson = JSON.stringify(obj);
     console.log(myJson);
-
-
 }
 
 function isInputPermissible(input) {
@@ -89,7 +80,6 @@ function isInputPermissible(input) {
     if (hasAlreadyBeenMentioned()){
         console.log("Tag has already been mentioned");
         return false;
-
     }
     return true;
 }
@@ -108,23 +98,20 @@ function getImageID() {
 
 function resetTimer() {
     deadline = classicTimeLimit;
-
 }
-function resetTotal() {
+
+function resetTotal(event) {
     resetTags();
     resetTimer();
-
-
 }
 
 function resetTags() {
     console.log("Resetting tags");
     mentionedTags = [];
-    root = document.getElementById("mentionedTags");
+    var root = document.getElementById("mentionedTags");
     while( root.firstChild ){
         root.removeChild( root.firstChild );
     }
-
 }
 
 function hasAlreadyBeenMentioned(tag) {
@@ -134,5 +121,7 @@ function hasAlreadyBeenMentioned(tag) {
 
 function reset() {
     resetTimer();
-
 }
+
+tagForm.addEventListener("reset", resetTotal);
+tagForm.addEventListener("submit", handleInput);
