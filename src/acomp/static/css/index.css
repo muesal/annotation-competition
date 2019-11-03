@@ -1,0 +1,7 @@
+body {
+    font-family: sans-serif;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
