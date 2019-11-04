@@ -5,4 +5,4 @@ from acomp.models import Image, Tag, User
 
 @app.route('/')
 def index():
-    return render_template('index.html', source = '/static/test.png', width = 800, height = 600)
+    return render_template('index.html', source = '/static/img/test.png', width = 800, height = 600)
