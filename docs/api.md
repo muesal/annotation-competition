@@ -1,4 +1,5 @@
-GET:
+GET
+
 - images
 - timelimit
 - accepted tags
@@ -7,7 +8,8 @@ GET:
 - user
 - 404
 
-POST:
+POST
+
 - tags (classic)
 - skip
 - joker (captcha)
@@ -16,7 +18,8 @@ POST:
 - 401 (user not playing or hasn't done tutorial/entry quiz)
 - 400
 
-URLS:
+URLS
+
 [
 /classic
 /captcha
