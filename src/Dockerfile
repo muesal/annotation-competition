@@ -8,6 +8,7 @@ RUN set -eux; \
 		gcc \
 		linux-headers \
 		musl-dev \
+		postgresql-dev \
 	; \
 	pip install -r requirements.txt; \
 	\
@@ -25,4 +26,4 @@ WORKDIR /app
 EXPOSE 5000
 
 CMD ["flask", "run", "-h", "0.0.0.0"]
-#CMD ["uwsgi", "-w", "run:app", "--socket", "0.0.0.0:5000"]
+#CMD ["uwsgi", "-w", "app:app", "--socket", "0.0.0.0:5000"]
