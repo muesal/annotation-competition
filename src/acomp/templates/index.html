@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="../static/css/index.css" rel="stylesheet" type="text/css"/>
     <script src="../static/js/index.js" defer></script>
 </head>
 <body>
 
 <p id="timer"></p>
 
-
 <img class="myImg" src={{ source }} width={{ width }} height={{ height }}>
 
 <p id="demo"></p>
 
-<p id="score">Score: 0</p>
+<label for="score">Score: </label><output id="score">0</output>
 
 <h3>Mentioned tags</h3>
 <ul id="mentionedTags">
     <li>&nbsp;</li>
 </ul>
 
-<input type="text" maxlength="512" id="searchTxt" class="searchField"/>
-<input type="button" value="Submit" onclick="handleInput(searchTxt.value)">
-<input type="button" value="Reset" onclick="resetTotal()">
+<form id="tagForm">
+    <input type="text" maxlength="512" id="searchTxt" class="searchField"/>
+    <input type="submit" value="Submit">
+    <input type="reset" value="Reset">
+</form>
 
 </body>
 </html>
