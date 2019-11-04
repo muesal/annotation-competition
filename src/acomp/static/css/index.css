@@ -5,3 +5,26 @@ body {
     -ms-hyphens: auto;
     hyphens: auto;
 }
+
+img {
+
+    height: auto;
+    width: auto;
+    max-width: 70%;
+    max-height: 70%;
+}
+
+#imageWrapper {
+    width: 100%;
+    overflow: hidden;
+}
+
+#taggingImage {
+    float: left;
+    display: inline-block;
+}
+
+#column {
+    vertical-align: top;
+    display: inline-block;
+}
