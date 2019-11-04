@@ -5,6 +5,7 @@ var score = 0;
 var deadline = 60;
 const classicTimeLimit = 20;
 resetTimer();
+getImage();
 setInterval(resetTimer, 60000);
 setInterval(displayTimer, 1000);
 setInterval(updateTimer, 1000);
@@ -77,7 +78,7 @@ function isInputPermissible(input) {
         console.log("Tag is empty");
         return false;
     }
-    if (hasAlreadyBeenMentioned()){
+    if (hasAlreadyBeenMentioned()) {
         console.log("Tag has already been mentioned");
         return false;
     }
@@ -109,9 +110,27 @@ function resetTags() {
     console.log("Resetting tags");
     mentionedTags = [];
     var root = document.getElementById("mentionedTags");
-    while( root.firstChild ){
-        root.removeChild( root.firstChild );
+    while (root.firstChild) {
+        root.removeChild(root.firstChild);
     }
+}
+
+async function getImage() {
+    var currentUrl = window.location.href;
+    console.log("Current URL: " + currentUrl);
+    var requestUrl = currentUrl + "/classic/data";
+    console.log(requestUrl);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', requestUrl, true);
+    xhr.send();
+
+
+}
+
+function getTimelimit() {
+}
+
+function getScore() {
 }
 
 function hasAlreadyBeenMentioned(tag) {
