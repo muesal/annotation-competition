@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  acomp:
+    build: ./src
+    command: uwsgi -w app:app --socket 0.0.0.0:5000
+    restart: always
+    volumes:
+      - ./src:/app
+    depends_on:
+      - postgres
+    env_file:
+      - acomp.env
+    networks:
+      - annotation-backend
+      - annotation-frontend
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./src/acomp/static:/app/static
+    depends_on:
+      - acomp
+    networks:
+      - annotation-frontend
+
+  postgres:
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - ./postgres:/var/lib/postgresql
+    env_file:
+      - db.env
+    networks:
+      - annotation-backend
+
+networks:
+  annotation-backend:
+  annotation-frontend:
