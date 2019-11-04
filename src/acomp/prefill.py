@@ -10,6 +10,14 @@ BUF_SIZE = 65536  # 64KB
 @app.cli.command("prefill")
 @click.argument("dirname")
 def prefill(dirname):
+    """
+    Takes a folder of images and imports them into acomp.
+    The import is implemented by creating a link in the specified acomp object
+    folder and inserting a reference in the database.
+    The image name is represented as it's own hash value combined with it's
+    normalized file extension.
+    """
+
     target_dir = os.path.join(app.root_path, app.config['ACOMP_OBJ_DIR'])
     if not os.path.isdir(target_dir):
         app.logger.warning('Directory %s does not exist, creating now', target_dir)
@@ -39,6 +47,9 @@ def prefill(dirname):
 
 
 def calc_checksum(path) -> str:
+    """
+    Returns a unique, cryptographic checksum for a given file.
+    """
     checksum = hashlib.sha3_256()
     with open(path, 'rb') as filereader:
         while True:
@@ -52,6 +63,11 @@ def calc_checksum(path) -> str:
 
 
 def normalize_fileext(filename) -> str:
+    """
+    Checks a file against a list of allowed extensions.
+    It also normalize the extension to lowercase and unifies aliases.
+    """
+
     (name, ext) = os.path.splitext(filename)
     if not name:
         raise ValueError('Missing name before file extension')
