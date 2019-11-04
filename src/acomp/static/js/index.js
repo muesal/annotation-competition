@@ -123,9 +123,29 @@ async function getImage() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', requestUrl, true);
     xhr.send();
+    var stuff = xhr.response;
+    var stuffJson = JSON.parse(stuff);
+    newImg = stuff.Image;
+    setImg(newImg);
+
 
 
 }
+
+
+
+
+function setImg(newImg) {
+    document.getElementById("myImg").src = newImg;
+
+
+}
+
+function setTimer(newTime) {
+    resetTimer;
+
+}
+
 
 function getTimelimit() {
 }
