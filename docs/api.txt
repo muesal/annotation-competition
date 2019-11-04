@@ -1,0 +1,30 @@
+GET:
+- images
+- timelimit
+- accepted tags
+- joker (captcha)
+- score
+- user
+- 404
+
+POST:
+- tags (classic)
+- skip
+- joker (captcha)
+- captcha (captcha)
+- skip
+- 401 (user not playing or hasn't done tutorial/entry quiz)
+- 400
+
+URLS:
+[
+/classic
+/captcha
+/tutorial
+/highscore
+/login
+/usersettings
+[/home|/]
+/documentation
+]
+/data
