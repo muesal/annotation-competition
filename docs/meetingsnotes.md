@@ -1,5 +1,19 @@
 # Notes
 
+04 November '19
+
+Planning the API: 
+Dynamic requests with RESTful API and JSON and stuff. Use GET and POST requests. 
+
+Errors: 400, 401, 403, 404 and stuff for GET requests. Give further information in JSON.
+	
+
+
+No user data in prototype.
+
+Commands see Salome's notes. 
+
+
 ## 22 October '19
 * We'll use Python and the Flask Framework (https://gitlab.com/55683-01/annotation-competition/issues/1)
 * We'll use an SQL/relational Database (https://gitlab.com/55683-01/annotation-competition/issues/2)
