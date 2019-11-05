@@ -147,11 +147,20 @@ async function sendTag(submittedTag) {
     fetch(requestUrl,
         {
             method: "POST",
-            body: payload
-        })
-        .then(function (res) {
-            return res.json();
-        })
+            content type application / json
+    body: payload
+    headers: {
+        'Content-Type'
+    :
+        'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+    }
+,
+})
+.
+    then(function (res) {
+        return res.json();
+    })
         .then(function (data) {
             alert(JSON.stringify(data))
         })
@@ -186,7 +195,7 @@ function reset() {
     resetTimer();
 }
 
-function addPoints(delta){
+function addPoints(delta) {
     console.log("Received " + delta + " points");
     points += delta;
 }
