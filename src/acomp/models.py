@@ -3,7 +3,7 @@ from acomp import db
 image_tag = db.Table('image_tag', db.Model.metadata,
     db.Column('image_id', db.Integer, db.ForeignKey('Image.id'), primary_key=True),
     db.Column('tag_id', db.Integer, db.ForeignKey('Tag.id'), primary_key=True),
-    db.Column('frequency', db.Integer, db.CheckConstraint('frequency >= 0'), default=0, nullable=False),
+    db.Column('frequency', db.Integer, db.CheckConstraint('frequency >= 0'), default=1, nullable=False),
     db.Column('successful_verified', db.Integer, db.CheckConstraint('successful_verified >= 0'), default=0, nullable=False),
     db.Column('total_verified', db.Integer, db.CheckConstraint('total_verified >= 0'), default=0, nullable=False)
 )
@@ -44,8 +44,7 @@ class User(db.Model):
     score = db.Column(db.Integer, db.CheckConstraint('score >= 0'), nullable=False)
     seen = db.relationship('Image', secondary='user_image', backref='seen')
 
-    def __init__(self, username, secret, score=0, seen=None):
+    def __init__(self, username, secret, score=0):
         self.username = username
-        self.score = score
         self.secret = secret
-        self.seen = seen
+        self.score = score
