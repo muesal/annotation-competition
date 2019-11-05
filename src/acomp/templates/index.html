@@ -9,18 +9,21 @@
 <body>
 
 <p id="timer"></p>
-
-<img class="myImg" src={{ source }} width={{ width }} height={{ height }}>
+<div id="imageWrapper">
+<div id="taggingImage">
+    <img class="myImg" src={{ source }} width={{ width }} height={{ height }}>
+</div>
 
 <p id="demo"></p>
-
+<div id = column>
 <label for="score">Score: </label><output id="score">0</output>
 
 <h3>Mentioned tags</h3>
 <ul id="mentionedTags">
     <li>&nbsp;</li>
 </ul>
-
+</div>
+</div>>
 <form id="tagForm">
     <input type="text" maxlength="512" id="searchTxt" class="searchField"/>
     <input type="submit" value="Submit">
