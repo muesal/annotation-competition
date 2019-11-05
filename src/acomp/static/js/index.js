@@ -5,8 +5,6 @@ var score = 0;
 var deadline = 60;
 const classicTimeLimit = 20;
 resetTimer();
-getImage();
-setInterval(resetTimer, 60000);
 setInterval(displayTimer, 1000);
 setInterval(updateTimer, 1000);
 var mentionedTags = [];
@@ -116,12 +114,15 @@ async function getImage() {
     var requestUrl = currentUrl + "classic/data";
     console.log(requestUrl);
     fetch(requestUrl)
-        .then(function (response) {
-            console.log(response.json());
-        })
+        .then(response => response.json())
         .then(function (jsonResponse) {
             console.log("The thing with the json response");
             console.log(jsonResponse);
+            setTimer(jsonResponse.timelimit);
+            setImg(jsonResponse.images);
+            addPoints(jsonResponse.points);
+
+
             console.log("==========");
 
             // do something with jsonResponse
@@ -143,25 +144,29 @@ async function sendTag(submittedTag) {
     var data = new FormData();
     data.append("request", payload);
 
-fetch(requestUrl,
-{
-    method: "POST",
-    body: payload
-})
-.then(function(res){ return res.json(); })
-.then(function(data){ alert( JSON.stringify( data ) ) })
+    fetch(requestUrl,
+        {
+            method: "POST",
+            body: payload
+        })
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (data) {
+            alert(JSON.stringify(data))
+        })
 
 }
 
 
 function setImg(newImg) {
-    document.getElementById("myImg").src = newImg;
-
+    console.log("Changing image to " + newImg);
+    document.getElementById("tagImage").src = newImg;
 
 }
 
 function setTimer(newTime) {
-    resetTimer;
+    deadline = newTime;
 
 }
 
@@ -179,6 +184,11 @@ function hasAlreadyBeenMentioned(tag) {
 
 function reset() {
     resetTimer();
+}
+
+function addPoints(delta){
+    console.log("Received " + delta + " points");
+    points += delta;
 }
 
 tagForm.addEventListener("reset", resetTotal);
