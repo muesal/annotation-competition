@@ -5,7 +5,6 @@ var score = 0;
 var deadline = 60;
 const classicTimeLimit = 20;
 resetTimer();
-setInterval(resetTimer, 60000);
 setInterval(displayTimer, 1000);
 setInterval(updateTimer, 1000);
 var mentionedTags = [];
@@ -21,18 +20,11 @@ function writeToMentionedTags(tag) {
     console.log(mentionedTags);
 }
 
-function sendTag() { //TODO
-
-}
-
 function updateScore(delta) {
     score += delta;
     document.getElementById("score").value = score.toString();
 }
 
-function loadImage() { //TODO
-
-}
 
 function handleOutbound(out) { //TODO
     myJson = JSON.stringify(out);
@@ -49,7 +41,7 @@ function handleInput(event) {
         return;
     }
     writeToMentionedTags(tag);
-    writeTagToJson(tag);
+    sendTag(tag);
 }
 
 function displayTimer() {
@@ -77,7 +69,7 @@ function isInputPermissible(input) {
         console.log("Tag is empty");
         return false;
     }
-    if (hasAlreadyBeenMentioned()){
+    if (hasAlreadyBeenMentioned()) {
         console.log("Tag has already been mentioned");
         return false;
     }
@@ -103,15 +95,86 @@ function resetTimer() {
 function resetTotal(event) {
     resetTags();
     resetTimer();
+    getImage();
+
 }
 
 function resetTags() {
     console.log("Resetting tags");
     mentionedTags = [];
     var root = document.getElementById("mentionedTags");
-    while( root.firstChild ){
-        root.removeChild( root.firstChild );
+    while (root.firstChild) {
+        root.removeChild(root.firstChild);
     }
+}
+
+async function getImage() {
+    var currentUrl = window.location.href;
+    console.log("Current URL: " + currentUrl);
+    var requestUrl = currentUrl + "classic/data";
+    console.log(requestUrl);
+    fetch(requestUrl)
+        .then(response => response.json())
+        .then(function (jsonResponse) {
+            console.log("The thing with the json response");
+            console.log(jsonResponse);
+            setTimer(jsonResponse.timelimit);
+            setImg(jsonResponse.images);
+            addPoints(jsonResponse.points);
+
+
+            console.log("==========");
+
+            // do something with jsonResponse
+        });
+}
+
+
+async function sendTag(submittedTag) {
+    console.log("Sending tag");
+    var currentUrl = window.location.href;
+    var requestUrl = currentUrl + "classic/data";
+
+    var tagObject = {
+        Type: "Tag",
+        Content: submittedTag,
+    };
+    payload = JSON.stringify(tagObject);
+    console.log(payload);
+    var data = new FormData();
+    data.append("request", payload);
+
+    fetch(requestUrl,
+        {
+            method: "POST",
+            body: payload
+        })
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (data) {
+            alert(JSON.stringify(data))
+        })
+
+}
+
+
+function setImg(newImg) {
+    console.log("Changing image to " + newImg);
+    document.getElementById("tagImage").src = newImg;
+
+}
+
+function setTimer(newTime) {
+    deadline = newTime;
+
+}
+
+
+function getTimelimit() {
+}
+
+function getScore() {
 }
 
 function hasAlreadyBeenMentioned(tag) {
@@ -121,6 +184,11 @@ function hasAlreadyBeenMentioned(tag) {
 
 function reset() {
     resetTimer();
+}
+
+function addPoints(delta){
+    console.log("Received " + delta + " points");
+    points += delta;
 }
 
 tagForm.addEventListener("reset", resetTotal);
