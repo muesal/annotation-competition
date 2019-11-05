@@ -1,4 +1,4 @@
-from flask import render_template, url_for
+from flask import render_template, request, url_for
 from acomp import app
 
 
@@ -25,10 +25,13 @@ def classic_data_get():
 
 
 @app.route('/classic/data', methods=['POST'])
-def classic_data_post(request):
+def classic_data_post():
     # TODO: check for user/token
     data = request.get_json()
-    return '{"OK":"200"}'
+    if data is None:
+        return bad_request('Invalid JSON.')
+    else:
+        return '{"OK":"200"}'
 
 
 @app.errorhandler(400)
