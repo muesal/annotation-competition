@@ -1,13 +1,15 @@
 from unittest import TestCase
-from acomp.Game_logic import Tag
+from acomp.gamelogic import GLTag
 
 
 class TestTag(TestCase):
     def test_mentioned(self):
-        tag = Tag('a', 0)
+        image_id = 1
+        tag = GLTag('a', image_id)
         tag.mentioned()
-        self.assertEqual(tag.getFrequency(), 2)
+        self.assertEqual(tag.getFrequency(image_id), 2)
 
     def test_word(self):
-        tag = Tag('a', 0)
+        image_id = 1
+        tag = GLTag('a', image_id)
         self.assertEqual(tag.getWord(), 'a')

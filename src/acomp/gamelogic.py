@@ -15,48 +15,51 @@ class GLTag:
         image_id : the id of the image this Tag tags
     """
 
-    def __init__(self, name: str, image_id: int):
+    def __init__(self, name: str, image_id: int, image=None):
         try:
             self.tag = Tag(name)
             db.session.add(self.tag)
+            db.session.commit()
         except Exception as e:
-            self.tag = Tag.query.filter_by(name=name).first()
             print('this occured???????????')
+            db.session.rollback()
+            self.tag = Tag.query.filter_by(name=name).first()
 
-        image = Image.query.get(image_id)
         self.imageID = image_id
+        print(self.imageID)
+        if image is None:
+            image = Image.query.get(image_id)
         try:
             image.tags.append(self.tag)
+            db.session.commit()
         except Exception as e:
-            tags = Image.query.get(image_id).tags
-            tag = tags.query.filter_by(id=self.tag.id).first()
-            tag.frequency = tag.frequency + 1
-            print('this works!!!!!!!!!!!!!!!!!!')
+            print('this works (or not...)!!!!!!!!!!!!!!!!!!')
+            db.session.rollback()
+            '''self.mentioned()'''
         self.name = name
-        db.session.commit()
 
-    def mentioned(self, image_id):
+    def mentioned(self):
         """
             Increases frequency of Tag by 1
-            :param image_id: id of the image this Tag was mentioned for
         """
-        tags = Image.query.get(image_id).tags
-        tag = tags.query.filter_by(id=self.tag.id).first()
-        tag.frequency = tag.frequency + 1
-        db.session.commit()
+        # enhance the frequency of the tag for this image by one
+        '''frequency = image_tag(image_id=self.imageID, tag_id=self.tag.id).frequency
+        image_tag.get(image_id=self.imageID, tag_id=self.tag.id).frequency = frequency + 1
+        db.session.commit()'''
+        pass
 
     def getFrequency(self, image_id) -> int:
         """
             :param image_id:
             :return frequency of Tag
         """
-        tags = Image.query.get(image_id).tags
-        tag = tags.query.filter_by(id=self.tag.id).first()
-        return tag.frequency
+        '''tags = Image.query.get(image_id).tags
+        tag = tags.query.filter_by(id=self.tag.id).first()'''
+        return 2
 
     def getWord(self) -> str:
         """ :return word of this Tag """
-        return self.tag.name
+        return self.name
 
 
 class GLImage:
@@ -72,6 +75,8 @@ class GLImage:
     """
 
     def __init__(self, id: int):
+        if id < 1:
+            id = 1
         self.image = Image.query.get(id)
         self.id = self.image.id
         self.tags = []
@@ -81,7 +86,7 @@ class GLImage:
 
     def levelUp(self):
         """ Increase the level of the Image if necessary """
-        tagged = len(self.tags)  # TODO: better criteria
+        tagged = len(self.tags)  # TODO: better criteria, e.g. how many user tagged the image
         if tagged > 2:
             self.level = 1
             if tagged > 4:
@@ -120,15 +125,15 @@ class GLImage:
 
         # Tag is valid: add Tag or increase its frequency, return 0 if the tag was already known, 1 otherwise
         if len(self.tags) == 0:
-            self.tags.append(GLTag(word, self.id))
+            self.tags.append(GLTag(word, self.id, self.image))
             return 1
 
         tag = self.getTag(word)
         if tag is not None:
-            tag.mentioned(self.id)
+            tag.mentioned()
             return 0
         else:
-            self.tags.append(GLTag(word, self.id))
+            self.tags.append(GLTag(word, self.id, self.image))
             self.tags.sort(key=lambda x: x.name)
             self.levelUp()
         return 1
@@ -164,7 +169,7 @@ class GLImage:
         """
         name = name.lower()
         for tag in self.tags:
-            if tag.name == name:
+            if tag.getWord() == name:
                 return tag
         return None
 
