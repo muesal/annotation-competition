@@ -111,7 +111,7 @@ function resetTags() {
 async function getImage() {
     var currentUrl = window.location.href;
     console.log("Current URL: " + currentUrl);
-    var requestUrl = currentUrl + "/classic/data";
+    var requestUrl = currentUrl + "classic/data";
     console.log(requestUrl);
     var xhr = new XMLHttpRequest();
     xhr.open('GET', requestUrl, true);
@@ -126,7 +126,7 @@ async function getImage() {
 async function sendTag(submittedTag) {
     console.log("Sending tag");
     var currentUrl = window.location.href;
-    var requestUrl = currentUrl + "/classic/data";
+    var requestUrl = currentUrl + "classic/data";
     var xhr = new XMLHttpRequest();
     xhr.open('POST', requestUrl, true);
     var tagObject = {
