@@ -16,31 +16,38 @@ class GLTag:
     """
 
     def __init__(self, name: str, image_id: int, image=None):
+        # add e new tag to the database, if this word never occurred before, or get this tag from the db
         try:
             self.tag = Tag(name)
             db.session.add(self.tag)
             db.session.commit()
         except Exception as e:
-            print('this occured???????????')
             db.session.rollback()
             self.tag = Tag.query.filter_by(name=name).first()
 
-        self.imageID = image_id
-        print(self.imageID)
         if image is None:
-            image = Image.query.get(image_id)
+            try:
+                # TODO: check image id
+                image = Image.query.get(image_id)
+            except Exception as e:
+                # TODO: why does this exception occur? should not happen...
+                db.session.rollback()
+                print('The image could not be found!')
+                return
+
+        self.imageID = image_id
+        self.image = image
         try:
             image.tags.append(self.tag)
             db.session.commit()
         except Exception as e:
-            print('this works (or not...)!!!!!!!!!!!!!!!!!!')
             db.session.rollback()
             '''self.mentioned()'''
         self.name = name
 
     def mentioned(self):
         """
-            Increases frequency of Tag by 1
+            Increases frequency of Tag for this image by 1
         """
         # enhance the frequency of the tag for this image by one
         '''frequency = image_tag(image_id=self.imageID, tag_id=self.tag.id).frequency
@@ -48,12 +55,11 @@ class GLTag:
         db.session.commit()'''
         pass
 
-    def getFrequency(self, image_id) -> int:
+    def getFrequency(self) -> int:
         """
-            :param image_id:
             :return frequency of Tag
         """
-        '''tags = Image.query.get(image_id).tags
+        '''tags = self.image.tags
         tag = tags.query.filter_by(id=self.tag.id).first()'''
         return 2
 
@@ -78,7 +84,7 @@ class GLImage:
         if id < 1:
             id = 1
         self.image = Image.query.get(id)
-        self.id = self.image.id
+        self.id = id
         self.tags = []
         self.forbiddenTags = []
         self.level = 0
@@ -91,7 +97,7 @@ class GLImage:
             self.level = 1
             if tagged > 4:
                 self.level = 2
-                # TODO: make this better
+                # TODO: make this better (not alphabetically...)
                 for i in range(2):
                     self.forbiddenTags.append(self.tags[i].name)
 

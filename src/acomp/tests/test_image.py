@@ -9,7 +9,7 @@ class TestImage(TestCase):
         self.assertEqual(image.level, 0)
 
     def test_levelUp1(self):
-        image = GLImage(2)
+        image = GLImage(1)
         image.addTag('a')
         image.addTag('b')
         image.addTag('c')
@@ -39,7 +39,7 @@ class TestImage(TestCase):
         self.assertEqual(image.addTag('a'), 1)
         self.assertEqual(image.addTag('b'), 1)
         self.assertEqual(image.addTag('b'), 1)
-        self.assertEqual(image.getTag('b').getFrequency(1), 2)
+        self.assertEqual(image.getTag('b').getFrequency(), 2)
 
     def test_addTag_level1(self):
         image = GLImage(1)
@@ -89,7 +89,7 @@ class TestImage(TestCase):
         image.addTag('c')
         image.addTag('d')
         tag = image.getTag('b')
-        self.assertEqual(tag.getFrequency(1), 2)
+        self.assertEqual(tag.getFrequency(), 2)
         self.assertEqual(tag.getWord(), 'b')
         tag = image.getTag('c')
         #self.assertEqual(tag.getFrequency(1), 1)
