@@ -97,6 +97,8 @@ function resetTimer() {
 function resetTotal(event) {
     resetTags();
     resetTimer();
+    getImage();
+
 }
 
 function resetTags() {
@@ -113,13 +115,17 @@ async function getImage() {
     console.log("Current URL: " + currentUrl);
     var requestUrl = currentUrl + "classic/data";
     console.log(requestUrl);
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', requestUrl, true);
-    xhr.send();
-    var stuff = xhr.response;
-    var stuffJson = JSON.parse(stuff);
-    newImg = stuff.Image;
-    setImg(newImg);
+    fetch(requestUrl)
+        .then(function (response) {
+            console.log(response.json());
+        })
+        .then(function (jsonResponse) {
+            console.log("The thing with the json response");
+            console.log(jsonResponse);
+            console.log("==========");
+
+            // do something with jsonResponse
+        });
 }
 
 
@@ -127,16 +133,23 @@ async function sendTag(submittedTag) {
     console.log("Sending tag");
     var currentUrl = window.location.href;
     var requestUrl = currentUrl + "classic/data";
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', requestUrl, true);
+
     var tagObject = {
         Type: "Tag",
         Content: submittedTag,
     };
-    console.log("Sending " + JSON.stringify(tagObject) + " to " + requestUrl);
-    xhr.send(JSON.stringify(tagObject));
+    payload = JSON.stringify(tagObject);
+    console.log(payload);
+    var data = new FormData();
+    data.append("request", payload);
 
-
+fetch(requestUrl,
+{
+    method: "POST",
+    body: payload
+})
+.then(function(res){ return res.json(); })
+.then(function(data){ alert( JSON.stringify( data ) ) })
 
 }
 
