@@ -1,4 +1,21 @@
 # Notes
+06 November
+
+seminar presentation
+if papers go into details, it's not necessary to use further publications
+15 mins presentation, 5 questions
+no hand-in in advance
+hand in midterm slide on adam
+
+discuss seminar presentations 03 December 13:00 
+
+
+project
+google mdl should make integration easier
+Wordnet or something like that for semantic issues (good thing to mention in midterm presentation alongside spell checking )
+
+
+
 
 04 November '19
 
