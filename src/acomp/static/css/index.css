@@ -4,4 +4,31 @@ body {
     -webkit-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
+    border: 1px solid black;
+    background-color: lightgray;
+
+
+}
+
+img {
+
+    height: auto;
+    width: auto;
+    max-width: 70%;
+    max-height: 70%;
+}
+
+#imageWrapper {
+    width: 100%;
+    overflow: hidden;
+}
+
+#taggingImage {
+    float: left;
+    display: inline-block;
+}
+
+#column {
+    vertical-align: top;
+    display: inline-block;
 }
