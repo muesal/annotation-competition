@@ -25,6 +25,7 @@ class GLTag:
             db.session.rollback()
             self.tag = Tag.query.filter_by(name=name).first()
 
+        self.id = self.tag.id
         if image is None:
             try:
                 # TODO: check image id
@@ -42,7 +43,8 @@ class GLTag:
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            '''self.mentioned()'''
+        #self.getFrequency()
+        #self.mentioned()
         self.name = name
 
     def mentioned(self):
@@ -50,8 +52,10 @@ class GLTag:
             Increases frequency of Tag for this image by 1
         """
         # enhance the frequency of the tag for this image by one
-        '''frequency = image_tag(image_id=self.imageID, tag_id=self.tag.id).frequency
-        image_tag.get(image_id=self.imageID, tag_id=self.tag.id).frequency = frequency + 1
+        '''query_image_tag = Image.query.join(image_tag).join(Tag).filter(
+            (image_tag.c.tag_id == self.id) & (image_tag.c.image_id == self.imageID)).first()
+        frequency = query_image_tag.frequency
+        frequency = frequency + 1
         db.session.commit()'''
         pass
 
@@ -59,9 +63,10 @@ class GLTag:
         """
             :return frequency of Tag
         """
-        '''tags = self.image.tags
-        tag = tags.query.filter_by(id=self.tag.id).first()'''
-        return 2
+        frequency = 2  # TODO: remove
+        '''query_image_tag = Tag.query.join(image_tag).filter(
+            (image_tag.c.tag_id == self.id) and (image_tag.c.image_id == self.imageID)).one()'''
+        return frequency
 
     def getWord(self) -> str:
         """ :return word of this Tag """
@@ -92,14 +97,17 @@ class GLImage:
 
     def levelUp(self):
         """ Increase the level of the Image if necessary """
-        tagged = len(self.tags)  # TODO: better criteria, e.g. how many user tagged the image
+        query_image_user = User.query.join(user_image).join(Image).filter(
+            user_image.c.image_id == self.id).all()
+        tagged = len(query_image_user)
         if tagged > 2:
             self.level = 1
             if tagged > 4:
                 self.level = 2
                 # TODO: make this better (not alphabetically...)
                 for i in range(2):
-                    self.forbiddenTags.append(self.tags[i].name)
+                    pass
+                    #self.forbiddenTags.append(self.tags[i].name) TODO
 
     def validate(self, word: str) -> int:
         """ Validates the Tag regarding his spelling (minor misspellings are corrected with frequency list algorithm of
@@ -141,7 +149,6 @@ class GLImage:
         else:
             self.tags.append(GLTag(word, self.id, self.image))
             self.tags.sort(key=lambda x: x.name)
-            self.levelUp()
         return 1
 
     def addTag(self, tag: str) -> int:
@@ -164,6 +171,7 @@ class GLImage:
         if self.level == 2:
             points = 2
 
+        self.levelUp()
         return points
 
     def getTag(self, name: str) -> GLTag:
