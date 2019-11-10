@@ -147,8 +147,8 @@ async function sendTag(submittedTag) {
     fetch(requestUrl,
         {
             method: "POST",
-            content type application / json
-    body: payload
+            'Content-Type': 'application/json',
+    body: payload,
     headers: {
         'Content-Type'
     :
