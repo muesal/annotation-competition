@@ -197,7 +197,7 @@ function reset() {
 
 function addPoints(delta) {
     console.log("Received " + delta + " points");
-    points += delta;
+    score += delta;
 }
 
 tagForm.addEventListener("reset", resetTotal);
