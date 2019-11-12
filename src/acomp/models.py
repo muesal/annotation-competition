@@ -1,17 +1,22 @@
 from acomp import db
 
-image_tag = db.Table('image_tag', db.Model.metadata,
-    db.Column('image_id', db.Integer, db.ForeignKey('Image.id'), primary_key=True),
-    db.Column('tag_id', db.Integer, db.ForeignKey('Tag.id'), primary_key=True),
-    db.Column('frequency', db.Integer, db.CheckConstraint('frequency >= 0'), default=1, nullable=False),
-    db.Column('successful_verified', db.Integer, db.CheckConstraint('successful_verified >= 0'), default=0, nullable=False),
-    db.Column('total_verified', db.Integer, db.CheckConstraint('total_verified >= 0'), default=0, nullable=False)
-)
 
 user_image = db.Table('user_image', db.Model.metadata,
     db.Column('image_id', db.Integer, db.ForeignKey('Image.id'), primary_key=True),
     db.Column('user_id', db.Integer, db.ForeignKey('User.id'), primary_key=True)
 )
+
+
+class ImageTag(db.Model):
+    __tablename__ = 'image_tag'
+    image_id = db.Column(db.Integer, db.ForeignKey('Image.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('Tag.id'), primary_key=True)
+    frequency = db.Column('frequency', db.Integer, db.CheckConstraint('frequency >= 0'), default=1, nullable=False)
+    successful_verified = db.Column('successful_verified', db.Integer, db.CheckConstraint('successful_verified >= 0'), default=0, nullable=False)
+    total_verified = db.Column('total_verified', db.Integer, db.CheckConstraint('total_verified >= 0'), default=0, nullable=False)
+    tag = db.relationship('Tag', back_populates='images')
+    image = db.relationship('Image', back_populates='tags')
+
 
 
 class Image(db.Model):
@@ -20,7 +25,7 @@ class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     filename = db.Column(db.String, unique=True, nullable=False)
     skips = db.Column(db.Integer, db.CheckConstraint('skips >= 0'), nullable=False, default=0)
-    tags = db.relationship('Tag', secondary='image_tag', backref='tags')
+    tags = db.relationship('ImageTag', back_populates='image')
 
     def __init__(self, filename):
         self.filename = filename
@@ -31,6 +36,7 @@ class Tag(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, unique=True, nullable=False)
+    images = db.relationship('ImageTag', back_populates='tag')
 
     def __init__(self, name):
         self.name = name
