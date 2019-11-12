@@ -3,16 +3,16 @@ from acomp.gamelogic import GLImage, GLUser, GLTag
 
 
 class TestUser(TestCase):
-    def test_tagImage(self):
-        user = GLUser('franz')
-        image = GLImage(1)
-        user.tagImage(image, 'first')
-        self.assertEqual(user.getScore(), 1)
-        user.tagImage(image, 'second')
-        self.assertEqual(user.getScore(), 2)
-        self.assertEqual(image.tags[0].getWord(), 'first')
-        self.assertEqual(len(image.tags), 2)
 
-    def test_getScore(self):
-        user = GLUser('franz')
-        self.assertEqual(user.getScore(), 0)
+    def setUp(self):
+        self.user = GLUser('franz')
+        self.image_id = 3
+        self.image = GLImage(self.image_id)
+
+    def test_tagImage(self):
+        self.user.tagImage(self.image, 'first')
+        self.assertEqual(self.user.getScore(), 1)
+        self.user.tagImage(self.image, 'second')
+        self.assertEqual(self.user.getScore(), 2)
+        self.assertEqual(self.image.tags[0].getWord(), 'first')
+        self.assertEqual(len(self.image.tags), 2)

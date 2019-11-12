@@ -3,13 +3,14 @@ from acomp.gamelogic import GLTag
 
 
 class TestTag(TestCase):
+
+    def setUp(self):
+        self.image_id = 2
+        self.tag = GLTag('a', self.image_id)
+
     def test_mentioned(self):
-        image_id = 1
-        tag = GLTag('a', image_id)
-        tag.mentioned()
-        self.assertEqual(tag.getFrequency(), 2)
+        self.tag.mentioned()
+        self.assertEqual(self.tag.getFrequency(), 2)
 
     def test_word(self):
-        image_id = 1
-        tag = GLTag('a', image_id)
-        self.assertEqual(tag.getWord(), 'a')
+        self.assertEqual(self.tag.getWord(), 'a')

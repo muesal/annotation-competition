@@ -3,7 +3,7 @@ import sqlite3
 from spellchecker.spellchecker import SpellChecker
 
 from acomp import db
-from acomp.models import Image, Tag, User, user_image, image_tag
+from acomp.models import Image, Tag, User, ImageTag, user_image
 
 
 class GLTag:
@@ -22,6 +22,7 @@ class GLTag:
             db.session.add(self.tag)
             db.session.commit()
         except Exception as e:
+            # The tag is already known to the db
             db.session.rollback()
             self.tag = Tag.query.filter_by(name=name).first()
 
@@ -33,39 +34,38 @@ class GLTag:
             except Exception as e:
                 # TODO: why does this exception occur? should not happen...
                 db.session.rollback()
-                print('The image could not be found!')
+                print('The image could not be found! Error: ')
+                print(e, end='\n\n')
                 return
 
         self.imageID = image_id
         self.image = image
         try:
-            image.tags.append(self.tag)
+            it = ImageTag(image_id=self.imageID, tag_id=self.id, frequency=1, successful_verified=0, total_verified=0)
+            it.tag = self.tag
+            it.image = self.image
             db.session.commit()
         except Exception as e:
+            # The tag and this image are already connected, the frequency has to be increased with mentioned()
             db.session.rollback()
-        #self.getFrequency()
-        #self.mentioned()
+            self.mentioned()
         self.name = name
 
     def mentioned(self):
         """
             Increases frequency of Tag for this image by 1
         """
-        # enhance the frequency of the tag for this image by one
-        '''query_image_tag = Image.query.join(image_tag).join(Tag).filter(
-            (image_tag.c.tag_id == self.id) & (image_tag.c.image_id == self.imageID)).first()
-        frequency = query_image_tag.frequency
-        frequency = frequency + 1
-        db.session.commit()'''
+        it = ImageTag.query.filter_by(
+            tag_id=self.id, image_id=self.imageID).one_or_none()
+        it.frequency = it.frequency + 1
         pass
 
     def getFrequency(self) -> int:
         """
             :return frequency of Tag
         """
-        frequency = 2  # TODO: remove
-        '''query_image_tag = Tag.query.join(image_tag).filter(
-            (image_tag.c.tag_id == self.id) and (image_tag.c.image_id == self.imageID)).one()'''
+        frequency = ImageTag.query.filter_by(
+            tag_id=self.id, image_id=self.imageID).one_or_none().frequency
         return frequency
 
     def getWord(self) -> str:
@@ -165,8 +165,8 @@ class GLImage:
         if val == -1:
             return 0
 
-        if self.level == 1 and val == 1:
-            # a new tag for a level 2 image gives 2 points
+        if self.level == 1 and val == 0:
+            # a already known tag for a level 1 image gives 2 points
             points = 2
         if self.level == 2:
             points = 2
