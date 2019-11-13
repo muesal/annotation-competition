@@ -42,6 +42,7 @@ function handleInput(event) {
     }
     writeToMentionedTags(tag);
     sendTag(tag);
+    document.getElementById("searchTxt").value = "";
 }
 
 function displayTimer() {
@@ -140,7 +141,6 @@ async function sendTag(submittedTag) {
         Content: submittedTag,
     };
     payload = JSON.stringify(tagObject);
-    console.log(payload);
     var data = new FormData();
     data.append("request", payload);
 
@@ -164,6 +164,7 @@ async function sendTag(submittedTag) {
         .then(function (data) {
             alert(JSON.stringify(data))
         })
+    console.log("Sent: " + payload);
 
 }
 
