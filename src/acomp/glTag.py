@@ -15,14 +15,17 @@ class GLTag:
 
     def __init__(self, name: str, image_id: int, image=None):
         # add e new tag to the database, if this word never occurred before, or get this tag from the db
-        try:
-            self.tag = Tag(name)
-            db.session.add(self.tag)
-            db.session.commit()
-        except Exception as e:
-            # The tag is already known to the db
-            db.session.rollback()
-            self.tag = Tag.query.filter_by(name=name).first()
+
+        self.tag = Tag.query.filter_by(name=name).one_or_none()
+        if self.tag is None:
+            try:
+                self.tag = Tag(name)
+                db.session.add(self.tag)
+                db.session.commit()
+            except Exception as e: #TODO: SQLException instead of any
+                # The tag is already known to the db
+                print(e, '\n')
+                db.session.rollback()
 
         self.id = self.tag.id
         if image is None:
