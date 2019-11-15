@@ -10,7 +10,7 @@ RUN set -eux; \
 		musl-dev \
 		postgresql-dev \
 	; \
-	pip install -r requirements.txt; \
+	pip install --no-cache-dir -r requirements.txt; \
 	\
 	runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/python3.8 \
