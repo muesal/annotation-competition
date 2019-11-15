@@ -69,9 +69,9 @@ class GLUser:
         # create a class for this image
         self.image_current = GLImage(image_id)
         self.image_level = self.image_current.getLevel()
-        return self.image_current
+        return self.image_current.id
 
-    def tagImage(self, tag: str, image=None):
+    def tagImage(self, tag: str, image=None):  # Todo: return: (0, "tag") (-1, "error")
         """ Tag the image with the given Tag, add the reached points to the score
 
             :param tag: the word to tag
