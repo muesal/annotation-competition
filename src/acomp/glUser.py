@@ -18,11 +18,12 @@ class GLUser:
         cap_captcha (int): if the user is in captcha mode, the position of the main image in the list of images
     """
 
-    def __init__(self, username: str, secret='top-secret'):
+    def __init__(self, id: int):
         # Todo: is here a try...except needed?
-        self.user = User(username, secret)
-        db.session.add(self.user)
-        db.session.commit()
+        self.user = User.query.filter_by(id=id).one_or_none()
+
+        if self.user is None:
+            raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
 
         self.image_current = GLImage(1)
         self.game_mode = 0
