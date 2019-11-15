@@ -1,5 +1,5 @@
 from unittest import TestCase
-from acomp.gamelogic import GLTag
+from acomp.glTag import GLTag
 
 
 class TestTag(TestCase):
