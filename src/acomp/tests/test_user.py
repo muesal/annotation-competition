@@ -1,4 +1,6 @@
 from unittest import TestCase
+from acomp import db
+from acomp.models import User, Image
 from acomp.glImage import GLImage
 from acomp.glUser import GLUser
 
@@ -6,8 +8,17 @@ from acomp.glUser import GLUser
 class TestUser(TestCase):
 
     def setUp(self):
-        self.user = GLUser('franz')
-        self.image_id = 3
+        try:
+            self.user = GLUser(1)
+        except Exception as e:
+            print("Empty User table, creating new user")
+            user = User('hans', 'top-secret')
+            db.session.add(user)
+            db.session.commit()
+            self.user = GLUser(1)
+
+        self.user.startClassic()
+        self.image_id = 2
         self.image = GLImage(self.image_id)
 
     def test_startClassic(self):
@@ -16,12 +27,46 @@ class TestUser(TestCase):
         GLImage(image_id)
 
     def test_tagImage(self):
-        self.user.tagImage('first', self.image)
+        val, mes = self.user.tagImage('first', self.image)
+        self.assertEqual(val, 0)
+        self.assertEqual(mes, 'first')
         self.assertEqual(self.user.getScore(), 1)
-        self.user.tagImage('second', self.image)
-        self.assertEqual(self.user.getScore(), 2)
-        self.assertEqual(self.image.tags[0].getWord(), 'first')
-        self.assertEqual(len(self.image.tags), 2)
+        self.assertIsNotNone(self.image.getTag('first'))
+
+    def test_tagImage_wrongGameMode(self):
+        self.user.startCaptcha()
+        val, mes = self.user.tagImage('first', self.image)
+        self.assertEqual(val, -1)
+        self.assertEqual(mes, 'Wrong game mode')
+
+        self.user.end()
+        val, mes = self.user.tagImage('first', self.image)
+        self.assertEqual(val, -1)
+        self.assertEqual(mes, 'Wrong game mode')
+        self.user.startClassic()
+
+    def test_tagImage_sameTagTwice(self):
+        self.user.tagImage('first', self.image)
+        val, mes = self.user.tagImage('first', self.image)
+        self.assertEqual(val, -1)
+        self.assertEqual(mes, 'You already provided this tag for this image')
+
+    def test_tagImage_threeWords(self):
+        val, mes = self.user.tagImage('first and second', self.image)
+        self.assertEqual(val, -1)
+        self.assertEqual(mes, 'A tag may not be longer than two words.')
+
+    def test_tagImage_misspelled(self):
+        val, mes = self.user.tagImage('blubeldio', self.image)
+        self.assertEqual(val, -1)
+        self.assertEqual(mes, 'This word(s) could not be found in our dictionary.')
+
+    def test_skip(self):
+        image_id = self.user.startClassic()
+        image = Image.query.filter_by(id=image_id).one_or_none()
+        skips = image.skips
+        score = self.user.skip()
+        self.assertEqual(image.skips, skips + 1)
 
     def test_end(self):
         self.assertIsNotNone(self.user.end())

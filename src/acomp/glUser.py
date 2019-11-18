@@ -12,21 +12,20 @@ class GLUser:
     Attributes:
         user (User): User instance of the user
         image_current (GLImage): Image this user is currently playing with
-        game_mode (int): 0 if user is playing Classic, 1 if Reverse Captcha
+        game_mode (int): 0 if user is playing Classic, 1 if Reverse Captcha, -1 if he is not playing
         image_level (int): level of this image when user started playing
         tags_for_image_current ([str]): tags he has provided during this round for this image
         cap_captcha (int): if the user is in captcha mode, the position of the main image in the list of images
     """
 
     def __init__(self, id: int):
-        # Todo: is here a try...except needed?
         self.user = User.query.filter_by(id=id).one_or_none()
 
         if self.user is None:
             raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
 
         self.image_current = GLImage(1)
-        self.game_mode = 0
+        self.game_mode = -1
         self.image_level = 0
         self.tags_for_image_current = []
         self.cap_captcha = None
@@ -69,23 +68,37 @@ class GLUser:
 
         # create a class for this image
         self.image_current = GLImage(image_id)
+        self.image_current.levelUp()
         self.image_level = self.image_current.getLevel()
         return self.image_current.id
 
-    def tagImage(self, tag: str, image=None):  # Todo: return: (0, "tag") (-1, "error")
+    def tagImage(self, tag: str, image=None) -> (int, str):  # Todo: return: (0, "tag") (-1, "error")
         """ Tag the image with the given Tag, add the reached points to the score
+            Return -1 and error message, if an error occurred, else 0 and the tag which was added.
 
             :param tag: the word to tag
             :param image: GLImage to tag, or none to tag the image this user is playing with
+
+            :returns (validation, message)
         """
         # if user is playing captcha or has already provided this tag in this round do nothing
-        if self.game_mode == 1 or tag in self.tags_for_image_current:
-            return
+        if self.game_mode != 0:
+            return -1, "Wrong game mode"
+        if tag in self.tags_for_image_current:
+            return -1, "You already provided this tag for this image"
 
         if image is None:
             image = self.image_current
-        self.user.score = self.user.score + image.addTag(tag, self.image_level)
+
+        try:
+            points, tag = image.addTag(tag, self.image_level)
+        except Exception as e:
+            return -1, e.args[0]
+
+        self.tags_for_image_current.append(tag)
+        self.user.score = self.user.score + points
         db.session.commit()
+        return 0, tag
 
     def startCaptcha(self) -> ([Image.id], [str]):
         """ Start a game in Captcha mode, select one main and n other images, to validate the tags of the main.
@@ -117,6 +130,7 @@ class GLUser:
 
             :return current score of the user
         """
+        self.game_mode = -1
         return self.user.score
 
     def skip(self) -> int:
