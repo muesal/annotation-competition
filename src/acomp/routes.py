@@ -1,27 +1,47 @@
 from flask import render_template, request, session, url_for
-from acomp import app, glUser, sessions
+from acomp import app, db, sessions
+from acomp.glUser import GLUser
+from acomp.models import User, Image
 
 
 @app.route('/')
 @app.route('/home')
 @app.route('/classic')
 def classic():
-    if 'user' in session:
-        print(session['user'])
+    token = request.args.get('token')
+    if 'userid' in session:
+        app.logger.debug("UserID: %s", session['userid'])
+        if token is None:
+            # TODO: create new user
+            # Test usr
+            new_usr = User('guest', 'myverysecret')
+            db.session.add(new_usr)
+            db.session.commit()
+            app.logger.debug("New user")
+        else:
+            # TODO: verify existing user
+            app.logger.debug("Existing user")
     else:
-        session['user'] = 'guest'
-    return render_template('index.html', source=url_for('static', filename='img/test.png'), width=800, height=600)
+        # TODO: individual userid
+        session['userid'] = 'guest'
+    # TODO: individual userid
+    usr = GLUser(1)
+    img_id = usr.startClassic()
+    img = Image.query.get(img_id)
+    return render_template('index.html', source=url_for('static', filename='images/' + img.filename), width=800, height=600)
 
 
 @app.route('/classic/data', methods=['GET'])
 def classic_data_get():
-    if 'user' in session:
+    if 'userid' in session:
+        # TODO: individual userid
+        usr = GLUser(1)
         data: dict = {}
         data['images'] = url_for('static', filename='img/test.png')
         data['timelimit'] = app.config['ACOMP_CLASSIC_TIMELIMIT']
         data['accepted'] = ''
-        data['score'] = '0'
-        data['user'] = '0'
+        data['score'] = usr.getScore()
+        data['user'] = '1'
 
         res = app.make_response(data)
         res.headers.set('Content-Type', 'application/json')
@@ -32,11 +52,16 @@ def classic_data_get():
 
 @app.route('/classic/data', methods=['POST'])
 def classic_data_post():
-    if 'user' in session:
+    if 'userid' in session:
         data = request.get_json()
         if data is None:
             return bad_request('Invalid JSON.')
+        if 'Content' not in data:
+            return bad_request('Missing key in JSON.')
         else:
+            # TODO: individual userid
+            usr = GLUser(1)
+            usr.tagImage(data['Content'])
             return '{"OK":"200"}'
     else:
         return forbidden('Not authorized.')
