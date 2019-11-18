@@ -25,5 +25,8 @@ WORKDIR /app
 
 EXPOSE 5000
 
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+
 CMD ["flask", "run", "-h", "0.0.0.0"]
 #CMD ["uwsgi", "-w", "app:app", "--socket", "0.0.0.0:5000"]
