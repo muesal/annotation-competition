@@ -1,6 +1,7 @@
 from flask import render_template, request, session, url_for
 from acomp import app, db, sessions
 from acomp.glUser import GLUser
+from acomp.glImage import GLImage
 from acomp.models import User, Image
 
 
@@ -36,11 +37,15 @@ def classic_data_get():
     if 'userid' in session:
         # TODO: individual userid
         usr = GLUser(1)
+        img_id = usr.startClassic()
+        img = Image.query.get(img_id)
+        img_obj = GLImage(img_id)
         data: dict = {}
-        data['images'] = url_for('static', filename='img/test.png')
+        data['images'] = url_for('static', filename='images/' + img.filename)
         data['timelimit'] = app.config['ACOMP_CLASSIC_TIMELIMIT']
-        data['accepted'] = ''
+        data['accepted'] = img_obj.printTags()
         data['score'] = usr.getScore()
+        # TODO: individual userid
         data['user'] = '1'
 
         res = app.make_response(data)
