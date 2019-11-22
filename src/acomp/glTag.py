@@ -16,31 +16,31 @@ class GLTag:
     def __init__(self, name: str, image_id: int, image=None):
         # add e new tag to the database, if this word never occurred before, or get this tag from the db
 
+        if not 0 < image_id < db.session.query(Image).count():
+            raise Exception('Image ID out of bound')
+        self.imageID = image_id
+
         self.tag = Tag.query.filter_by(name=name).one_or_none()
         if self.tag is None:
             try:
                 self.tag = Tag(name)
                 db.session.add(self.tag)
                 db.session.commit()
-            except Exception as e: #TODO: SQLException instead of any
+            except Exception as e:  # TODO: SQLException instead of any
                 # The tag is already known to the db
-                print(e, '\n')
                 db.session.rollback()
 
         self.id = self.tag.id
         if image is None:
             try:
-                # TODO: check image id
-                image = Image.query.get(image_id)
+                image = Image.query.get(self.imageID)
             except Exception as e:
-                # TODO: why does this exception occur? should not happen...
                 db.session.rollback()
                 print('The image could not be found! Error: ')
                 print(e, end='\n\n')
                 return
-
-        self.imageID = image_id
         self.image = image
+
         try:
             it = ImageTag(image_id=self.imageID, tag_id=self.id, frequency=1, successful_verified=0, total_verified=0)
             it.tag = self.tag
