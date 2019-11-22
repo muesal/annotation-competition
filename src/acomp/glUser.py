@@ -34,7 +34,7 @@ class GLUser:
         """ :return score of the user """
         return self.user.score
 
-    def startClassic(self) -> Image.id:
+    def startClassic(self) -> Image.filename:
         """ Start a game in classic mode. Select an image the user has not seen before
 
             :return the image
@@ -70,7 +70,7 @@ class GLUser:
         self.image_current = GLImage(image_id)
         self.image_current.levelUp()
         self.image_level = self.image_current.getLevel()
-        return self.image_current.id
+        return Image.query.get(image_id).filename
 
     def tagImage(self, tag: str, image=None) -> (int, str):  # Todo: return: (0, "tag") (-1, "error")
         """ Tag the image with the given Tag, add the reached points to the score
@@ -100,7 +100,7 @@ class GLUser:
         db.session.commit()
         return 0, tag
 
-    def startCaptcha(self) -> ([Image.id], [str]):
+    def startCaptcha(self) -> ([Image.filename], [str]):
         """ Start a game in Captcha mode, select one main and n other images, to validate the tags of the main.
             The main is at a random position of the image list.
 
