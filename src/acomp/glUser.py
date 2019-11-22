@@ -3,6 +3,7 @@ from flask import url_for
 from acomp import app, db
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glImage import GLImage
+import time
 
 
 class GLUser:
@@ -34,6 +35,7 @@ class GLUser:
         self.image_level = 0
         self.tags_for_image_current = []
         self.cap_captcha = None
+        self.timestamp = time.time()
 
     def getScore(self) -> int:
         """ :return score of the user """
@@ -46,6 +48,7 @@ class GLUser:
         """
         self.game_mode = 0
         self.tags_for_image_current = []
+        self.timestamp = time.time()
 
         # get the new image
         iterations = 0
@@ -87,9 +90,10 @@ class GLUser:
                       'user': self.user.id}
         return data
 
-    def tagImage(self, tag: str, image=None) -> (int, str):  # Todo: return: (0, "tag") (-1, "error")
+    def tagImage(self, tag: str, image=None) -> (int, str):
         """ Tag the image with the given Tag, add the reached points to the score
             Return -1 and error message, if an error occurred, else 0 and the tag which was added.
+            Return 1 if the game is over (time's up)
 
             :param tag: the word to tag
             :param image: GLImage to tag, or none to tag the image this user is playing with
@@ -103,6 +107,10 @@ class GLUser:
             raise Exception('Wrong game mode')
         if tag in self.tags_for_image_current:
             return -1, "You already provided this tag for this image"
+        # if the time is up end this game
+        if abs(time.time() - self.timestamp) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
+            self.end()
+            return 1, "{}".format(self.user.score)
 
         if image is None:
             image = self.image_current
@@ -121,6 +129,7 @@ class GLUser:
             :return the images, and the tags to validate
         """
         self.game_mode = 1
+        self.timestamp = time.time()
         data: dict
         {}
         '''data: dict = {'images': url_for('static', filename='images/' + image.filename),
@@ -151,6 +160,10 @@ class GLUser:
             :return current score of the user
         """
         self.game_mode = -1
+        self.image_level = 0
+        self.tags_for_image_current = []
+        self.cap_captcha = None
+        self.timestamp = time.time()
         return self.user.score
 
     def skip(self) -> int:
