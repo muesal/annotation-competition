@@ -27,9 +27,8 @@ def classic():
         session['userid'] = 'guest'
     # TODO: individual userid
     usr = GLUser(1)
-    img_id = usr.startClassic()
-    img = Image.query.get(img_id)
-    return render_template('index.html', source=url_for('static', filename='images/' + img.filename), width=800, height=600)
+    img = usr.startClassic()
+    return render_template('index.html', source=img['images'], width=800, height=600)
 
 
 @app.route('/classic/data', methods=['GET'])
@@ -37,20 +36,13 @@ def classic_data_get():
     if 'userid' in session:
         # TODO: individual userid
         usr = GLUser(1)
-        img_id = usr.startClassic()
-        img = Image.query.get(img_id)
-        img_obj = GLImage(img_id)
-        data: dict = {}
-        data['images'] = url_for('static', filename='images/' + img.filename)
-        data['timelimit'] = app.config['ACOMP_CLASSIC_TIMELIMIT']
-        data['accepted'] = img_obj.printTags()
-        data['score'] = usr.getScore()
-        # TODO: individual userid
-        data['user'] = '1'
-
-        res = app.make_response(data)
-        res.headers.set('Content-Type', 'application/json')
-        return res
+        try:
+            res = app.make_response(usr.startClassic())
+        except Exception as e:
+            return bad_request(e)
+        else:
+            res.headers.set('Content-Type', 'application/json')
+            return res
     else:
         return forbidden('Not authorized.')
 
@@ -61,13 +53,18 @@ def classic_data_post():
         data = request.get_json()
         if data is None:
             return bad_request('Invalid JSON.')
-        if 'Content' not in data:
+        if 'Tag' not in data:
             return bad_request('Missing key in JSON.')
         else:
             # TODO: individual userid
             usr = GLUser(1)
-            usr.tagImage(data['Content'])
-            return '{"OK":"200"}'
+            try:
+                res = usr.tagImage(data['Content'])
+            except Exception as e:
+                return bad_request(e)
+            else:
+                res.headers.set('Content-Type', 'application/json')
+                return '{"OK":"200", "message":"' + res[1] + '"}'
     else:
         return forbidden('Not authorized.')
 
