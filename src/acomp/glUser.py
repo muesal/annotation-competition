@@ -26,9 +26,9 @@ class GLUser:
 
         # TODO: nicer way
         if db.session.query(Image).count() <= 0:
-            print('There are no images in our database')
-            return
-        self.image_current = GLImage(1)
+            app.logger('There are no images in our database')
+        else:
+            self.image_current = GLImage(1)
 
         self.game_mode = -1
         self.image_level = 0
@@ -53,7 +53,7 @@ class GLUser:
         new_image = False
 
         num_images = db.session.query(Image).count()
-        if  num_images <= 0:
+        if num_images <= 0:
             raise Exception('No images in DB')
 
         while (not new_image) and iterations < num_images:
@@ -83,7 +83,8 @@ class GLUser:
         data: dict = {'images': url_for('static', filename='images/' + image.filename),
                       'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
                       'accepted': self.image_current.getForbiddenTags(),
-                      'score': self.score}
+                      'score': self.getScore,
+                      'user': self.user.id}
         return data
 
     def tagImage(self, tag: str, image=None) -> (int, str):  # Todo: return: (0, "tag") (-1, "error")
@@ -106,10 +107,7 @@ class GLUser:
         if image is None:
             image = self.image_current
 
-        try:
-            points, tag = image.addTag(tag, self.image_level)
-        except Exception as e:
-            return -1, e.args[0]
+        points, tag = image.addTag(tag, self.image_level)
 
         self.tags_for_image_current.append(tag)
         self.user.score = self.user.score + points
