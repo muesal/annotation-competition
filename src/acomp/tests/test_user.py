@@ -65,7 +65,7 @@ class TestUser(TestCase):
         image_fn = self.user.startClassic()
         image = Image.query.filter_by(filename=image_fn).one_or_none()
         skips = image.skips
-        score = self.user.skip()
+        self.user.skip()
         self.assertEqual(image.skips, skips + 1)
 
     def test_end(self):

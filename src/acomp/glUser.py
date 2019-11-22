@@ -1,6 +1,6 @@
 from secrets import randbelow
-
-from acomp import db
+from flask import url_for
+from acomp import app, db
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glImage import GLImage
 
@@ -24,7 +24,12 @@ class GLUser:
         if self.user is None:
             raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
 
+        # TODO: nicer way
+        if db.session.query(Image).count() <= 0:
+            print('There are no images in our database')
+            return
         self.image_current = GLImage(1)
+
         self.game_mode = -1
         self.image_level = 0
         self.tags_for_image_current = []
@@ -34,7 +39,7 @@ class GLUser:
         """ :return score of the user """
         return self.user.score
 
-    def startClassic(self) -> Image.filename:
+    def startClassic(self) -> dict:
         """ Start a game in classic mode. Select an image the user has not seen before
 
             :return the image
@@ -46,7 +51,11 @@ class GLUser:
         iterations = 0
         image_id = None
         new_image = False
+
         num_images = db.session.query(Image).count()
+        if  num_images <= 0:
+            raise Exception('No images in DB')
+
         while (not new_image) and iterations < num_images:
             image_id = randbelow(num_images) + 1
             try:
@@ -64,13 +73,18 @@ class GLUser:
         # if an image which the user has not seen before couldn't be found, choose a random one
         if image_id is None:
             image_id = randbelow(num_images) + 1
-            image = Image.query.get(image_id)
 
         # create a class for this image
+        image = Image.query.get(image_id)
         self.image_current = GLImage(image_id)
         self.image_current.levelUp()
         self.image_level = self.image_current.getLevel()
-        return Image.query.get(image_id).filename
+
+        data: dict = {'images': url_for('static', filename='images/' + image.filename),
+                      'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
+                      'accepted': self.image_current.getForbiddenTags(),
+                      'score': self.score}
+        return data
 
     def tagImage(self, tag: str, image=None) -> (int, str):  # Todo: return: (0, "tag") (-1, "error")
         """ Tag the image with the given Tag, add the reached points to the score
@@ -81,9 +95,11 @@ class GLUser:
 
             :returns (validation, message)
         """
+        if self.image_current is None:
+            raise Exception('No image in DB')
         # if user is playing captcha or has already provided this tag in this round do nothing
         if self.game_mode != 0:
-            return -1, "Wrong game mode"
+            raise Exception('Wrong game mode')
         if tag in self.tags_for_image_current:
             return -1, "You already provided this tag for this image"
 
@@ -100,14 +116,20 @@ class GLUser:
         db.session.commit()
         return 0, tag
 
-    def startCaptcha(self) -> ([Image.filename], [str]):
+    def startCaptcha(self) -> dict:
         """ Start a game in Captcha mode, select one main and n other images, to validate the tags of the main.
             The main is at a random position of the image list.
 
             :return the images, and the tags to validate
         """
         self.game_mode = 1
-        return ([None], [None])
+        data: dict
+        {}
+        '''data: dict = {'images': url_for('static', filename='images/' + image.filename),
+                      'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
+                      'tags': self.image_current.getCaptchaTags(),
+                      'score': self.score}'''
+        return data
 
     def capCaptcha(self, cap: int) -> bool:
         """ Validate, whether the user chose the main image, and validate the tags. User gets 10 points, if correct cap.
@@ -138,6 +160,8 @@ class GLUser:
 
             :return score of user
         """
-        self.image_current.image.skips = self.image_current.image.skips + 1
-        db.session.commit()
+        if self.game_mode != -1 and self.image_current.image is not None:
+            # else there is no image in database, or user is not playing
+            self.image_current.image.skips = self.image_current.image.skips + 1
+            db.session.commit()
         return self.end()

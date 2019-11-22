@@ -146,3 +146,6 @@ class GLImage:
         for tag in self.tags:
             print(tag.name, end=" ")
         print()
+
+    def getForbiddenTags(self) -> [str]:
+        return self.forbiddenTags
