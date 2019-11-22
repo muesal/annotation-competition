@@ -1,4 +1,4 @@
-from acomp import db
+from acomp import app, db
 from acomp.models import Image, Tag, User, ImageTag, user_image
 
 
@@ -36,8 +36,8 @@ class GLTag:
                 image = Image.query.get(self.imageID)
             except Exception as e:
                 db.session.rollback()
-                print('The image could not be found! Error: ')
-                print(e, end='\n\n')
+                app.logger('The image could not be found! Error: ')
+                app.logger(e, end='\n\n')
                 return
         self.image = image
 
