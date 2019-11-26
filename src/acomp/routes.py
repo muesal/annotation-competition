@@ -1,4 +1,4 @@
-from flask import render_template, request, session, url_for
+from flask import make_response, render_template, request, session, url_for
 from acomp import app, db, sessions
 from acomp.glUser import GLUser
 from acomp.glImage import GLImage
@@ -59,7 +59,7 @@ def classic_data_post():
             # TODO: individual userid
             usr = GLUser(1)
             try:
-                res = usr.tagImage(data['Content'])
+                res = usr.tagImage(data['Tag'])
             except Exception as e:
                 return bad_request(e)
             else:

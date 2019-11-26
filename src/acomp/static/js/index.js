@@ -20,8 +20,7 @@ function writeToMentionedTags(tag) {
     console.log(mentionedTags);
 }
 
-function updateScore(delta) {
-    score += delta;
+function updateScore(score) {
     document.getElementById("score").value = score.toString();
 }
 
@@ -120,7 +119,7 @@ async function getImage() {
             console.log(jsonResponse);
             setTimer(jsonResponse.timelimit);
             setImg(jsonResponse.images);
-            addPoints(jsonResponse.points);
+            updateScore(jsonResponse.points);
             console.log("==========");
             // do something with jsonResponse
         });
@@ -178,11 +177,6 @@ function hasAlreadyBeenMentioned(tag) {
 
 function reset() {
     resetTimer();
-}
-
-function addPoints(delta) {
-    console.log("Received " + delta + " points");
-    score += delta;
 }
 
 tagForm.addEventListener("reset", resetTotal);
