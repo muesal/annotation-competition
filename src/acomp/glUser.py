@@ -73,6 +73,7 @@ class GLUser:
                 db.session.commit()
                 new_image = True
             except Exception as e:
+                app.logger.debug(e)
                 db.session.rollback()
                 new_image = False
                 image_id = None
@@ -88,11 +89,13 @@ class GLUser:
         self.clas_current_image.levelUp()
         self.clas_image_level = self.clas_current_image.getLevel()
 
-        data: dict = {'images': url_for('static', filename='images/' + image.filename),
-                      'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
-                      'accepted': self.clas_current_image.getForbiddenTags(),
-                      'score': self.getScore,
-                      'user': self.user.id}
+        data: dict = {
+            'images': url_for('static', filename='images/' + image.filename),
+            'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
+            'accepted': self.clas_current_image.getForbiddenTags(),
+            'score': self.getScore,
+            'user': self.user.id
+        }
         return data
 
     def tagImage(self, tag: str, image=None) -> (int, str):
