@@ -16,7 +16,7 @@ class GLTag:
     def __init__(self, name: str, image_id: int, image=None):
         # add e new tag to the database, if this word never occurred before, or get this tag from the db
 
-        if not 0 < image_id < db.session.query(Image).count():
+        if not 0 < image_id <= db.session.query(Image).count():
             raise Exception('Image ID out of bound')
         self.imageID = image_id
 
