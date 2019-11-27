@@ -19,11 +19,6 @@ function writeToMentionedTags(tag) {
     console.log(mentionedTags);
 }
 
-function updateScore(score) {
-    document.getElementById("score").value = score.toString();
-}
-
-
 function handleOutbound(out) { //TODO
     myJson = JSON.stringify(out);
     console.log(myJson);
@@ -49,15 +44,10 @@ function updateTimer() {
     if (deadline <= 0) {
         clearInterval(timer);
         alert('time is gone, starting new one...');
+        document.getElementById('searchTxt').disabled = true;
         document.location.reload();
         //resetTotal();
     }
-}
-
-function writeTagToJson(tag) {
-    var obj = {type: "Tag", content: tag};
-    var myJson = JSON.stringify(obj);
-    console.log(myJson);
 }
 
 function isInputPermissible(input) {
@@ -84,18 +74,20 @@ function isEmpty(input) {
     return input === "";
 }
 
-function getImageID() {
-
+function hasAlreadyBeenMentioned(tag) {
+    console.log(mentionedTags.includes(tag));
+    return mentionedTags.includes(tag);
 }
 
 function resetTimer() {
     deadline = classicTimeLimit;
+    document.getElementById("timer").innerHTML = deadline + " s";
 }
 
 function resetTotal(event) {
     resetTags();
     resetTimer();
-    getImage();
+    getClassicData();
 }
 
 function resetTags() {
@@ -107,7 +99,7 @@ function resetTags() {
     }
 }
 
-async function getImage() {
+async function getClassicData() {
     var currentUrl = document.baseURI;
     console.log("Current URL: " + currentUrl);
     var requestUrl = currentUrl + "classic/data";
@@ -119,7 +111,7 @@ async function getImage() {
             console.log(jsonResponse);
             setTimer(jsonResponse.timelimit);
             setImg(jsonResponse.images);
-            updateScore(jsonResponse.points);
+            setScore(jsonResponse.points);
             console.log("==========");
         });
 }
@@ -129,10 +121,7 @@ async function sendTag(submittedTag) {
     var currentUrl = window.location.href;
     var requestUrl = currentUrl + "classic/data";
 
-    var tagObject = {
-        Tag: submittedTag,
-    };
-    payload = JSON.stringify(tagObject);
+    payload = writeTagToJson(submittedTag);
     var data = new FormData();
     data.append("request", payload);
 
@@ -153,29 +142,24 @@ async function sendTag(submittedTag) {
     console.log("Sent: " + payload);
 }
 
+function writeTagToJson(mytag) {
+    var obj = {tag: mytag};
+    var myJson = JSON.stringify(obj);
+    console.log(myJson);
+    return myJson;
+}
+
 function setImg(newImg) {
     console.log("Changing image to " + newImg);
     document.getElementById("tagImage").src = newImg;
 }
 
+function setScore(score) {
+    document.getElementById("score").value = score.toString();
+}
+
 function setTimer(newTime) {
     deadline = newTime;
-}
-
-
-function getTimelimit() {
-}
-
-function getScore() {
-}
-
-function hasAlreadyBeenMentioned(tag) {
-    console.log(mentionedTags.includes(tag));
-    return mentionedTags.includes(tag);
-}
-
-function reset() {
-    resetTimer();
 }
 
 tagForm.addEventListener("reset", resetTotal);

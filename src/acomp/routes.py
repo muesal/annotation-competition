@@ -53,13 +53,13 @@ def classic_data_post():
         data = request.get_json()
         if data is None:
             return bad_request('Invalid JSON.')
-        if 'Tag' not in data:
+        if 'tag' not in data:
             return bad_request('Missing key in JSON.')
         else:
             # TODO: individual userid
             usr = GLUser(1)
             try:
-                res = usr.tagImage(data['Tag'])
+                res = usr.tagImage(data['tag'])
             except Exception as e:
                 return bad_request(e)
             else:
