@@ -2,17 +2,15 @@
 
 {% block main %}
   <main class="mdl-layout__content">
-    <div class="page-content"><!-- Your content goes here --></div>
-
-    <p id="timer"></p>
-
-    <div id="imageWrapper">
+    <div class="page-content" id="imageWrapper">
       <div id="taggingImage">
         <img class="myImg" id="tagImage" src={{ source }}>
       </div>
 
-      <p id="demo"></p>
-      <div id=column>
+      <div id="column">
+        <label for="timer">Timer: </label>
+        <output id="timer">0</output>
+        <br>
         <label for="score">Score: </label>
         <output id="score">0</output>
 
