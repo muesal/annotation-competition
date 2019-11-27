@@ -5,8 +5,7 @@ var score = 0;
 var deadline = 60;
 const classicTimeLimit = 20;
 resetTimer();
-setInterval(displayTimer, 1000);
-setInterval(updateTimer, 1000);
+var timer = setInterval(updateTimer, 1000);
 var mentionedTags = [];
 var tagForm = document.getElementById("tagForm");
 
@@ -44,14 +43,14 @@ function handleInput(event) {
     document.getElementById("searchTxt").value = "";
 }
 
-function displayTimer() {
-    console.log("display timer called");
-    var remaining = deadline;
-    document.getElementById("timer").innerHTML = remaining + " s";
-}
-
 function updateTimer() {
     deadline--;
+    document.getElementById("timer").innerHTML = deadline + " s";
+    if (deadline <= 0) {
+        clearInterval(timer);
+        alert('time is gone, starting new one...');
+        document.location.reload();
+    }
 }
 
 function writeTagToJson(tag) {
