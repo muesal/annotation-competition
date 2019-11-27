@@ -39,7 +39,7 @@ class GLUser:
         session['clas_image_level'] = 0
         self.clas_current_tags = []
 
-        self.cap_captcha = None
+        session['cap_captcha'] = None
         self.cap_images = []
 
     def getScore(self) -> int:
@@ -149,17 +149,17 @@ class GLUser:
             image_id = randbelow(num_images) + 1
             self.cap_images.append(Image.query.get(image_id))
 
-        self.cap_captcha = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
+        session['cap_captcha'] = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
 
         i = 0
-        image = self.cap_images[self.cap_captcha]
+        image = self.cap_images[session['cap_captcha']]
         image_tags = ImageTag.query.filter_by(image_id=image.id).all()
         num_image_tags = db.session.query(image_tags).count()
 
         while num_image_tags < 3 and i < num_images:
             image_id = randbelow(num_images) + 1
-            self.cap_images.append[self.cap_captcha] = Image.query.get(image_id)
-            image = self.cap_images[self.cap_captcha]
+            self.cap_images.append[session['cap_captcha']] = Image.query.get(image_id)
+            image = self.cap_images[session['cap_captcha']]
             image_tags = ImageTag.query.filter_by(image_id=image.id).all()
             num_image_tags = db.session.query(image_tags).count()
 
@@ -185,7 +185,7 @@ class GLUser:
             return -1, "{}".format(self.user.score)
         if session['game_mode'] != 0:
             raise Exception('Wrong game mode')
-        if cap != self.cap_captcha:
+        if cap != session['cap_captcha']:
             return 0, 'image {} is not the fitting image'.format(cap)
 
         # Todo: validate the tags (also if not recognized correctly?)
@@ -202,7 +202,7 @@ class GLUser:
         self.clas_current_image = None
         session['clas_image_level'] = 0
         self.clas_current_tags = []
-        self.cap_captcha = None
+        session['cap_captcha'] = None
         self.cap_images = []
         session['timestamp'] = time.time()
         return self.user.score
