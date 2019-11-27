@@ -20,8 +20,7 @@ function writeToMentionedTags(tag) {
     console.log(mentionedTags);
 }
 
-function updateScore(delta) {
-    score += delta;
+function updateScore(score) {
     document.getElementById("score").value = score.toString();
 }
 
@@ -97,7 +96,6 @@ function resetTotal(event) {
     resetTags();
     resetTimer();
     getImage();
-
 }
 
 function resetTags() {
@@ -121,15 +119,11 @@ async function getImage() {
             console.log(jsonResponse);
             setTimer(jsonResponse.timelimit);
             setImg(jsonResponse.images);
-            addPoints(jsonResponse.points);
-
-
+            updateScore(jsonResponse.points);
             console.log("==========");
-
             // do something with jsonResponse
         });
 }
-
 
 async function sendTag(submittedTag) {
     console.log("Sending tag");
@@ -137,8 +131,7 @@ async function sendTag(submittedTag) {
     var requestUrl = currentUrl + "classic/data";
 
     var tagObject = {
-        Type: "Tag",
-        Content: submittedTag,
+        Tag: submittedTag,
     };
     payload = JSON.stringify(tagObject);
     var data = new FormData();
@@ -147,37 +140,27 @@ async function sendTag(submittedTag) {
     fetch(requestUrl,
         {
             method: "POST",
-            'Content-Type': 'application/json',
-    body: payload,
-    headers: {
-        'Content-Type'
-    :
-        'application/json'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-    }
-,
-})
-.
-    then(function (res) {
-        return res.json();
-    })
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: payload,
+        })
+        .then(function (res) {
+            return res.json();
+        })
         .then(function (data) {
-            alert(JSON.stringify(data))
+            console.log(JSON.stringify(data))
         })
     console.log("Sent: " + payload);
-
 }
-
 
 function setImg(newImg) {
     console.log("Changing image to " + newImg);
     document.getElementById("tagImage").src = newImg;
-
 }
 
 function setTimer(newTime) {
     deadline = newTime;
-
 }
 
 
@@ -194,11 +177,6 @@ function hasAlreadyBeenMentioned(tag) {
 
 function reset() {
     resetTimer();
-}
-
-function addPoints(delta) {
-    console.log("Received " + delta + " points");
-    score += delta;
 }
 
 tagForm.addEventListener("reset", resetTotal);

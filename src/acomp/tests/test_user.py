@@ -22,9 +22,9 @@ class TestUser(TestCase):
         self.image = GLImage(self.image_id)
 
     def test_startClassic(self):
-        image_id = self.user.startClassic()
-        self.assertIsNotNone(image_id)
-        GLImage(image_id)
+        image_fn = self.user.startClassic()
+        self.assertIsNotNone(image_fn)
+        Image.query.filter_by(filename=image_fn)
 
     def test_tagImage(self):
         val, mes = self.user.tagImage('first', self.image)
@@ -62,10 +62,10 @@ class TestUser(TestCase):
         self.assertEqual(mes, 'This word(s) could not be found in our dictionary.')
 
     def test_skip(self):
-        image_id = self.user.startClassic()
-        image = Image.query.filter_by(id=image_id).one_or_none()
+        image_fn = self.user.startClassic()
+        image = Image.query.filter_by(filename=image_fn).one_or_none()
         skips = image.skips
-        score = self.user.skip()
+        self.user.skip()
         self.assertEqual(image.skips, skips + 1)
 
     def test_end(self):

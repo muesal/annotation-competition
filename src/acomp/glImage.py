@@ -1,7 +1,6 @@
 from spellchecker.spellchecker import SpellChecker
 from secrets import randbelow
 
-from acomp import db
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glTag import GLTag
 
@@ -141,8 +140,5 @@ class GLImage:
         self.tags.append(GLTag(name, self.id, self.image))
         return self.tags[-1]
 
-    def printTags(self):
-        """ Print the word of each Tag in the list """
-        for tag in self.tags:
-            print(tag.name, end=" ")
-        print()
+    def getForbiddenTags(self) -> [str]:
+        return self.forbiddenTags
