@@ -1,6 +1,6 @@
 from secrets import randbelow
-from flask import url_for
-from acomp import app, db
+from flask import url_for, session
+from acomp import app, db, sessions
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glImage import GLImage
 import time
@@ -32,11 +32,11 @@ class GLUser:
             app.logger('There are no images in our database')
 
 
-        self.game_mode = -1
-        self.timestamp = time.time()
+        session['game_mode'] = -1
+        session['timestamp'] = time.time()
 
         self.clas_current_image = None
-        self.clas_image_level = 0
+        session['clas_image_level'] = 0
         self.clas_current_tags = []
 
         self.cap_captcha = None
@@ -51,9 +51,9 @@ class GLUser:
 
             :return the image
         """
-        self.game_mode = 0
+        session['game_mode'] = 0
         self.clas_current_tags = []
-        self.timestamp = time.time()
+        session['timestamp'] = time.time()
 
         # get the new image
         iterations = 0
@@ -87,7 +87,7 @@ class GLUser:
         image = Image.query.get(image_id)
         self.clas_current_image = GLImage(image_id)
         self.clas_current_image.levelUp()
-        self.clas_image_level = self.clas_current_image.getLevel()
+        session['clas_image_level'] = self.clas_current_image.getLevel()
 
         data: dict = {
             'images': url_for('static', filename='images/' + image.filename),
@@ -111,19 +111,19 @@ class GLUser:
         if self.clas_current_image is None:
             raise Exception('No image in DB')
         # if user is playing captcha or has already provided this tag in this round do nothing
-        if self.game_mode != 0:
+        if session['game_mode'] != 0:
             raise Exception('Wrong game mode')
         if tag in self.clas_current_tags:
             return -1, "You already provided this tag for this image"
         # if the time is up end this game
-        if abs(time.time() - self.timestamp) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
+        if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
             return -2, "{}".format(self.user.score)
 
         if image is None:
             image = self.clas_current_image
 
-        points, tag = image.addTag(tag, self.clas_image_level)
+        points, tag = image.addTag(tag, session['clas_image_level'])
 
         self.clas_current_tags.append(tag)
         self.user.score = self.user.score + points
@@ -136,8 +136,8 @@ class GLUser:
 
             :return the images, and the tags to validate
         """
-        self.game_mode = 1
-        self.timestamp = time.time()
+        session['game_mode'] = 1
+        session['timestamp'] = time.time()
 
         num_images = db.session.query(Image).count()
         if num_images <= 0:
@@ -180,10 +180,10 @@ class GLUser:
             :return true, if it is the main image, false if not
         """
         # if user is playing classic or this is not the correct cap_captcha return False
-        if abs(time.time() - self.timestamp) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
+        if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
             return -1, "{}".format(self.user.score)
-        if self.game_mode != 0:
+        if session['game_mode'] != 0:
             raise Exception('Wrong game mode')
         if cap != self.cap_captcha:
             return 0, 'image {} is not the fitting image'.format(cap)
@@ -198,13 +198,13 @@ class GLUser:
 
             :return current score of the user
         """
-        self.game_mode = -1
+        session['game_mode'] = -1
         self.clas_current_image = None
-        self.clas_image_level = 0
+        session['clas_image_level'] = 0
         self.clas_current_tags = []
         self.cap_captcha = None
         self.cap_images = []
-        self.timestamp = time.time()
+        session['timestamp'] = time.time()
         return self.user.score
 
     def skip(self) -> int:
@@ -212,7 +212,7 @@ class GLUser:
 
             :return score of user
         """
-        if self.game_mode != -1 and self.clas_current_image.image is not None:
+        if session['game_mode'] != -1 and self.clas_current_image.image is not None:
             # else there is no image in database, or user is not playing
             self.clas_current_image.image.skips = self.clas_current_image.image.skips + 1
             db.session.commit()
