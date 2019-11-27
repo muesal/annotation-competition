@@ -28,7 +28,7 @@ def classic():
     # TODO: individual userid
     usr = GLUser(1)
     img = usr.startClassic()
-    return render_template('index.html', source=img['images'], width=800, height=600)
+    return render_template('index.html', source=img['images'])
 
 
 @app.route('/classic/data', methods=['GET'])
