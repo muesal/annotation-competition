@@ -50,6 +50,7 @@ function updateTimer() {
         clearInterval(timer);
         alert('time is gone, starting new one...');
         document.location.reload();
+        //resetTotal();
     }
 }
 
@@ -107,7 +108,7 @@ function resetTags() {
 }
 
 async function getImage() {
-    var currentUrl = window.location.href;
+    var currentUrl = document.baseURI;
     console.log("Current URL: " + currentUrl);
     var requestUrl = currentUrl + "classic/data";
     console.log(requestUrl);
@@ -120,7 +121,6 @@ async function getImage() {
             setImg(jsonResponse.images);
             updateScore(jsonResponse.points);
             console.log("==========");
-            // do something with jsonResponse
         });
 }
 
