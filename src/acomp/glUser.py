@@ -30,13 +30,17 @@ class GLUser:
         if db.session.query(Image).count() <= 0:
             app.logger('There are no images in our database')
 
-        session['game_mode'] = -1
-        session['current_image_id'] = 0
-        session['timestamp'] = time.time()
-
-        session['clas_image_level'] = 0
+        if 'game_mode' not in session:
+            session['game_mode'] = -1
+        if 'current_image_id' not in session:
+            session['current_image_id'] = 0
+        if 'timestamp' not in session:
+            session['timestamp'] = time.time()
+        if 'clas_image_level' not in session:
+            session['clas_image_level'] = 0
         self.clas_current_tags = []   # TODO
-        session['cap_captcha'] = 0
+        if 'cap_captcha' not in session:
+            session['cap_captcha'] = 0
 
     def getScore(self) -> int:
         """ :return score of the user """
