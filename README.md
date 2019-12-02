@@ -10,8 +10,9 @@ This appliation is powered by [Flask](https://flask.palletsprojects.com) and
 ## Setup
 
 First you have to create a file `src/acomp/config.py` that conatins 
-a `SECRET_KEY` and a `SQLALCHEMY_DATABASE_URI` 
-(e.g. `SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/acomp.sqlite3'`).
+a `SECRET_KEY`, a `SQLALCHEMY_DATABASE_URI` 
+(e.g. `SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/acomp.sqlite3'`) and 
+a `SESSION_TYPE` (e.g. `SESSION_TYPE = 'filesystem'`).
 
 ### Getting started
 
