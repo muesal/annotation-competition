@@ -25,6 +25,12 @@ def classic():
     else:
         # TODO: individual userid
         session['userid'] = 'guest'
+        # TODO: create new user
+        # Test usr
+        new_usr = User('guest', 'myverysecret')
+        db.session.add(new_usr)
+        db.session.commit()
+        app.logger.debug("New user 2")
     # TODO: individual userid
     usr = GLUser(1)
     img = usr.startClassic()
@@ -37,7 +43,7 @@ def classic_data_get():
         # TODO: individual userid
         usr = GLUser(1)
         try:
-            res = app.make_response(usr.startClassic())
+            res = make_response(usr.startClassic())
         except Exception as e:
             return bad_request(e)
         else:
@@ -59,12 +65,14 @@ def classic_data_post():
             # TODO: individual userid
             usr = GLUser(1)
             try:
-                res = usr.tagImage(data['tag'])
+                tag = usr.tagImage(data['tag'])
             except Exception as e:
                 return bad_request(e)
             else:
+                data = '{"OK":"200", "message":"' + tag[1] + '"}'
+                res = make_response(data)
                 res.headers.set('Content-Type', 'application/json')
-                return '{"OK":"200", "message":"' + res[1] + '"}'
+                return res
     else:
         return forbidden('Not authorized.')
 

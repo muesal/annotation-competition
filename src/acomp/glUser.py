@@ -1,6 +1,6 @@
 from secrets import randbelow
-from flask import url_for
-from acomp import app, db
+from flask import url_for, session
+from acomp import app, db, sessions
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glImage import GLImage
 import time
@@ -14,11 +14,10 @@ class GLUser:
         user (User): User instance of the user
         game_mode (int): 0 if user is playing Classic, 1 if Reverse Captcha, -1 if he is not playing
         timestamp (int): seconds for last start/end of a game
-        clas_image_current (GLImage): Image this user is currently playing with
+        current_image_id (int): ID of the image this user is currently playing with
         clas_image_level (int): level of this image when user started playing
         clas_current_tags ([str]): tags he has provided during this round for this image
         cap_captcha (int): if the user is in captcha mode, the position of the main image in the list of images
-        cap_images (Image): images for captcha mode
     """
 
     def __init__(self, id: int):
@@ -31,16 +30,17 @@ class GLUser:
         if db.session.query(Image).count() <= 0:
             app.logger('There are no images in our database')
 
-
-        self.game_mode = -1
-        self.timestamp = time.time()
-
-        self.clas_current_image = None
-        self.clas_image_level = 0
-        self.clas_current_tags = []
-
-        self.cap_captcha = None
-        self.cap_images = []
+        if 'game_mode' not in session:
+            session['game_mode'] = -1
+        if 'current_image_id' not in session:
+            session['current_image_id'] = 0
+        if 'timestamp' not in session:
+            session['timestamp'] = time.time()
+        if 'clas_image_level' not in session:
+            session['clas_image_level'] = 0
+        self.clas_current_tags = []   # TODO
+        if 'cap_captcha' not in session:
+            session['cap_captcha'] = 0
 
     def getScore(self) -> int:
         """ :return score of the user """
@@ -51,9 +51,9 @@ class GLUser:
 
             :return the image
         """
-        self.game_mode = 0
-        self.clas_current_tags = []
-        self.timestamp = time.time()
+        session['game_mode'] = 0
+        self.clas_current_tags = []  # TODO
+        session['timestamp'] = time.time()
 
         # get the new image
         iterations = 0
@@ -85,14 +85,15 @@ class GLUser:
 
         # create a class for this image
         image = Image.query.get(image_id)
-        self.clas_current_image = GLImage(image_id)
-        self.clas_current_image.levelUp()
-        self.clas_image_level = self.clas_current_image.getLevel()
+        gl_image = GLImage(image_id)
+        gl_image.levelUp()
+        session['current_image_id'] = image_id
+        session['clas_image_level'] = gl_image.getLevel()
 
         data: dict = {
             'images': url_for('static', filename='images/' + image.filename),
             'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
-            'accepted': self.clas_current_image.getForbiddenTags(),
+            'accepted': gl_image.getForbiddenTags(),
             'score': self.getScore,
             'user': self.user.id
         }
@@ -108,22 +109,22 @@ class GLUser:
 
             :returns (validation, message)
         """
-        if self.clas_current_image is None:
+        if session['current_image_id'] == 0:
             raise Exception('No image in DB')
         # if user is playing captcha or has already provided this tag in this round do nothing
-        if self.game_mode != 0:
+        if session['game_mode'] != 0:
             raise Exception('Wrong game mode')
-        if tag in self.clas_current_tags:
+        if tag in self.clas_current_tags:  # TODO
             return -1, "You already provided this tag for this image"
         # if the time is up end this game
-        if abs(time.time() - self.timestamp) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
+        if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
             return -2, "{}".format(self.user.score)
 
         if image is None:
-            image = self.clas_current_image
+            image = GLImage(session['current_image_id'])
 
-        points, tag = image.addTag(tag, self.clas_image_level)
+        points, tag = image.addTag(tag, session['clas_image_level'])
 
         self.clas_current_tags.append(tag)
         self.user.score = self.user.score + points
@@ -136,33 +137,38 @@ class GLUser:
 
             :return the images, and the tags to validate
         """
-        self.game_mode = 1
-        self.timestamp = time.time()
+        session['game_mode'] = 1
+        session['timestamp'] = time.time()
 
         num_images = db.session.query(Image).count()
         if num_images <= 0:
             raise Exception('No images in DB')
 
-        self.cap_images = []
-
+        # get n random images
+        images = []
         for i in range(app.config['ACOMP_CAPTCHA_NUM_IMAGES']):
             image_id = randbelow(num_images) + 1
-            self.cap_images.append(Image.query.get(image_id))
+            images.append(Image.query.get(image_id))
 
-        self.cap_captcha = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
+        # cap is a random one of these images
+        session['cap_captcha'] = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
 
         i = 0
-        image = self.cap_images[self.cap_captcha]
+        # count how many tags this image is connected with
+        image = images[session['cap_captcha']]
         image_tags = ImageTag.query.filter_by(image_id=image.id).all()
         num_image_tags = db.session.query(image_tags).count()
 
+        # get an image for cap, which has more than three tags, if possible
         while num_image_tags < 3 and i < num_images:
-            image_id = randbelow(num_images) + 1
-            self.cap_images.append[self.cap_captcha] = Image.query.get(image_id)
-            image = self.cap_images[self.cap_captcha]
+            image_id = randbelow(num_images) + 1  # get a random image_id
+            images[session['cap_captcha']] = Image.query.get(image_id)  # put the Image into the list
+            # count how many tags the image is connected with
+            image = images[session['cap_captcha']]
             image_tags = ImageTag.query.filter_by(image_id=image.id).all()
             num_image_tags = db.session.query(image_tags).count()
 
+        session['current_image_id'] = images[session['cap_captcha']].id
         data: dict = {}
         '''data: dict = {'images': url_for('static', filename='images/' + image.filename),
                       'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
@@ -180,12 +186,12 @@ class GLUser:
             :return true, if it is the main image, false if not
         """
         # if user is playing classic or this is not the correct cap_captcha return False
-        if abs(time.time() - self.timestamp) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
+        if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
-            return -1, "{}".format(self.user.score)
-        if self.game_mode != 0:
+            return -2, "{}".format(self.user.score)
+        if session['game_mode'] != 1:
             raise Exception('Wrong game mode')
-        if cap != self.cap_captcha:
+        if cap != session['cap_captcha']:
             return 0, 'image {} is not the fitting image'.format(cap)
 
         # Todo: validate the tags (also if not recognized correctly?)
@@ -198,13 +204,12 @@ class GLUser:
 
             :return current score of the user
         """
-        self.game_mode = -1
-        self.clas_current_image = None
-        self.clas_image_level = 0
-        self.clas_current_tags = []
-        self.cap_captcha = None
-        self.cap_images = []
-        self.timestamp = time.time()
+        session['game_mode'] = -1
+        session['current_image_id'] = 0
+        session['clas_image_level'] = 0
+        self.clas_current_tags = []  # TODO
+        session['cap_captcha'] = 0
+        session['timestamp'] = time.time()
         return self.user.score
 
     def skip(self) -> int:
@@ -212,8 +217,9 @@ class GLUser:
 
             :return score of user
         """
-        if self.game_mode != -1 and self.clas_current_image.image is not None:
+        if session['game_mode'] != -1 and session['current_image_id'] != 0:
             # else there is no image in database, or user is not playing
-            self.clas_current_image.image.skips = self.clas_current_image.image.skips + 1
+            image = Image.query.get(session['current_image_id'])
+            image.skips = image.skips + 1
             db.session.commit()
         return self.end()
