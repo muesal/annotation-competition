@@ -148,4 +148,5 @@ class GLImage:
         return []
 
     def validateTagCaptcha(self, tag: str):
+        # TODO: rename glImage.validate function, do this (glTag object?)
         pass
