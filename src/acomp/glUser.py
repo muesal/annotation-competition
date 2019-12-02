@@ -146,9 +146,11 @@ class GLUser:
 
         # get n random images
         images = []
+        filenames = []
         for i in range(app.config['ACOMP_CAPTCHA_NUM_IMAGES']):
             image_id = randbelow(num_images) + 1
             images.append(Image.query.get(image_id))
+            filenames.append(url_for('static', filename='images/' + images[i].filename))
 
         # cap is a random one of these images
         session['cap_captcha'] = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
@@ -161,19 +163,22 @@ class GLUser:
 
         # get an image for cap, which has more than three tags, if possible
         while num_image_tags < 3 and i < num_images:
-            image_id = randbelow(num_images) + 1  # get a random image_id
-            images[session['cap_captcha']] = Image.query.get(image_id)  # put the Image into the list
+            # get a random image_id
+            image_id = randbelow(num_images) + 1
+            image = Image.query.get(image_id)
             # count how many tags the image is connected with
-            image = images[session['cap_captcha']]
-            image_tags = ImageTag.query.filter_by(image_id=image.id).all()
+            image_tags = ImageTag.query.filter_by(image_id=image_id).all()
             num_image_tags = db.session.query(image_tags).count()
 
-        session['current_image_id'] = images[session['cap_captcha']].id
-        data: dict = {}
-        '''data: dict = {'images': url_for('static', filename='images/' + image.filename),
+        session['current_image_id'] = image.id
+        images[session['cap_captcha']] = image
+        filenames[session['cap_captcha']] = url_for('static', filename='images/' + image.filename)
+        gl_image = GLImage(image.id)
+
+        data: dict = {'images': filenames,
                       'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
-                      'tags': self.image_current.getCaptchaTags(),
-                      'score': self.score}'''
+                      'tags': gl_image.getCaptchaTags(),
+                      'score': self.getScore()}
         return data
 
     def capCaptcha(self, cap: int) -> (int, str):

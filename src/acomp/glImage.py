@@ -142,3 +142,10 @@ class GLImage:
 
     def getForbiddenTags(self) -> [str]:
         return self.forbiddenTags
+
+    def getCaptchaTags(self) -> [str]:
+        # TODO: get three (?) random tags of this image
+        return []
+
+    def validateTagCaptcha(self, tag: str):
+        pass
