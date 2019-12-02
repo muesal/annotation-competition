@@ -94,7 +94,7 @@ class GLUser:
             'images': url_for('static', filename='images/' + image.filename),
             'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
             'accepted': gl_image.getForbiddenTags(),
-            'score': self.getScore,
+            'score': self.getScore(),
             'user': self.user.id
         }
         return data

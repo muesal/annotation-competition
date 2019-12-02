@@ -111,7 +111,7 @@ async function getClassicData() {
             console.log(jsonResponse);
             setTimer(jsonResponse.timelimit);
             setImg(jsonResponse.images);
-            setScore(jsonResponse.points);
+            setScore(jsonResponse.score);
             console.log("==========");
         });
 }

@@ -3,6 +3,7 @@ from acomp import app, db, sessions
 from acomp.glUser import GLUser
 from acomp.glImage import GLImage
 from acomp.models import User, Image
+import json
 
 
 @app.route('/')
@@ -43,7 +44,9 @@ def classic_data_get():
         # TODO: individual userid
         usr = GLUser(1)
         try:
-            res = make_response(usr.startClassic())
+            dict = usr.startClassic()
+            app.logger.debug(dict)
+            res = make_response(json.dumps(dict))
         except Exception as e:
             return bad_request(e)
         else:
