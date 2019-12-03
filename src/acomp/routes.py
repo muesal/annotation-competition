@@ -96,6 +96,22 @@ def login_post():
         return '{"OK":"200", "message":""}'
 
 
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+
+
+@app.route('/signup/data', methods=['POST'])
+def signup_post():
+    data = request.get_json()
+    if data is None:
+        return bad_request('Invalid JSON.')
+    if 'name' not in data:
+        return bad_request('Missing key in JSON.')
+    else:
+        return '{"OK":"200", "message":""}'
+
+
 @app.errorhandler(400)
 def bad_request(e):
     return render_template('4xx.html', error_msg=e), 400
