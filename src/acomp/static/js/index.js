@@ -24,7 +24,7 @@ function writeToMentionedTags(tag) {
 }
 
 function handleOutbound(out) { //TODO
-    myJson = JSON.stringify(out);
+    const myJson = JSON.stringify(out);
     console.log(myJson);
 }
 
