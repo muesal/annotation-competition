@@ -80,6 +80,22 @@ def classic_data_post():
         return forbidden('Not authorized.')
 
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+@app.route('/login/data', methods=['POST'])
+def login_post():
+    data = request.get_json()
+    if data is None:
+        return bad_request('Invalid JSON.')
+    if 'name' not in data:
+        return bad_request('Missing key in JSON.')
+    else:
+        return '{"OK":"200", "message":""}'
+
+
 @app.errorhandler(400)
 def bad_request(e):
     return render_template('4xx.html', error_msg=e), 400
