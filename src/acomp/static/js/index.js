@@ -6,6 +6,9 @@ var deadline = 60;
 var timer = setInterval(updateTimer, 1000);
 var mentionedTags = [];
 const tagForm = document.getElementById("tagForm");
+// TODO: use absolute immutable url
+const currentUrl = window.location.href;
+const requestUrl = currentUrl + "classic/data";
 tagForm.addEventListener("reset", resetTotal);
 tagForm.addEventListener("submit", handleInput);
 
@@ -98,25 +101,23 @@ function resetTags() {
 }
 
 async function getClassicData() {
-    var currentUrl = document.baseURI;
-    console.log("Current URL: " + currentUrl);
-    var requestUrl = currentUrl + "classic/data";
-    console.log(requestUrl);
-    fetch(requestUrl)
-        .then(response => response.json())
-        .then(function (jsonResponse) {
-            console.log("The thing with the json response");
-            console.log(jsonResponse);
-            setTimer(jsonResponse.timelimit);
-            setImg(jsonResponse.images);
-            setScore(jsonResponse.score);
-            console.log("==========");
-        });
+    try {
+        const response = await fetch(requestUrl);
+        if (response.ok) {
+            const json = await response.json();
+            console.log('Success:', JSON.stringify(json));
+            setTimer(json.timelimit);
+            setImg(json.images);
+            setScore(json.score);
+        } else {
+            console.error('Error:', response.statusText); // TODO: notify user
+        }
+    } catch (err) {
+        console.error('Error:', err);
+    }
 }
 
 async function sendTag(submittedTag) {
-    const currentUrl = window.location.href;
-    const requestUrl = currentUrl + "classic/data";
     const payload = writeTagToJson(submittedTag);
 
     try {
@@ -128,11 +129,11 @@ async function sendTag(submittedTag) {
             }
         });
         console.log('Sent:', payload);
-        if (!response.ok) {
-            console.error('Error:', response.statusText); // TODO: notify user
-        } else {
+        if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
+        } else {
+            console.error('Error:', response.statusText); // TODO: notify user
         }
     } catch (err) {
         console.error('Error:', err);
