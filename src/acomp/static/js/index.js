@@ -3,11 +3,13 @@
 
 var score = 0;
 var deadline = 60;
-const classicTimeLimit = 20;
-resetTimer();
 var timer = setInterval(updateTimer, 1000);
 var mentionedTags = [];
-var tagForm = document.getElementById("tagForm");
+const tagForm = document.getElementById("tagForm");
+tagForm.addEventListener("reset", resetTotal);
+tagForm.addEventListener("submit", handleInput);
+
+resetTotal();
 
 function writeToMentionedTags(tag) {
     console.log("Write to tags called");
@@ -43,10 +45,9 @@ function updateTimer() {
     document.getElementById("timer").innerHTML = deadline + " s";
     if (deadline <= 0) {
         clearInterval(timer);
-        alert('time is gone, starting new one...');
-        document.getElementById('searchTxt').disabled = true;
-        document.location.reload();
-        //resetTotal();
+        document.getElementById('btnSubmit').disabled = true;
+        document.getElementById('btnSubmit').value = "Time is over!";
+        document.getElementById('btnSkip').value = "Restart";
     }
 }
 
@@ -79,15 +80,12 @@ function hasAlreadyBeenMentioned(tag) {
     return mentionedTags.includes(tag);
 }
 
-function resetTimer() {
-    deadline = classicTimeLimit;
-    document.getElementById("timer").innerHTML = deadline + " s";
-}
-
 function resetTotal(event) {
     resetTags();
-    resetTimer();
     getClassicData();
+    document.getElementById('btnSubmit').disabled = false;
+    document.getElementById('btnSubmit').value = "Submit";
+    document.getElementById('btnSkip').value = "Skip";
 }
 
 function resetTags() {
@@ -160,7 +158,7 @@ function setScore(score) {
 
 function setTimer(newTime) {
     deadline = newTime;
+    clearInterval(timer);
+    timer = setInterval(updateTimer, 1000);
+    document.getElementById("timer").innerHTML = deadline + " s";
 }
-
-tagForm.addEventListener("reset", resetTotal);
-tagForm.addEventListener("submit", handleInput);
