@@ -115,35 +115,33 @@ async function getClassicData() {
 }
 
 async function sendTag(submittedTag) {
-    console.log("Sending tag");
-    var currentUrl = window.location.href;
-    var requestUrl = currentUrl + "classic/data";
+    const currentUrl = window.location.href;
+    const requestUrl = currentUrl + "classic/data";
+    const payload = writeTagToJson(submittedTag);
 
-    payload = writeTagToJson(submittedTag);
-    var data = new FormData();
-    data.append("request", payload);
-
-    fetch(requestUrl,
-        {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
+    try {
+        const response = await fetch(requestUrl, {
+            method: 'POST',
             body: payload,
-        })
-        .then(function (res) {
-            return res.json();
-        })
-        .then(function (data) {
-            console.log(JSON.stringify(data))
-        })
-    console.log("Sent: " + payload);
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        console.log('Sent:', payload);
+        if (!response.ok) {
+            console.error('Error:', response.statusText); // TODO: notify user
+        } else {
+            const json = await response.json();
+            console.log('Success:', JSON.stringify(json));
+        }
+    } catch (err) {
+        console.error('Error:', err);
+    }
 }
 
 function writeTagToJson(mytag) {
-    var obj = {tag: mytag};
-    var myJson = JSON.stringify(obj);
-    console.log(myJson);
+    const obj = {tag: mytag};
+    const myJson = JSON.stringify(obj);
     return myJson;
 }
 
