@@ -1,5 +1,4 @@
-// TODO
-//'use strict';
+'use strict';
 
 var score = 0;
 var deadline = 60;
