@@ -1,3 +1,5 @@
+'use strict';
+
 function writeToJson(username, userpassword) {
     var obj = {
         name: username,

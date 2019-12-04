@@ -1,3 +1,6 @@
+'use strict';
+
+
 function writeToJson(username, userpassword) {
     var obj = {
         name: username,
@@ -23,7 +26,7 @@ function handleSignup(e) {
 
     var currentUrl = window.location.href;
     var requestUrl = currentUrl + "/data";
-    var payload = writeToJson(name,password);
+    var payload = writeToJson(name, password);
     console.log(payload);
 
     fetch(requestUrl,
