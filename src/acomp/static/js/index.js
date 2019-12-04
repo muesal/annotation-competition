@@ -14,30 +14,23 @@ tagForm.addEventListener("submit", handleInput);
 resetTotal();
 
 function writeToMentionedTags(tag) {
-    console.log("Write to tags called");
-    var node = document.createElement("LI");                 // Create a <li> node
-    var textnode = document.createTextNode(tag.toString());// Create a text node
-    node.appendChild(textnode);                              // Append the text to <li>
-    document.getElementById("mentionedTags").appendChild(node);     // Append <li> to <ul> with id="myList"
+    const node = document.createElement("LI");                  // Create a <li> node
+    const textnode = document.createTextNode(tag.toString());   // Create a text node
+
+    node.appendChild(textnode);                                 // Append the text to <li>
+    document.getElementById("mentionedTags").appendChild(node); // Append <li> to <ul> with id="myList"
     mentionedTags.push(tag);
     console.log(mentionedTags);
 }
 
-function handleOutbound(out) { //TODO
-    const myJson = JSON.stringify(out);
-    console.log(myJson);
-}
-
 function handleInput(event) {
+    const tag = document.getElementById("searchTxt").value;
     event.preventDefault();
-    var tag = document.getElementById("searchTxt").value;
-    console.log("handleInput called");
 
     if (!isInputPermissible(tag)) {
         console.log("Input" + tag + " not permissible");
         return;
     }
-    writeToMentionedTags(tag);
     sendTag(tag);
     document.getElementById("searchTxt").value = "";
 }
@@ -58,11 +51,11 @@ function isInputPermissible(input) {
         console.log("Tag submitted after ");
         return false;
     }
-    if (isEmpty()) {
+    if (isEmpty(input)) {
         console.log("Tag is empty");
         return false;
     }
-    if (hasAlreadyBeenMentioned()) {
+    if (hasAlreadyBeenMentioned(input)) {
         console.log("Tag has already been mentioned");
         return false;
     }
@@ -93,7 +86,7 @@ function resetTotal(event) {
 function resetTags() {
     console.log("Resetting tags");
     mentionedTags = [];
-    var root = document.getElementById("mentionedTags");
+    const root = document.getElementById("mentionedTags");
     while (root.firstChild) {
         root.removeChild(root.firstChild);
     }
@@ -131,6 +124,7 @@ async function sendTag(submittedTag) {
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
+            writeToMentionedTags(json.message);
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
         }
