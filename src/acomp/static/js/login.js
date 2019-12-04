@@ -8,13 +8,13 @@ function writeToJson(username, userpassword) {
     return JSON.stringify(obj);
 }
 
-function handleLogin(e) {
+
+async function handleLogin(e) {
     e.preventDefault();
     var name = document.getElementById("loginTxt2").value;
-    var password = document.getElementById(loginpswd);
-    var currentUrl = window.location.href;
-    var requestUrl = currentUrl + "/data";
-    var payload = writeToJson(name, );
+    var password = document.getElementById("loginpswd").value;
+
+    var payload = writeToJson(name, password);
     console.log(payload);
 
         fetch(requestUrl,
