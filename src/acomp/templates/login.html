@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block js %}
+    <script src="../static/js/login.js" defer></script>
+{% endblock %}
+
+
+{% block main %}
+    <form id="loginForm">
+        <div class="mdl-textfield mdl-js-textfield">
+            <label class="mdl-textfield__label" for="loginTxt2" id="loginLabel">Name...</label>
+            <input class="mdl-textfield__input" type="text" id="loginTxt2" maxlength="512" autofocus required
+            >
+        </div>
+        <div class="mdl-textfield mdl-js-textfield">
+            <label class="mdl-textfield__label" for="loginpswd" id="pswdLabel">Password...</label>
+            <input type=password id="loginpswd" required>
+        </div>
+        <input type="submit" value="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+               id="loginSubmitButton">
+    </form>
+<div style="text-align: center;">     <h2>New here?</h2>
+    Feel free to <a href="signup">sign up</a>.
+</div>
+
+
+{% endblock %}
