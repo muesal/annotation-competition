@@ -1,5 +1,7 @@
 'use strict';
 
+const currentUrl = window.location.href;
+const requestUrl = currentUrl + "/data";
 
 function writeToJson(username, userpassword) {
     var obj = {
@@ -9,7 +11,7 @@ function writeToJson(username, userpassword) {
     return JSON.stringify(obj);
 }
 
-function handleSignup(e) {
+async function handleSignup(e) {
     e.preventDefault();
     console.log("handling signup");
 
@@ -23,27 +25,29 @@ function handleSignup(e) {
         return;
 
     }
-
-    var currentUrl = window.location.href;
-    var requestUrl = currentUrl + "/data";
     var payload = writeToJson(name, password);
-    console.log(payload);
 
-    fetch(requestUrl,
-        {
-            method: "POST",
+    try {
+        const response = await fetch(requestUrl, {
+            method: 'POST',
+            body: payload,
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: payload,
-        })
-        .then(function (res) {
-            return res.json();
-        })
-        .then(function (data) {
-            console.log(JSON.stringify(data))
+            }
         });
+        console.log('Sent:', payload);
+        if (response.ok) {
+            const json = await response.json();
+            console.log('Success:', JSON.stringify(json));
+        } else {
+            console.error('Error:', response.statusText); // TODO: notify user
+        }
+    } catch (err) {
+        console.error('Error:', err);
+
+    }
 }
+
 
 var signupForm = document.getElementById("signupForm");
 signupForm.addEventListener("submit", handleSignup);
