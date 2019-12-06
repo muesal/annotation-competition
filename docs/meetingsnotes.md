@@ -1,4 +1,12 @@
 # Notes
+05 December
+
+automatic labels - pretrained models, we're going to receive the files
+semantic distance to provided labels
+nlp
+
+
+
 06 November
 
 seminar presentation
