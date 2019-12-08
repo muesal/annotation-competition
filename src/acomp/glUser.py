@@ -4,6 +4,7 @@ from acomp import app, db, sessions
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glImage import GLImage
 import time
+from json import dumps
 
 
 class GLUser:
@@ -16,8 +17,8 @@ class GLUser:
         timestamp (int): seconds for last start/end of a game
         image_id (int): ID of the image this user is currently playing with
         image_level (int): level of this image when user started playing
-        tags ([str]): tags user has provided during this round for this image, or tags of captcha image if captcha mode
         cap_captcha (int): if the user is in captcha mode, the position of the main image in the list of images
+        tags ([str]): tags user has provided during this round for this image, or tags of captcha image if captcha mode
     """
 
     def __init__(self, id: int):
@@ -38,10 +39,10 @@ class GLUser:
             session['timestamp'] = time.time()
         if 'image_level' not in session:
             session['image_level'] = 0
-        self.tags = []   # TODO store in session
-        # session['tags']
         if 'cap_captcha' not in session:
             session['cap_captcha'] = 0
+        if 'tags' not in session:
+            session['tags'] = '[]'
 
     def getScore(self) -> int:
         """ :return score of the user """
@@ -53,7 +54,6 @@ class GLUser:
             :return the image
         """
         session['game_mode'] = 0
-        # session['tags'] = []  # TODO
         session['timestamp'] = time.time()
 
         # get the new image
@@ -90,11 +90,12 @@ class GLUser:
         gl_image.levelUp()
         session['image_id'] = image_id
         session['image_level'] = gl_image.getLevel()
+        session['tags'] = dumps(gl_image.getForbiddenTags())
 
         data: dict = {
             'images': url_for('static', filename='images/' + image.filename),
             'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
-            'accepted': gl_image.getForbiddenTags(),
+            'accepted': session['tags'],
             'score': self.getScore(),
             'user': self.user.id
         }
@@ -115,8 +116,8 @@ class GLUser:
         # if user is playing captcha or has already provided this tag in this round do nothing
         if session['game_mode'] != 0:
             raise Exception('Wrong game mode')
-        #if tag in session['tags']:  # TODO
-        #    return -1, "You already provided this tag for this image"
+        if tag in eval(session['tags']):
+            return -1, "You may not mention this tag again for this image"
         # if the time is up end this game
         if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
@@ -127,10 +128,15 @@ class GLUser:
 
         points, tag = image.addTag(tag, session['image_level'])
 
-        self.tags.append(tag)
-        self.user.score = self.user.score + points
-        db.session.commit()
-        return 1, tag
+        tags = eval(session['tags'])
+        if tag not in tags:
+            tags.append(tag)
+            session['tags'] = dumps(tags)
+
+            self.user.score = self.user.score + points
+            db.session.commit()
+            return 1, tag
+        return -1, "You may not mention this tag again for this image"
 
     def startCaptcha(self) -> dict:
         """ Start a game in Captcha mode, select one main and n other images, to validate the tags of the main.
@@ -163,7 +169,7 @@ class GLUser:
         num_image_tags = db.session.query(image_tags).count()
 
         # get an image for cap, which has more than three tags, if possible
-        while num_image_tags < 3 and i < num_images:
+        while num_image_tags < app.config['ACOMP_CAPTCHA_NUM_TAGS'] and i < num_images:
             # get a random image_id
             image_id = randbelow(num_images) + 1
             image = Image.query.get(image_id)
@@ -176,7 +182,7 @@ class GLUser:
         filenames[session['cap_captcha']] = url_for('static', filename='images/' + image.filename)
         gl_image = GLImage(image.id)
 
-        #session['tags'] = gl_image.getCaptchaTags()
+        session['tags'] = dumps(gl_image.getCaptchaTags())
         data: dict = {'images': filenames,
                       'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
                       'tags': session['tags'],
@@ -201,12 +207,11 @@ class GLUser:
         if cap != session['cap_captcha']:
             return 0, 'image {} is not the fitting image'.format(cap)
 
-        # Todo: validate the tags (also if not recognized correctly?)
         self.user.score = self.user.score + 10
         db.session.commit()
 
         gl_image = GLImage(session['image_id'])
-        gl_image.validateTagsCaptcha(session['tags'])
+        gl_image.verifyTags(eval(session['tags']))
         return 1, '{}'.format(self.user.score)
 
     def end(self) -> int:
@@ -217,8 +222,8 @@ class GLUser:
         session['game_mode'] = -1
         session['image_id'] = 0
         session['image_level'] = 0
-        session['tags'] = []  # TODO
         session['cap_captcha'] = 0
+        session['tags'] = '[]'
         session['timestamp'] = time.time()
         return self.user.score
 
