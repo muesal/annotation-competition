@@ -133,7 +133,7 @@ class GLUser:
             tags.append(tag)
             session['tags'] = dumps(tags)
 
-            self.user.score = self.user.score + points
+            self.user.score += points
             db.session.commit()
             return 1, tag
         return -1, "You may not mention this tag again for this image"
