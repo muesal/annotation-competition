@@ -204,14 +204,16 @@ class GLUser:
             return -2, "{}".format(self.user.score)
         if session['game_mode'] != 1:
             raise Exception('Wrong game mode')
+
+        gl_image = GLImage(session['image_id'])
         if cap != session['cap_captcha']:
+            gl_image.verifyTags(loads(session['tags']), False)
             return 0, 'image {} is not the fitting image'.format(cap)
 
+        gl_image.verifyTags(loads(session['tags']), True)
         self.user.score = self.user.score + 10
         db.session.commit()
 
-        gl_image = GLImage(session['image_id'])
-        gl_image.verifyTags(loads(session['tags']))
         return 1, '{}'.format(self.user.score)
 
     def end(self) -> int:

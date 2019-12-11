@@ -175,16 +175,16 @@ class GLImage:
             rand = randbelow(db.session.query(all_tags).count())
             tag_id = db.session.query(all_tags)[rand].tag_id
             captcha_tags.append(Tag.query.filter_by(id=tag_id).one_and_only().name)
-            tag_image = all_tags.query.filter_by(tag_id=tag_id).one_and_only()
-            tag_image.total_verified = tag_image.total_verified + 1
 
         return captcha_tags
 
-    def verifyTags(self, tags: [str]):
+    def verifyTags(self, tags: [str], correct: bool):
         for tag in tags:
             gl_tag = GLTag(tag, self.id, self.image)
             image_tag = ImageTag.query.filter_by(image_id=self.id, tag_id=gl_tag.id).one_or_none()
-            image_tag.successful_verified = image_tag.successful_verified + 1
+            image_tag.total_verified += 1
+            if correct:
+                image_tag.successful_verified += 1
             try:
                 db.session.commit()
             except Exception as e:
