@@ -149,7 +149,7 @@ class GLImage:
         all_tags = ImageTag.query.filter_by(image_id=self.id).all()
         num_tags = app.config['ACOMP_CAPTCHA_NUM_TAGS']
 
-        # if there are less ore exactly as many tags for this image, as wanted, just take them all.
+        # if there are less or exactly as many tags for this image as wanted, just take them all.
         if num_tags <= db.session.query(all_tags).count():
             for elem in all_tags:
                 captcha_tags.append(Tag.query.filter_by(id=elem.tag_id).one_and_only().name)
