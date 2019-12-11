@@ -4,7 +4,7 @@ from acomp import app, db, sessions
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glImage import GLImage
 import time
-from json import dumps
+from json import dumps, loads
 
 
 class GLUser:
@@ -116,7 +116,7 @@ class GLUser:
         # if user is playing captcha or has already provided this tag in this round do nothing
         if session['game_mode'] != 0:
             raise Exception('Wrong game mode')
-        if tag in eval(session['tags']):
+        if tag in loads(session['tags']):
             return -1, "You may not mention this tag again for this image"
         # if the time is up end this game
         if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
@@ -128,7 +128,7 @@ class GLUser:
 
         points, tag = image.addTag(tag, session['image_level'])
 
-        tags = eval(session['tags'])
+        tags = loads(session['tags'])
         if tag not in tags:
             tags.append(tag)
             session['tags'] = dumps(tags)
@@ -211,7 +211,7 @@ class GLUser:
         db.session.commit()
 
         gl_image = GLImage(session['image_id'])
-        gl_image.verifyTags(eval(session['tags']))
+        gl_image.verifyTags(loads(session['tags']))
         return 1, '{}'.format(self.user.score)
 
     def end(self) -> int:
