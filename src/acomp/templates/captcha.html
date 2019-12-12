@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block css %}
+    <link href="../static/css/captcha.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+
+{% block js %}
+    <script src="../static/js/captcha.js" defer></script>
+{% endblock %}
+
+{% block main %}
+    <main class="mdl-layout__content">
+        <p id="captchaTags"></p>
+        <p id="time"></p>
+
+        <div id="captchaImages">
+        </div>
+
+    </main>
+{% endblock %}
