@@ -17,6 +17,7 @@ class GLUser:
         timestamp (int): seconds for last start/end of a game
         image_id (int): ID of the image this user is currently playing with
         image_level (int): level of this image when user started playing
+        num_levels (int): number of provided tags (for classic mode)
         cap_captcha (int): if the user is in captcha mode, the position of the main image in the list of images
         tags ([str]): tags user has provided during this round for this image, or tags of captcha image if captcha mode
     """
@@ -56,6 +57,7 @@ class GLUser:
             :return the image
         """
         session['game_mode'] = 0
+        session['num_tags'] = 0
         session['timestamp'] = time.time()
 
         # get the new image
@@ -232,6 +234,7 @@ class GLUser:
         session['game_mode'] = -1
         session['image_id'] = 0
         session['image_level'] = 0
+        session['num_tags'] = 0
         session['cap_captcha'] = 0
         session['tags'] = '[]'
         session['timestamp'] = time.time()
