@@ -88,7 +88,7 @@ def captcha():
 @app.route('/captcha/data', methods=['GET'])
 def captcha_get():
     test_images = ["static/img/test.png", "static/img/test_alt.png"]
-    stuff = {'image': test_images}
+    stuff = {'image': test_images, 'tags': ['house', 'sun', 'flower']}
     data = '{"OK":"200", "message":"' + json.dumps(stuff) + '"}'
     res = make_response(data)
     res.headers.set('Content-Type', 'application/json')
