@@ -80,6 +80,49 @@ def classic_data_post():
         return forbidden('Not authorized.')
 
 
+@app.route('/captcha')
+def captcha():
+    return render_template('captcha.html')
+
+
+@app.route('/captcha/data', methods=['GET'])
+def captcha_get():
+    test_images = ["static/img/test.png", "static/img/test_alt.png"]
+    stuff = {'image': test_images}
+    data = '{"OK":"200", "message":"' + json.dumps(stuff) + '"}'
+    res = make_response(data)
+    res.headers.set('Content-Type', 'application/json')
+
+
+    res = make_response(stuff)
+    res.headers.set('Content-Type', 'application/json')
+    return res
+
+
+@app.route('/captcha/data', methods=['POST'])
+def captcha_post():
+    if 'userid' in session:
+        data = request.get_json()
+        if data is None:
+            return bad_request('Invalid JSON.')
+        if 'captcha' not in data:
+            return bad_request('Missing key in JSON.')
+        else:
+            # TODO: individual userid
+            usr = GLUser(1)
+            try:
+                tag = usr.tagImage(data['tag'])
+            except Exception as e:
+                return bad_request(e)
+            else:
+                data = '{"OK":"200", "message":"' + tag[1] + '"}'
+                res = make_response(data)
+                res.headers.set('Content-Type', 'application/json')
+                return res
+    else:
+        return forbidden('Not authorized.')
+
+
 @app.route('/login')
 def login():
     return render_template('login.html')
