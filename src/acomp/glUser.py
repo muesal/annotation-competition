@@ -39,6 +39,8 @@ class GLUser:
             session['timestamp'] = time.time()
         if 'image_level' not in session:
             session['image_level'] = 0
+        if 'num_tags' not in session:
+            session['num_tags'] = 0
         if 'cap_captcha' not in session:
             session['cap_captcha'] = 0
         if 'tags' not in session:
@@ -116,12 +118,18 @@ class GLUser:
         # if user is playing captcha or has already provided this tag in this round do nothing
         if session['game_mode'] != 0:
             raise Exception('Wrong game mode')
-        if tag in loads(session['tags']):
-            return -1, "You may not mention this tag again for this image"
         # if the time is up end this game
         if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
             return -2, "{}".format(self.user.score)
+        # check if the tagging rate is okay
+        session['num_tags'] += 1
+        if session['num_tags'] > app.config['ACOMP_CLASSIC_TIMELIMIT'] / 2:
+            self.end()
+            # TODO: Do something, like deleting previous tags?
+            return -1, "your tagging rate was too high, we must suspect you are spam!"
+        if tag in loads(session['tags']):
+            return -1, "You may not mention this tag again for this image"
 
         if image is None:
             image = GLImage(session['image_id'])
