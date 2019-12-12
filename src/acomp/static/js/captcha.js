@@ -3,7 +3,7 @@
 
 const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
-
+getCaptchaData();
 
 
 async function getCaptchaData() {
