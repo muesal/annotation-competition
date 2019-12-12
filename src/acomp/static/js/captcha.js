@@ -63,9 +63,10 @@ function setImages(images) {
             imagesInHtml.appendChild(img);
             var btn = document.createElement("BUTTON");
             btn.innerHTML = i.toString();
+            const current = i.valueOf();
             btn.setAttribute("class", "mdl-button mdl-js-button mdl-button--raised mdl-button--colored");
             btn.addEventListener("click", function () {
-                    selectImage(i);
+                    selectImage(current);
                 }
             );
 
@@ -74,7 +75,6 @@ function setImages(images) {
     } catch (e) {
         console.log(e)
     }
-
 
 }
 
