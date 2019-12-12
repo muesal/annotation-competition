@@ -23,7 +23,7 @@ async function getCaptchaData() {
 
 
 async function sendSelection(num) {
-    values = {
+    var values = {
         'captcha': num
     };
 
@@ -79,6 +79,7 @@ function setImages(images) {
 }
 
 function selectImage(num) {
+    console.log("Selected " + num);
     sendSelection(num);
 }
 
