@@ -2,15 +2,15 @@ from acomp import db
 
 
 user_image = db.Table('user_image', db.Model.metadata,
-    db.Column('image_id', db.Integer, db.ForeignKey('Image.id'), primary_key=True),
-    db.Column('user_id', db.Integer, db.ForeignKey('User.id'), primary_key=True)
+    db.Column('image_id', db.Integer, db.ForeignKey('image.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
 )
 
 
 class ImageTag(db.Model):
     __tablename__ = 'image_tag'
-    image_id = db.Column(db.Integer, db.ForeignKey('Image.id'), primary_key=True)
-    tag_id = db.Column(db.Integer, db.ForeignKey('Tag.id'), primary_key=True)
+    image_id = db.Column(db.Integer, db.ForeignKey('image.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tag.id'), primary_key=True)
     frequency = db.Column('frequency', db.Integer, db.CheckConstraint('frequency >= 0'), default=1, nullable=False)
     successful_verified = db.Column('successful_verified', db.Integer, db.CheckConstraint('successful_verified >= 0'), default=0, nullable=False)
     total_verified = db.Column('total_verified', db.Integer, db.CheckConstraint('total_verified >= 0'), default=0, nullable=False)
@@ -20,7 +20,7 @@ class ImageTag(db.Model):
 
 
 class Image(db.Model):
-    __tablename__ = 'Image'
+    __tablename__ = 'image'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     filename = db.Column(db.String, unique=True, nullable=False)
@@ -32,7 +32,7 @@ class Image(db.Model):
 
 
 class Tag(db.Model):
-    __tablename__ = 'Tag'
+    __tablename__ = 'tag'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, unique=True, nullable=False)
@@ -43,9 +43,9 @@ class Tag(db.Model):
 
 
 class User(db.Model):
-    __tablename__ = 'User'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String, nullable=False)
+    username = db.Column(db.String, unique=True, nullable=False)
     secret = db.Column(db.String, nullable=True)
     score = db.Column(db.Integer, db.CheckConstraint('score >= 0'), nullable=False)
     seen = db.relationship('Image', secondary='user_image', backref='seen')
