@@ -5,6 +5,7 @@ const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
 
 
+
 async function getCaptchaData() {
     console.log("Getting data");
     try {
@@ -13,6 +14,7 @@ async function getCaptchaData() {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
             setImages(json.image);
+            setTags(json.tags);
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
         }
