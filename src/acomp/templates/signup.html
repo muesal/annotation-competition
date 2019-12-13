@@ -16,17 +16,17 @@
 {% block main %}
     <form id="signupForm">
         <div class="mdl-textfield mdl-js-textfield">
-            <label class="mdl-textfield__label" for="loginTxt2" id="loginLabel">Name...</label>
-            <input class="mdl-textfield__input" type="text" id="loginTxt2" maxlength="512" autofocus required
-            >
+            <label class="mdl-textfield__label" for="loginname" id="loginLabel">Name...</label>
+            <input class="mdl-textfield__input" type="text" id="loginname" maxlength="512"
+                   pattern="\w+" autofocus required>
         </div>
         <div class="mdl-textfield mdl-js-textfield">
             <label class="mdl-textfield__label" for="loginpswd" id="pswdLabel">Password...</label>
-            <input type=password id="loginpswd" required>
+            <input class="mdl-textfield__input" type="password" id="loginpswd" maxlength="512" required>
         </div>
-                <div class="mdl-textfield mdl-js-textfield">
+        <div class="mdl-textfield mdl-js-textfield">
             <label class="mdl-textfield__label" for="loginpswdConfirm" id="pswdLabelConfirm">Confirm...</label>
-            <input type=password id="loginpswdConfirm" required>
+            <input class="mdl-textfield__input" type="password" id="loginpswdConfirm" maxlength="512" required>
         </div>
         <input type="submit" value="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
                id="loginSubmitButton">

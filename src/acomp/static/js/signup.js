@@ -1,31 +1,29 @@
 'use strict';
 
+// TODO: use absolute immutable url
 const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
 
-function writeToJson(username, userpassword) {
-    var obj = {
+const loginname = document.getElementById("loginname");
+const paragraph = document.getElementById("feedbackParagraph");
+const password = document.getElementById("loginpswd");
+const passwordConfirm = document.getElementById("loginpswdConfirm");
+
+function writeToJson(username) {
+    const obj = {
         name: username,
-        password: userpassword
     };
     return JSON.stringify(obj);
 }
 
-async function handleSignup(e) {
-    e.preventDefault();
-    console.log("handling signup");
-
-    var name = document.getElementById("loginTxt2").value;
-    var password = document.getElementById("loginpswd").value;
-    var passwordConfirm = document.getElementById("loginpswdConfirm").value;
-    console.log(name + ":" + password + "," + passwordConfirm);
-    if (password !== passwordConfirm) {
-        var paragraph = document.getElementById("feedbackParagraph");
-        paragraph.textContent += "Please make sure to confirm your password";
+async function checkLoginname(e) {
+    loginname.setCustomValidity('');
+    if (!loginname.checkValidity()) {
+        loginname.setCustomValidity('Please use alphanumeric characters and not more than 512');
         return;
-
     }
-    var payload = writeToJson(name, password);
+
+    const payload = writeToJson(loginname.value);
 
     try {
         const response = await fetch(requestUrl, {
@@ -44,15 +42,53 @@ async function handleSignup(e) {
         }
     } catch (err) {
         console.error('Error:', err);
-
     }
 }
 
+async function checkPasswords(e) {
+    passwordConfirm.setCustomValidity('');
+    if (password.value !== passwordConfirm.value) {
+        passwordConfirm.setCustomValidity('Please make sure to confirm your password');
+        return;
+    }
 
-var signupForm = document.getElementById("signupForm");
-signupForm.addEventListener("submit", handleSignup);
-signupForm.addEventListener("text", handleSignup);
-signupForm.addEventListener("password", handleSignup);
-var button = document.getElementById("loginSubmitButton");
-button.addEventListener("click", handleSignup);
+    // https://haveibeenpwned.com/API/v3#SearchingPwnedPasswordsByRange
+    const apiurl = 'https://api.pwnedpasswords.com/range/';
+    const hash = await digest(password.value);
+    const fetchurl = apiurl + hash.substring(0, 5);
+    var regex = new RegExp('^' + hash.slice(5) + ':(\\d+)', 'im');
+    console.log('Search for:', regex.source);
 
+    try {
+        const response = await fetch(fetchurl);
+        console.log('Sent:', fetchurl);
+        if (response.ok) {
+            const data = await response.text();
+            console.log('Success:', data);
+            if (regex.test(data)) {
+                paragraph.textContent += "Your password might be insecure";
+                return;
+            } else {
+                console.log('Not yet been pwned.');
+            }
+        } else {
+            console.error('Error:', response.statusText); // TODO: notify user
+        }
+    } catch (err) {
+        console.error('Error:', err);
+    }
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#Converting_a_digest_to_a_hex_string
+async function digest(str) {
+    const strUint8 = new TextEncoder().encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-1', strUint8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    console.log('SHA-1:', hashHex);
+    return hashHex;
+}
+
+loginname.addEventListener('input', checkLoginname);
+password.addEventListener('input', checkPasswords);
+passwordConfirm.addEventListener('input', checkPasswords);
