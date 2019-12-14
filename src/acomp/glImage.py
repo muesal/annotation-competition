@@ -38,10 +38,11 @@ class GLImage:
             self.level = 1
             if tagged > 4:
                 self.level = 2
-                # TODO: make this better (not alphabetically...)
-                for i in range(2):
-                    pass
-                    # self.forbiddenTags.append(self.tags[i].name)
+                tags = ImageTag.query.filter_by(image_id=self.id).first()
+                sorted_by_frequency = tags.query.order_by(ImageTag.frequency.desc()).all()
+                for i in range(app.config['ACOMP_CAPTCHA_NUM_TAGS']):
+                    tag = Tag.query.filter_by(id=sorted_by_frequency[i].tag_id).one_or_none()
+                    self.forbiddenTags.append(tag.name)
 
     def getLevel(self) -> int:
         """ :return the level of the image"""
