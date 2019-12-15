@@ -6,6 +6,7 @@ COPY requirements.txt requirements.txt
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps\
 		gcc \
+		libffi-dev \
 		linux-headers \
 		musl-dev \
 		postgresql-dev \

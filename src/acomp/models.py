@@ -46,7 +46,7 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String, unique=True, nullable=False)
-    secret = db.Column(db.String, nullable=True)
+    secret = db.Column(db.String, nullable=False)
     score = db.Column(db.Integer, db.CheckConstraint('score >= 0'), nullable=False)
     seen = db.relationship('Image', secondary='user_image', backref='seen')
 
