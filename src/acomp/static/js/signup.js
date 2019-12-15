@@ -37,6 +37,10 @@ async function checkLoginname(e) {
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
+            if (json.available != '1') {
+                loginname.setCustomValidity('This username is already taken, please choose another name.');
+                return;
+            }
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
         }

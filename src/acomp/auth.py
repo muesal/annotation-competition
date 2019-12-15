@@ -10,7 +10,7 @@ def load_user(usr_id):
 
 class auth:
     """ :return whether a username exists in the database or not """
-    def checkAvailability(username: str) -> bool:
+    def exists(username: str) -> bool:
         return db.session.query(db.exists().where(User.username == username)).scalar()
 
     """ :return  the id of the logged in user """

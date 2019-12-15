@@ -141,10 +141,10 @@ def signup_post():
     if 'name' not in data:
         return bad_request('Missing key in JSON.')
     else:
-        if (auth.checkAvailability(data['name'])):
-            return '{"OK":"200", "message":"Username available"}'
+        if (auth.exists(data['name'])):
+            return '{"available":"0", "message":"Username not available"}'
         else:
-            return '{"OK":"200", "message":"Username not available"}'
+            return '{"available":"1", "message":"Username available"}'
 
 
 @app.errorhandler(400)
