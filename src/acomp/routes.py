@@ -1,83 +1,75 @@
-from flask import make_response, render_template, request, session, url_for
-from acomp import app, db, sessions
+from flask import make_response, render_template, redirect, request, session, url_for
+from acomp import app, db, sessions, loginmanager
+from flask_login import current_user, login_user, login_required, logout_user
 from acomp.glUser import GLUser
-from acomp.glImage import GLImage
-from acomp.models import User, Image
+from acomp.auth import auth
 import json
 
 
-@app.route('/')
+loginmanager.login_view = 'login'
+
+
 @app.route('/home')
 @app.route('/classic')
+@login_required
 def classic():
-    token = request.args.get('token')
-    if 'userid' in session:
-        app.logger.debug("UserID: %s", session['userid'])
-        if token is None:
-            # TODO: create new user
-            # Test usr
-            new_usr = User('guest', 'myverysecret')
-            db.session.add(new_usr)
-            db.session.commit()
-            app.logger.debug("New user")
-        else:
-            # TODO: verify existing user
-            app.logger.debug("Existing user")
-    else:
-        # TODO: individual userid
-        session['userid'] = 'guest'
-        # TODO: create new user
-        # Test usr
-        new_usr = User('guest', 'myverysecret')
-        db.session.add(new_usr)
-        db.session.commit()
-        app.logger.debug("New user 2")
-    # TODO: individual userid
-    usr = GLUser(1)
+    usr = GLUser(current_user)
     img = usr.startClassic()
     return render_template('index.html', source=img['images'])
 
 
 @app.route('/classic/data', methods=['GET'])
+@login_required
 def classic_data_get():
-    if 'userid' in session:
-        # TODO: individual userid
-        usr = GLUser(1)
-        try:
-            dict = usr.startClassic()
-            app.logger.debug(dict)
-            res = make_response(json.dumps(dict))
-        except Exception as e:
-            return bad_request(e)
-        else:
-            res.headers.set('Content-Type', 'application/json')
-            return res
+    usr = GLUser(current_user)
+    try:
+        dict = usr.startClassic()
+        app.logger.debug(dict)
+        res = make_response(json.dumps(dict))
+    except Exception as e:
+        return bad_request(e)
     else:
-        return forbidden('Not authorized.')
+        res.headers.set('Content-Type', 'application/json')
+        return res
 
 
 @app.route('/classic/data', methods=['POST'])
+@login_required
 def classic_data_post():
-    if 'userid' in session:
-        data = request.get_json()
-        if data is None:
-            return bad_request('Invalid JSON.')
-        if 'tag' not in data:
-            return bad_request('Missing key in JSON.')
-        else:
-            # TODO: individual userid
-            usr = GLUser(1)
-            try:
-                tag = usr.tagImage(data['tag'])
-            except Exception as e:
-                return bad_request(e)
-            else:
-                data = '{"OK":"200", "message":"' + tag[1] + '"}'
-                res = make_response(data)
-                res.headers.set('Content-Type', 'application/json')
-                return res
+    data = request.get_json()
+    if data is None:
+        return bad_request('Invalid JSON.')
+    if 'tag' not in data:
+        return bad_request('Missing key in JSON.')
     else:
-        return forbidden('Not authorized.')
+        usr = GLUser(current_user)
+        try:
+            tag = usr.tagImage(data['tag'])
+        except Exception as e:
+            return bad_request(e)
+        else:
+            data = '{"OK":"200", "message":"' + tag[1] + '"}'
+            res = make_response(data)
+            res.headers.set('Content-Type', 'application/json')
+            return res
+
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    data = request.get_json()
+    if data is None:
+        return render_template('login.html')
+    if 'name' in data:
+        try:
+            user = auth.login(data['name'], data['password'])
+            login_user(user)
+        except Exception as e:
+            return bad_request(e)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return render_template('login.html')
 
 
 @app.route('/captcha')
@@ -123,25 +115,22 @@ def captcha_post():
         return forbidden('Not authorized.')
 
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('/'))
 
 
-@app.route('/login/data', methods=['POST'])
-def login_post():
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
     data = request.get_json()
     if data is None:
-        return bad_request('Invalid JSON.')
+        return render_template('signup.html')
     if 'name' not in data:
-        return bad_request('Missing key in JSON.')
+        return redirect(url_for('signup'))
     else:
-        return '{"OK":"200", "message":""}'
-
-
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
+        return render_template('signup.html')
 
 
 @app.route('/signup/data', methods=['POST'])
@@ -152,7 +141,10 @@ def signup_post():
     if 'name' not in data:
         return bad_request('Missing key in JSON.')
     else:
-        return '{"OK":"200", "message":""}'
+        if (auth.checkAvailability(data['name'])):
+            return '{"OK":"200", "message":"Username available"}'
+        else:
+            return '{"OK":"200", "message":"Username not available"}'
 
 
 @app.errorhandler(400)
