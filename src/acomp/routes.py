@@ -3,7 +3,7 @@ from acomp import app, db, sessions, loginmanager
 from flask_login import current_user, login_user, login_required, logout_user
 from acomp.glUser import GLUser
 from acomp.auth import auth
-from acomp.forms import Signup
+from acomp.forms import Signup, Signin
 import json
 
 
@@ -58,19 +58,15 @@ def classic_data_post():
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    data = request.get_json()
-    if data is None:
-        return render_template('login.html')
-    if 'name' in data:
+    form = Signin()
+    if form.validate_on_submit():
         try:
-            user = auth.login(data['name'], data['password'])
+            user = auth.login(form.loginname.data, form.loginpswd.data)
+            flash('Login successful')
             login_user(user)
         except Exception as e:
-            return bad_request(e)
-        else:
-            return redirect(url_for('home'))
-    else:
-        return render_template('login.html')
+            flash(e)
+    return render_template('login.html', form=form)
 
 
 @app.route('/captcha')

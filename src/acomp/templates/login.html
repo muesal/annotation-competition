@@ -5,22 +5,41 @@
 {% endblock %}
 
 {% block main %}
-    <form id="loginForm">
+    <form id="loginForm" method="post">
         <div class="mdl-textfield mdl-js-textfield">
-            <label class="mdl-textfield__label" for="loginTxt2" id="loginLabel">Name...</label>
-            <input class="mdl-textfield__input" type="text" id="loginTxt2" maxlength="512" autofocus required
-            >
+            {{ form.loginname.label(class="mdl-textfield__label") }}
+            {{ form.loginname(autofocus=true, class="mdl-textfield__input") }}
+            {% if form.loginname.errors %}
+                <ul class="errors">{% for error in form.loginname.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
         </div>
         <div class="mdl-textfield mdl-js-textfield">
-            <label class="mdl-textfield__label" for="loginpswd" id="pswdLabel">Password...</label>
-            <input class="mdl-textfield__input" type=password id="loginpswd" maxlength="512" required>
+            {{ form.loginpswd.label(class="mdl-textfield__label") }}
+            {{ form.loginpswd(class="mdl-textfield__input") }}
+            {% if form.loginpswd.errors %}
+                <ul class="errors">{% for error in form.loginpswd.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
         </div>
-        <input type="submit" value="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-               id="loginSubmitButton">
+        {{ form.csrf_token }}
+        {{ form.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
     </form>
+
+    <p id="feedbackParagraph"></p>
+
     <div class="mdl-typography--text-center">
         <h2>New here?</h2>
         <p>Feel free to <a href="signup">sign up</a>.</p>
     </div>
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+    <div class="notification is-danger">
+        {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
+    </div>
+{% endif %}
+{% endwith %}
 {% endblock %}
