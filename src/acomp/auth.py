@@ -32,7 +32,7 @@ class auth:
     def register(username: str, token: str, tokenVerify: str) -> int:
         bcrypt = Bcrypt(app)
 
-        if auth.checkAvailability(username):
+        if auth.exists(username):
             raise Exception('A user with this username is already registered. The username was: {}'.format(username))
 
         if token != tokenVerify:

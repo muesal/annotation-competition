@@ -4,6 +4,7 @@
 const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
 
+const csrf_token = document.getElementById("csrf_token");
 const loginname = document.getElementById("loginname");
 const paragraph = document.getElementById("feedbackParagraph");
 const password = document.getElementById("loginpswd");
@@ -30,7 +31,8 @@ async function checkLoginname(e) {
             method: 'POST',
             body: payload,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token.value,
             }
         });
         console.log('Sent:', payload);

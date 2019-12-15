@@ -1,8 +1,9 @@
-from flask import make_response, render_template, redirect, request, session, url_for
+from flask import flash, make_response, render_template, redirect, request, session, url_for
 from acomp import app, db, sessions, loginmanager
 from flask_login import current_user, login_user, login_required, logout_user
 from acomp.glUser import GLUser
 from acomp.auth import auth
+from acomp.forms import Signup
 import json
 
 
@@ -124,13 +125,11 @@ def logout():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    data = request.get_json()
-    if data is None:
-        return render_template('signup.html')
-    if 'name' not in data:
-        return redirect(url_for('signup'))
-    else:
-        return render_template('signup.html')
+    form = Signup()
+    if form.validate_on_submit():
+        auth.register(form.loginname.data, form.loginpswd.data, form.loginpswdConfirm.data)
+        flash('Thanks for registering')
+    return render_template('signup.html', form=form)
 
 
 @app.route('/signup/data', methods=['POST'])
