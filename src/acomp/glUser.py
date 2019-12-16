@@ -251,3 +251,12 @@ class GLUser:
             image.skips = image.skips + 1
             db.session.commit()
         return self.end()
+
+    def getHighscore(self) -> dict:
+        sorted_by_score = User.query.order_by(User.score.desc()).all()
+        highscores = []
+        for i in range(app.config['ACOMP_NUM_HIGHSCORE']):
+            highscores.append((sorted_by_score[i].name, sorted_by_score[i].score))
+        hs_as_jsn = dumps(highscores)
+        data: dict = {'highscores': hs_as_jsn}
+        return data
