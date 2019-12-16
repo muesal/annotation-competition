@@ -169,7 +169,7 @@ function setTimer(newTime) {
 
 
 function notifyUser(msg) {
-    var snackbarContainer = document.querySelector('#demo-toast-example');
-    var data = {message: msg};
+    const snackbarContainer = document.querySelector('#demo-toast-example');
+    const data = {message: msg};
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
 }
