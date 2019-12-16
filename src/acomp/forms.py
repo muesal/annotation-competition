@@ -78,11 +78,11 @@ class Signin(FlaskForm):
 
     loginname = StringField("Name", validators=[
         InputRequired(message='Username must be provided'),
-        Length(min=1, max=512, message='Please use not more than 512 characters'),
-        Regexp('^\\w+$', message='Please use alphanumeric characters'),
-    ], widget=HTML5TextWidget())
+        Length(min=1, max=512, message='Username too long'),
+        Regexp('^\\w+$', message='Invalid username'),
+    ])
     loginpswd = PasswordField("Password", validators=[
         InputRequired(message='Password must be provided'),
-        Length(min=14, max=512, message='Please make sure to confirm your password'),
-    ], widget=HTML5TextWidget())
+        Length(min=1, max=512, message='Password too long'),
+    ])
     submit = SubmitField("Login")
