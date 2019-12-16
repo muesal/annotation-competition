@@ -104,7 +104,7 @@ async function getClassicData() {
             setScore(json.score);
         } else {
             console.error('Error:', response.statusText);
-            notifyUser('There has been an error, check the console for details');
+            notifyUser(response.statusText);
 
         }
     } catch (err) {
@@ -130,7 +130,7 @@ async function sendTag(submittedTag) {
             writeToMentionedTags(json.message);
         } else {
             console.error('Error:', response.statusText);
-            notifyUser('There has been an error, check the console for details');
+            notifyUser(response.statusText);
         }
     } catch (err) {
         console.error('Error:', err);
