@@ -9,7 +9,7 @@ getCaptchaData();
 async function getCaptchaData() {
     console.log("Getting data");
     try {
-        const response = await fetch(requestUrl);
+        const response = await fetch('/data');
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
@@ -31,7 +31,7 @@ async function sendSelection(num) {
 
     const payload = JSON.stringify(values);
     try {
-        const response = await fetch(requestUrl, {
+        const response = await fetch('/data', {
             method: 'POST',
             body: payload,
             headers: {
