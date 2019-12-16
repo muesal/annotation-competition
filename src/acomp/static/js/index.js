@@ -38,6 +38,7 @@ function handleInput(event) {
 function updateTimer() {
     deadline--;
     document.getElementById("timer").innerHTML = deadline + " s";
+    document.getElementById("timemeter").value = deadline;
     if (deadline <= 0) {
         clearInterval(timer);
         document.getElementById('btnSubmit').disabled = true;
@@ -117,7 +118,7 @@ async function sendTag(submittedTag) {
             method: 'POST',
             body: payload,
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             }
         });
         console.log('Sent:', payload);
@@ -152,5 +153,13 @@ function setTimer(newTime) {
     deadline = newTime;
     clearInterval(timer);
     timer = setInterval(updateTimer, 1000);
+    var timerMeter = document.getElementById("timemeter");
+
+    document.getElementById("timemeter").value = newTime;
+    timerMeter.max=newTime;
+    timerMeter.low=newTime/4;
+    timerMeter.high=timerMeter/2;
+    timerMeter.optimum=(3 * timerMeter) / 4;
+
     document.getElementById("timer").innerHTML = deadline + " s";
 }
