@@ -6,7 +6,7 @@
 
 
 {% block classiclink %}
-<u>Classic</u>
+    <u>Classic</u>
 {% endblock %}
 
 
@@ -23,7 +23,8 @@
 
             <div id="column">
                 <label for="timer">Timer: </label>
-                <meter id="timemeter" class="mdl-progress" min="0" max="60" value="12" low="15" high="30" optimum="45"></meter>
+                <meter id="timemeter" class="mdl-progress" min="0" max="60" value="12" low="15" high="30"
+                       optimum="45"></meter>
                 <output id="timer">0</output>
                 <br>
                 <label for="score">Score: </label>
@@ -42,8 +43,15 @@
                 <input class="mdl-textfield__input" type="text" id="searchTxt" maxlength="512" autofocus required
                        spellcheck>
             </div>
-            <input id="btnSubmit" type="submit" value="Submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-            <input id="btnSkip" type="reset" value="Skip" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+            <input id="btnSubmit" type="submit" value="Submit"
+                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+            <input id="btnSkip" type="reset" value="Skip"
+                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
         </form>
+
+        <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
     </main>
 {% endblock %}

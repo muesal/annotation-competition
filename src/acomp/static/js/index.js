@@ -103,7 +103,9 @@ async function getClassicData() {
             setImg(json.images);
             setScore(json.score);
         } else {
-            console.error('Error:', response.statusText); // TODO: notify user
+            console.error('Error:', response.statusText);
+            notifyUser(response.statusText);
+
         }
     } catch (err) {
         console.error('Error:', err);
@@ -127,7 +129,8 @@ async function sendTag(submittedTag) {
             console.log('Success:', JSON.stringify(json));
             writeToMentionedTags(json.message);
         } else {
-            console.error('Error:', response.statusText); // TODO: notify user
+            console.error('Error:', response.statusText);
+            notifyUser(response.statusText);
         }
     } catch (err) {
         console.error('Error:', err);
@@ -162,4 +165,11 @@ function setTimer(newTime) {
     timerMeter.optimum=(3 * timerMeter) / 4;
 
     document.getElementById("timer").innerHTML = deadline + " s";
+}
+
+
+function notifyUser(msg) {
+    const snackbarContainer = document.querySelector('#demo-toast-example');
+    const data = {message: msg};
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 }
