@@ -37,7 +37,7 @@
             </div>
         </div>
 
-        <form id="tagForm">
+        <form id="tagForm" data-datauri="{{ url_for('classic_data_post') }}">
             <div class="mdl-textfield mdl-js-textfield">
                 <label class="mdl-textfield__label" for="searchTxt" id="tagTxt">Tag...</label>
                 <input class="mdl-textfield__input" type="text" id="searchTxt" maxlength="512" autofocus required

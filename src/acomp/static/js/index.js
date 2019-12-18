@@ -5,9 +5,6 @@ var deadline = 60;
 var timer = setInterval(updateTimer, 1000);
 var mentionedTags = [];
 const tagForm = document.getElementById("tagForm");
-// TODO: use absolute immutable url
-const currentUrl = window.location.href;
-const requestUrl = currentUrl + "classic/data";
 tagForm.addEventListener("reset", resetTotal);
 tagForm.addEventListener("submit", handleInput);
 
@@ -95,7 +92,7 @@ function resetTags() {
 
 async function getClassicData() {
     try {
-        const response = await fetch('/data');
+        const response = await fetch(tagForm.dataset.datauri);
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
@@ -116,7 +113,7 @@ async function sendTag(submittedTag) {
     const payload = writeTagToJson(submittedTag);
 
     try {
-        const response = await fetch('/data', {
+        const response = await fetch(tagForm.dataset.datauri, {
             method: 'POST',
             body: payload,
             headers: {

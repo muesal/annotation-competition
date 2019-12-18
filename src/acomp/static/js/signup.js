@@ -1,14 +1,11 @@
 'use strict';
 
-// TODO: use absolute immutable url
-const currentUrl = window.location.href;
-const requestUrl = currentUrl + "/data";
-
 const csrf_token = document.getElementById("csrf_token");
 const loginname = document.getElementById("loginname");
 const paragraph = document.getElementById("feedbackParagraph");
 const password = document.getElementById("loginpswd");
 const passwordConfirm = document.getElementById("loginpswdConfirm");
+const form = document.getElementById("signupForm");
 
 function writeToJson(username) {
     const obj = {
@@ -27,7 +24,7 @@ async function checkLoginname(e) {
     const payload = writeToJson(loginname.value);
 
     try {
-        const response = await fetch(requestUrl, {
+        const response = await fetch(form.dataset.datauri, {
             method: 'POST',
             body: payload,
             headers: {
