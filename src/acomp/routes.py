@@ -4,7 +4,7 @@ from flask_login import current_user, login_required, logout_user
 from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
 from acomp.auth import auth
-from acomp.forms import Signup, Signin
+from acomp.forms import Classic, Signup, Signin
 import json
 
 loginmanager.login_view = 'login'
@@ -22,9 +22,10 @@ def is_safe_url(target):
 @app.route('/classic')
 @login_required
 def classic():
+    form = Classic()
     usr = GLUser(current_user.get_id())
     img = usr.startClassic()
-    return render_template('index.html', source=img['images'])
+    return render_template('index.html', source=img['images'], form=form)
 
 
 @app.route('/classic/data', methods=['GET'])

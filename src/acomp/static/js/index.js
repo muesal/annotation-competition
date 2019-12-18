@@ -4,6 +4,7 @@ var score = 0;
 var deadline = 60;
 var timer = setInterval(updateTimer, 1000);
 var mentionedTags = [];
+const csrf_token = document.getElementById("csrf_token");
 const tagForm = document.getElementById("tagForm");
 tagForm.addEventListener("reset", resetTotal);
 tagForm.addEventListener("submit", handleInput);
@@ -117,7 +118,8 @@ async function sendTag(submittedTag) {
             method: 'POST',
             body: payload,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token.value,
             }
         });
         console.log('Sent:', payload);
