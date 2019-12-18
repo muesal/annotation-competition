@@ -32,9 +32,9 @@ def classic():
 def classic_data_get():
     usr = GLUser(current_user.get_id())
     try:
-        dict = usr.startClassic()
-        app.logger.debug(dict)
-        res = make_response(json.dumps(dict))
+        data = usr.startClassic()
+        app.logger.debug(data)
+        res = make_response(json.dumps(data))
     except Exception as e:
         return bad_request(e)
     else:
