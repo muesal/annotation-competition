@@ -1,7 +1,6 @@
-from flask import session
 from flask_bcrypt import Bcrypt
 from flask_login import login_user
-from acomp import app, db, loginmanager, sessions
+from acomp import app, db, loginmanager
 from acomp.models import User
 
 

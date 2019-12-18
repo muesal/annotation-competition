@@ -1,5 +1,5 @@
-from flask import flash, make_response, render_template, redirect, request, session, url_for
-from acomp import app, db, sessions, loginmanager
+from flask import flash, make_response, render_template, redirect, request, url_for
+from acomp import app, db, loginmanager
 from flask_login import current_user, login_required, logout_user
 from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
@@ -107,26 +107,22 @@ def captcha_get():
 @app.route('/captcha/data', methods=['POST'])
 @login_required
 def captcha_post():
-    if 'userid' in session:
-        data = request.get_json()
-        if data is None:
-            return bad_request('Invalid JSON.')
-        if 'captcha' not in data:
-            return bad_request('Missing key in JSON.')
-        else:
-            # TODO: individual userid
-            usr = GLUser(1)
-            try:
-                tag = usr.tagImage(data['tag'])
-            except Exception as e:
-                return bad_request(e)
-            else:
-                data = '{"OK":"200", "message":"' + tag[1] + '"}'
-                res = make_response(data)
-                res.headers.set('Content-Type', 'application/json')
-                return res
+    data = request.get_json()
+    if data is None:
+        return bad_request('Invalid JSON.')
+    if 'captcha' not in data:
+        return bad_request('Missing key in JSON.')
     else:
-        return forbidden('Not authorized.')
+        usr = GLUser(current_user.get_id())
+        try:
+            tag = usr.tagImage(data['tag'])
+        except Exception as e:
+            return bad_request(e)
+        else:
+            data = '{"OK":"200", "message":"' + tag[1] + '"}'
+            res = make_response(data)
+            res.headers.set('Content-Type', 'application/json')
+            return res
 
 
 @app.route('/logout')
