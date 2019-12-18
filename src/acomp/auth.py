@@ -1,5 +1,6 @@
 from flask import session
 from flask_bcrypt import Bcrypt
+from flask_login import login_user
 from acomp import app, db, loginmanager, sessions
 from acomp.models import User
 
@@ -14,9 +15,9 @@ class auth:
     def exists(username: str) -> bool:
         return db.session.query(db.exists().where(User.username == username)).scalar()
 
-    """ :return the User object of the logged in user """
-    def login(username: str, token: str) -> User:
-        # usr_id = -1
+    """ :return the id of the logged in user """
+    def login(username: str, token: str) -> int:
+        usr_id = -1
         bcrypt = Bcrypt(app)
 
         usr = User.query.filter_by(username=username).one_or_none()
@@ -25,13 +26,13 @@ class auth:
 
         if bcrypt.check_password_hash(usr.secret, token):
             app.logger.debug('Login: {}'.format(username))
-            # usr_id = usr.id
+            login_user(usr)
+            usr_id = usr.id
         else:
             app.logger.debug('Failed login: '.format(username))
             raise Exception('Username/Password combination not found')
 
-        # return usr_id
-        return usr
+        return usr_id
 
     """ :return  the id of the registered user """
     def register(username: str, token: str, tokenVerify: str) -> int:

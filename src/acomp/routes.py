@@ -1,11 +1,10 @@
 from flask import flash, make_response, render_template, redirect, request, session, url_for
 from acomp import app, db, sessions, loginmanager
-from flask_login import current_user, login_user, login_required, logout_user
+from flask_login import current_user, login_required, logout_user
 from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
 from acomp.auth import auth
 from acomp.forms import Signup, Signin
-from acomp.models import User
 import json
 
 loginmanager.login_view = 'login'
@@ -71,11 +70,10 @@ def login():
     if form.validate_on_submit():
         try:
             app.logger.debug('Login user name {}'.format(form.loginname.data))
-            user = auth.login(form.loginname.data, form.loginpswd.data)
-            if user is not None:
+            usr_id = auth.login(form.loginname.data, form.loginpswd.data)
+            if usr_id > 0:
                 flash('Login successful')
-                login_user(user)
-                app.logger.debug('Login user id {}'.format(user.get_id()))
+                app.logger.debug('Login user id {}'.format(usr_id))
                 app.logger.debug('Current user id {}'.format(current_user.get_id()))
                 target = request.args.get('next')
             if not is_safe_url(target):
@@ -86,11 +84,13 @@ def login():
 
 
 @app.route('/captcha')
+@login_required
 def captcha():
     return render_template('captcha.html')
 
 
 @app.route('/captcha/data', methods=['GET'])
+@login_required
 def captcha_get():
     test_images = ["static/img/test.png", "static/img/test_alt.png"]
     stuff = {'image': test_images, 'tags': ['house', 'sun', 'flower']}
@@ -105,6 +105,7 @@ def captcha_get():
 
 
 @app.route('/captcha/data', methods=['POST'])
+@login_required
 def captcha_post():
     if 'userid' in session:
         data = request.get_json()
@@ -132,7 +133,7 @@ def captcha_post():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('/'))
+    return redirect(url_for('login'))
 
 
 @app.route('/signup', methods=['GET', 'POST'])
