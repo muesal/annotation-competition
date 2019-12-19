@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, SubmitField, PasswordField, ValidationError
+from wtforms import Form, StringField, SubmitField, PasswordField, ValidationError, FormField
 from wtforms.validators import InputRequired, EqualTo, Length, Regexp
 from wtforms.widgets import HTMLString, html_params
 from flask_wtf import FlaskForm
@@ -97,45 +97,33 @@ class Signin(FlaskForm):
 
 
 class SettingsUserName(FlaskForm):
-    csrf = CSRFProtect(app)
-    loginpswd = PasswordField("Password", validators=[
-        InputRequired(message='Password must be provided'),
-        Length(min=1, max=512, message='Password too long'),
-    ])
-    newpswd = PasswordField("Password", validators=[
-        InputRequired(message='Password must be provided'),
-        Length(min=14, max=512, message='Please make sure to confirm your password'),
-    ], widget=HTML5TextWidget())
-    newpswdConfirm = PasswordField("Confirm", validators=[
-        InputRequired(message='Password must be confirmed'),
-        Length(min=14, max=512, message='Please make sure to confirm your password'),
-        EqualTo('loginpswd', message='Please make sure to confirm your password'),
-    ], widget=HTML5TextWidget())
-    submit = SubmitField("Register")
+    loginname = StringField("Name")
+    nameButton = SubmitField("Change Name")
 
 
 class SettingsChangePassword(FlaskForm):
-    csrf = CSRFProtect(app)
-    loginpswd = PasswordField("Password", validators=[
-        InputRequired(message='Password must be provided'),
-        Length(min=1, max=512, message='Password too long'),
-    ])
-    newpswd = PasswordField("Password", validators=[
-        InputRequired(message='Password must be provided'),
-        Length(min=14, max=512, message='Please make sure to confirm your password'),
+    newpswd = PasswordField("New password", validators=[
     ], widget=HTML5TextWidget())
-    newpswdConfirm = PasswordField("Confirm", validators=[
-        InputRequired(message='Password must be confirmed'),
-        Length(min=14, max=512, message='Please make sure to confirm your password'),
-        EqualTo('loginpswd', message='Please make sure to confirm your password'),
+    newpswdConfirm = PasswordField("Confirm new password", validators=[
     ], widget=HTML5TextWidget())
-    submit = SubmitField("Change Password")
+    password = SubmitField("Change Password")
 
 
 class SettingsDeleteAccount(FlaskForm):
-    csrf = CSRFProtect(app)
+    delete = SubmitField("Delete Account")
+
+
+class SettingsEnterPassword(FlaskForm):
     loginpswd = PasswordField("Password", validators=[
-        InputRequired(message='Please enter your password'),
+        InputRequired(message='Password must be provided'),
         Length(min=1, max=512, message='Password too long'),
     ])
-    submit = SubmitField("Register")
+
+
+class Settings(FlaskForm):
+    csrf = CSRFProtect(app)
+    name = FormField(SettingsUserName)
+    delete = FormField(SettingsDeleteAccount)
+    password = FormField(SettingsEnterPassword)
+    changepassowrd = FormField(SettingsChangePassword)
+

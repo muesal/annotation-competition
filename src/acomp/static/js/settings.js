@@ -1,0 +1,86 @@
+'use strict';
+
+
+// TODO: use absolute immutable url
+const currentUrl = window.location.href;
+const requestUrl = currentUrl + "/data";
+
+const csrf_token = document.getElementById("csrf_token");
+const password = document.getElementById("loginpswd");
+const newpassword = document.getElementById("newpswd");
+const newpasswordConfirm = document.getElementById("newpswdConfirm");
+const loginname = document.getElementById("login/name");
+const deletebutton = document.getElementById("");
+
+
+
+async function checkLoginname(e) {
+
+
+    const payload = writeToJson(loginname.value);
+
+    try {
+        const response = await fetch(requestUrl, {
+            method: 'POST',
+            body: payload,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token.value,
+            }
+        });
+        console.log('Sent:', payload);
+        if (response.ok) {
+            const json = await response.json();
+            console.log('Success:', JSON.stringify(json));
+            if (json.available != '1') {
+                loginname.setCustomValidity('This username is already taken, please choose another name.');
+                return;
+            }
+        } else {
+            console.error('Error:', response.statusText); // TODO: notify user
+        }
+    } catch (err) {
+        console.error('Error:', err);
+    }
+}
+
+async function checkPasswords(e) {
+    passwordConfirm.setCustomValidity('');
+    if (password.value !== passwordConfirm.value) {
+        passwordConfirm.setCustomValidity('Please make sure to confirm your password');
+        return;
+    }
+
+    // https://haveibeenpwned.com/API/v3#SearchingPwnedPasswordsByRange
+    const apiurl = 'https://api.pwnedpasswords.com/range/';
+    const hash = await digest(password.value);
+    const fetchurl = apiurl + hash.substring(0, 5);
+    var regex = new RegExp('^' + hash.slice(5) + ':(\\d+)', 'im');
+    console.log('Search for:', regex.source);
+
+    try {
+        const response = await fetch(fetchurl);
+        console.log('Sent:', fetchurl);
+        if (response.ok) {
+            const data = await response.text();
+            console.log('Success:', data);
+            if (regex.test(data)) {
+                paragraph.textContent += "Your password might be insecure";
+                return;
+            } else {
+                console.log('Not yet been pwned.');
+            }
+        } else {
+            console.error('Error:', response.statusText); // TODO: notify user
+        }
+    } catch (err) {
+        console.error('Error:', err);
+    }
+}
+
+function handleDelete(event){
+    event.preventDefault()
+        console.log("Delete");
+
+}
+
