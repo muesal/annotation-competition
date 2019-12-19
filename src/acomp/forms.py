@@ -94,3 +94,48 @@ class Signin(FlaskForm):
         Length(min=1, max=512, message='Password too long'),
     ])
     submit = SubmitField("Login")
+
+
+class SettingsUserName(FlaskForm):
+    csrf = CSRFProtect(app)
+    loginpswd = PasswordField("Password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=1, max=512, message='Password too long'),
+    ])
+    newpswd = PasswordField("Password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=14, max=512, message='Please make sure to confirm your password'),
+    ], widget=HTML5TextWidget())
+    newpswdConfirm = PasswordField("Confirm", validators=[
+        InputRequired(message='Password must be confirmed'),
+        Length(min=14, max=512, message='Please make sure to confirm your password'),
+        EqualTo('loginpswd', message='Please make sure to confirm your password'),
+    ], widget=HTML5TextWidget())
+    submit = SubmitField("Register")
+
+
+class SettingsChangePassword(FlaskForm):
+    csrf = CSRFProtect(app)
+    loginpswd = PasswordField("Password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=1, max=512, message='Password too long'),
+    ])
+    newpswd = PasswordField("Password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=14, max=512, message='Please make sure to confirm your password'),
+    ], widget=HTML5TextWidget())
+    newpswdConfirm = PasswordField("Confirm", validators=[
+        InputRequired(message='Password must be confirmed'),
+        Length(min=14, max=512, message='Please make sure to confirm your password'),
+        EqualTo('loginpswd', message='Please make sure to confirm your password'),
+    ], widget=HTML5TextWidget())
+    submit = SubmitField("Change Password")
+
+
+class SettingsDeleteAccount(FlaskForm):
+    csrf = CSRFProtect(app)
+    loginpswd = PasswordField("Password", validators=[
+        InputRequired(message='Please enter your password'),
+        Length(min=1, max=512, message='Password too long'),
+    ])
+    submit = SubmitField("Register")

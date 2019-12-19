@@ -4,7 +4,8 @@ from flask_login import current_user, login_required, logout_user
 from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
 from acomp.auth import auth
-from acomp.forms import Captcha, Classic, Signup, Signin
+
+from acomp.forms import Captcha, Classic, Signup, Signin, SettingsChangePassword
 import json
 
 loginmanager.login_view = 'login'
@@ -15,7 +16,7 @@ def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
-        ref_url.netloc == test_url.netloc
+           ref_url.netloc == test_url.netloc
 
 
 @app.route('/home')
@@ -170,6 +171,26 @@ def signup_post():
 def tutorial():
     form = Classic()
     return render_template('tutorial.html', source='../static/img/tutorial_1.jpg', form=form)
+
+
+@app.route('/settings')
+def settings():
+    form = SettingsChangePassword()
+    return render_template('settings.html', form=form)
+
+
+@app.route('/settings/data', methods=['POST'])
+def settings_post():
+    data = request.get_json()
+    if data is None:
+        return bad_request('Invalid JSON.')
+    if 'name' not in data:
+        return bad_request('Missing key in JSON.')
+    else:
+        if (auth.exists(data['name'])):
+            return '{"available":"0", "message":"Username not available"}'
+        else:
+            return '{"available":"1", "message":"Username available"}'
 
 
 @app.errorhandler(400)

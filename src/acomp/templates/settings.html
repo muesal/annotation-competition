@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block js %}
+    <script src="../static/js/signup.js" defer></script>
+{% endblock %}
+
+{% block loginlink %}
+<u>Login</u>
+{% endblock %}
+
+{% block main %}
+
+    <form id="SettingsForm" method="post">
+        <div class="mdl-textfield mdl-js-textfield">
+            {{ form.loginpswd.label(class="mdl-textfield__label") }}
+            {{ form.loginpswd(class="mdl-textfield__input") }}
+            {% if form.loginpswd.errors %}
+                <ul class="errors">{% for error in form.loginpswd.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+            <div class="mdl-textfield mdl-js-textfield">
+            {{ form.newpswd.label(class="mdl-textfield__label") }}
+            {{ form.newpswd(class="mdl-textfield__input") }}
+            {% if form.newpswd.errors %}
+                <ul class="errors">{% for error in form.newpswd.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        <div class="mdl-textfield mdl-js-textfield">
+            {{ form.newpswdConfirm.label(class="mdl-textfield__label") }}
+            {{ form.newpswdConfirm(class="mdl-textfield__input") }}
+            {% if form.newpswdConfirm.errors %}
+                <ul class="errors">{% for error in form.newpswdConfirm.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        {{ form.csrf_token }}
+        {{ form.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
+    </form>
+
+    <p id="feedbackParagraph"></p>
+
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+    <div class="notification is-danger">
+        {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
+    </div>
+{% endif %}
+{% endwith %}
+{% endblock %}
