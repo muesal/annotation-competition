@@ -3,6 +3,8 @@ from secrets import randbelow
 from acomp import app, db
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glTag import GLTag
+from nltk import pos_tag
+from nltk.stem import WordNetLemmatizer
 
 
 class GLImage:
@@ -15,7 +17,6 @@ class GLImage:
             tags ([Tag]): list of all the Tags provided for this image
             forbiddenTags [str]: string list of words which are forbidden to tag if image is in level 2
             level (int): level of this image (corresponds with the amount of provided Tags)
-            spellcheck (SpellChecker): instance of the Spellchecker to check the spelling of new Tags
     """
 
     def __init__(self, id: int):
@@ -27,7 +28,6 @@ class GLImage:
         self.tags = []
         self.forbiddenTags = []
         self.level = 0
-        self.spellcheck = SpellChecker(distance=1)
 
     def levelUp(self):
         """ Increase the level of the Image if necessary """
@@ -49,6 +49,80 @@ class GLImage:
         self.levelUp()
         return self.level
 
+    def lemmatizeTag(self, tag: [str]) -> str:
+        """
+        Check whether the words are spelled correctly, auto-correct them if possible. Get their Part-of-Speech and stem
+        it them to the root form. Verbs will be put a to in front, adverbs are only allowed in combination with an verb.
+
+        :param tag: the tag
+        :return: the correct tag
+        """
+        sc = SpellChecker(distance=1)
+        wl = WordNetLemmatizer()
+
+        word = tag[0]
+
+        # if unknown to dictionary: correct if minor error, else Tag is invalid
+        wrong = list(sc.unknown([word]))
+        if len(wrong) > 0:
+            word = sc.correction(wrong[0])
+            if word == wrong[0]:
+                raise Exception("\'{}\' could not be found in our dictionary.".format(word))
+
+        pos = pos_tag([word])[0][1]
+        to = ''
+        # todo: switch case?
+        if pos in ['NN', 'NNS', 'NNP', 'NNPS']:
+            # noun, e.g. house
+            pos_one = 'n'
+        elif pos in ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']:
+            # verb, e.g. to go
+            pos_one = 'v'
+            to = 'to '
+        elif pos in ['JJ', 'JJR', 'JJS']:
+            # adjective, e.g. red
+            pos_one = 'a'
+        elif pos in ['RB', 'RBR', 'RBS']:
+            # adverb, e.g. silently
+            pos_one = 'r'
+        else:
+            # todo: find an example for a adjective which was misscaluated as noun
+            raise Exception("Your tag has to bee either a noun, verb or adjective. If \'{}\' is of these part-of-speech"
+                            ", try to reformulate it (e.g. looking instead of look)".format(word))
+
+        correct_tag = to + wl.lemmatize(word, pos=pos_one)
+
+        # if the tag consists of two words repeat:
+        if len(tag) > 1:
+            word = tag[1]
+            # if unknown to dictionary: correct if minor error, else Tag is invalid
+            wrong = list(sc.unknown([word]))
+            if len(wrong) > 0:
+                word = sc.correction(wrong[0])
+                if word == wrong[0]:
+                    raise Exception("\'{}\' could not be found in our dictionary.".format(word))
+
+            pos = pos_tag(word)
+            pos_two = None
+            if pos_one == 'n' and pos in ['NN', 'NNS', 'NNP', 'NNPS']:
+                # e.g. Sherlock Holmes
+                pos_two = 'n'
+            elif pos_one == 'v':
+                if pos in ['RB', 'RBR', 'RBS']:
+                    # e.g. to walk silently
+                    pos_two = 'r'
+                if pos in ['RP', 'IN']:
+                    # eg. to give up or to look after; these words should not be lemmatized
+                    pos_two = None
+            else:
+                #TODO better excetion message
+                raise Exception("\'{}\' in combination with \'{}\'({}) does not make sense to our natural language "
+                                "processor. Try to reformulate it (e.g. looking after instead of look after). "
+                                "If you think we're wrong please contact us.".format(word, tag[0], pos_one))
+            correct_tag += ' ' + (wl.lemmatize(word, pos=pos_two) if pos_two is not None else word)
+
+        return correct_tag
+
     def validate(self, word: str) -> (int, str):
         """ Validates the Tag regarding his spelling (minor misspellings are corrected with frequency list algorithm of
             SpellChecker) and forbidden Tag list, if image in level 2.
@@ -59,27 +133,20 @@ class GLImage:
 
             :return 0 if the tag was already known, 1 if he is valid and new for this picture
         """
-        # word should not consist of more than two words
-        word = word.split(" ")
+        # word should not consist of more than two words (except if it starts with 'to', e.g. 'to go down')
+        word = word.lower().split(" ")
+        if word[0] == 'to':
+            word.pop(0)
         if len(word) > 2:
             raise Exception("A tag may not be longer than two words.")
-        # Todo: only letters, and '-'
 
-        # for each word in tag: if unknown to dictionary: correct if minor error, else Tag is invalid
-        wrong = list(self.spellcheck.unknown(word))
-        if len(wrong) > 0:
-            for i in range(len(wrong)):
-                word[i] = self.spellcheck.correction(wrong[i])
-                if word[i] == wrong[i]:
-                    raise Exception("This word(s) could not be found in our dictionary.")
-
-        # should be one string again
-        word = (' '.join(word)).lower()
+        # lemmatize it
+        word = self.lemmatizeTag(word)
 
         # invalid if image is level 2 and Tag is forbidden
         if self.level == 2 and word in self.forbiddenTags:
-            raise Exception("This tag has been mentioned very often, we cannot give you points for this."
-                            "\n(Not allowed tags may be seen on the right side, under \'mentioned Tags\')")
+            raise Exception("'{}' has been mentioned very often, we cannot give you points for this."
+                            "\n(Not allowed tags may be seen on the right side, under \'mentioned Tags\')".format(word))
 
         # Tag is valid: add Tag or increase its frequency, return 0 if the tag was already known, 1 otherwise
         tag = self.getTag(word)

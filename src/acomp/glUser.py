@@ -136,7 +136,10 @@ class GLUser:
         if image is None:
             image = GLImage(session['image_id'])
 
-        points, tag = image.addTag(tag, session['image_level'])
+        try:
+            points, tag = image.addTag(tag, session['image_level'])
+        except Exception as e:
+            return -1, e.args[0]
 
         tags = loads(session['tags'])
         if tag not in tags:
