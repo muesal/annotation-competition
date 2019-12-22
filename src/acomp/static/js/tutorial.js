@@ -36,6 +36,9 @@ function handleSubmit(e) {
 
 function handleSkip(e) {
     e.preventDefault();
+    if (tutorialState == 5 || tutorialState == 6){
+        advanceState();
+    }
 }
 
 function setInitialSate() {
@@ -50,7 +53,7 @@ function setInitialSate() {
 
 function explainPurpose() {
     tutorialText.innerText = "The goal of this game is to crowdsource the tagging of images\n" +
-        "To make it more exciting, we give you points!"
+        "To make it more exciting, we give you points!\n Press Enter to continue"
 
 }
 
@@ -61,7 +64,7 @@ function highlightImage() {
 function promptTag() {
     submitButton.disabled = false;
     tagField.disabled = false;
-    tutorialText.innerText = "Now you're ready to provide a tag.\n Please enter 'castle'"
+    tutorialText.innerText = "Now you're ready to provide a tag.\n Please enter 'Castle'"
 
 }
 
