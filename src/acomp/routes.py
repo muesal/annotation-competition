@@ -174,6 +174,7 @@ def tutorial():
 
 
 @app.route('/settings')
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
     form = Settings()
     return render_template('settings.html', form=form)
