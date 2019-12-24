@@ -22,7 +22,7 @@ class GLUser:
         tags ([str]): tags user has provided during this round for this image, or tags of captcha image if captcha mode
     """
 
-    def __init__(self, id: int):
+    def __init__(self, id: int, language='en'):
         self.user = User.query.filter_by(id=id).one_or_none()
 
         if self.user is None:
@@ -46,6 +46,8 @@ class GLUser:
             session['cap_captcha'] = 0
         if 'tags' not in session:
             session['tags'] = '[]'
+        if 'languge' not in session:
+            session['language'] = language
 
     def getScore(self) -> int:
         """ :return score of the user """
@@ -137,7 +139,7 @@ class GLUser:
             image = GLImage(session['image_id'])
 
         try:
-            points, tag = image.addTag(tag, session['image_level'])
+            points, tag = image.addTag(tag, session['image_level'], language=session['language'])
         except Exception as e:
             return -1, e.args[0]
 
@@ -195,7 +197,7 @@ class GLUser:
         filenames[session['cap_captcha']] = url_for('static', filename='images/' + image.filename)
         gl_image = GLImage(image.id)
 
-        session['tags'] = dumps(gl_image.getCaptchaTags())
+        session['tags'] = dumps(gl_image.getCaptchaTags(language=session['language']))
         data: dict = {'images': filenames,
                       'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
                       'tags': session['tags'],
@@ -220,10 +222,10 @@ class GLUser:
 
         gl_image = GLImage(session['image_id'])
         if cap != session['cap_captcha']:
-            gl_image.verifyTags(loads(session['tags']), False)
+            gl_image.verifyTags(loads(session['tags']), False, language=session['language'])
             return 0, 'image {} is not the fitting image'.format(cap)
 
-        gl_image.verifyTags(loads(session['tags']), True)
+        gl_image.verifyTags(loads(session['tags']), True, language=session['language'])
         self.user.score = self.user.score + 10
         db.session.commit()
 
