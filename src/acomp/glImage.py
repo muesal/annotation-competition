@@ -15,7 +15,6 @@ class GLImage:
         Attributes:
             image (Image); the image
             id (int): id of the image
-            tags ([Tag]): list of all the Tags provided for this image
             forbiddenTags [str]: string list of words which are forbidden to tag if image is in level 2
             level (int): level of this image (corresponds with the amount of provided Tags)
     """
@@ -26,7 +25,6 @@ class GLImage:
             id = 1
         self.image = Image.query.get(id)
         self.id = id
-        self.tags = []
         self.forbiddenTags = []
         self.level = 0
 
@@ -104,7 +102,7 @@ class GLImage:
                 if word == wrong[0]:
                     raise Exception("\'{}\' could not be found in our dictionary.".format(origin_tag))
 
-            pos = pos_tag([word])
+            pos = pos_tag([word])[0][1]
             pos_two = None
             if pos_one == 'n' and pos in ['NN', 'NNS', 'NNP', 'NNPS']:
                 # e.g. Sherlock Holmes
@@ -170,19 +168,13 @@ class GLImage:
 
         # invalid if image is level 2 and Tag is forbidden
         if self.level == 2 and word in self.forbiddenTags:
-            # TODO: are the mentioned tags on the right side?
+            # TODO: are the mentioned tags on the right side? (for exception message)
             raise Exception("'{}' has been mentioned very often for this image, we cannot give you points for this."
                             "\n(Not allowed tags may be seen on the right side, under \'mentioned Tags\')".format(tag))
 
         # Tag is valid: add Tag or increase its frequency, return 0 if the tag was already known, 1 otherwise
-        known = self.getTag(word)
-        if known is not None:
-            known.mentioned()
-            return 0, self.translateTags([word], 'en', language)[0]
-        else:
-            self.tags.append(GLTag(word, self.id, self.image))
-            self.tags.sort(key=lambda x: x.name)
-        return 1, self.translateTags([word], 'en', language)[0]
+        GLTag(word, self.id)
+        return self.hasTag(word), self.translateTags([word], 'en', language)[0]
 
     def addTag(self, tag: str, level=None, language='en') -> (int, str):
         """ Add a Tag to this image and return the points, depending on the level of the image and whether the Tag is
@@ -209,31 +201,21 @@ class GLImage:
         self.levelUp()
         return points, tag
 
-    def getTag(self, name: str) -> GLTag:
+    def hasTag(self, name: str) -> int:
         """ Get a Tag of this image
 
             :param name: value of this Tag
 
-            :return the Tag, or None if a Tag matching this word doesn't exist
+            :return 0 if a Tag matching this word doesn't exist for this image or 1 if it does
         """
         name = name.lower()
         # make sure, this tag does exist
         tag = Tag.query.filter_by(name=name).one_or_none()
         if tag is None:
-            return None
+            return 0
 
         # make sure it is connected with this image
-        if ImageTag.query.filter_by(tag_id=tag.id, image_id=self.id).one_or_none() is None:
-            return None
-
-        # put it in own list of tags
-        if len(self.tags) >= 0:
-            for tag in self.tags:
-                if tag.getWord() == name:
-                    return tag
-
-        self.tags.append(GLTag(name, self.id, self.image))
-        return self.tags[-1]
+        return 0 if ImageTag.query.filter_by(tag_id=tag.id, image_id=self.id).one_or_none() is None else 1
 
     def getForbiddenTags(self, language='en') -> [str]:
         self.levelUp()

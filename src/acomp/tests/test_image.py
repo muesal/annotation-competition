@@ -68,7 +68,7 @@ class TestImage(TestCase):
         self.user5.image_level = 1
 
         score = self.user2.getScore()
-        self.assertIsNotNone(self.image.getTag('b'))
+        self.assertIsNotNone(self.image.hasTag('b'))
         self.user2.tagImage('b', self.image)  # adds already known tag
         self.assertEqual(self.user2.getScore(), score + 2)  # -> score + 2
         self.user2.tagImage('c', self.image)  # adds new tag
@@ -108,21 +108,21 @@ class TestImage(TestCase):
 
     def test_validate_uppercase(self):
         self.image.addTag('SHERLOCK')
-        self.assertIsNotNone(self.image.getTag('sherlock'))
+        self.assertIsNotNone(self.image.hasTag('sherlock'))
 
     def test_validate_twoWords(self):
         self.assertNotEqual(self.image.addTag('Sherlock Holmes')[0], 0)
-        self.assertIsNotNone(self.image.getTag('Sherlock Holmes'))
+        self.assertIsNotNone(self.image.hasTag('Sherlock Holmes'))
         self.assertRaises(Exception, self.image.validate, 'Sh er lock')
 
     def test_getTag(self):
         self.image.addTag('y')
         self.image.addTag('y')
-        tag = self.image.getTag('y')
+        tag = self.image.hasTag('y')
         self.assertEqual(tag.getFrequency(), 2)
         self.assertEqual(tag.getWord(), 'y')
 
     def test_getTag_invalid(self):
-        self.assertIsNone(self.image.getTag('x'))
+        self.assertIsNone(self.image.hasTag('x'))
 
     # TODO: Test forbidden tags
