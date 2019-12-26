@@ -4,7 +4,7 @@ from flask_login import current_user, login_required, logout_user
 from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
 from acomp.auth import auth
-from acomp.forms import Classic, Signup, Signin
+from acomp.forms import Captcha, Classic, Signup, Signin
 import json
 
 loginmanager.login_view = 'login'
@@ -87,20 +87,28 @@ def login():
 @app.route('/captcha')
 @login_required
 def captcha():
-    return render_template('captcha.html')
+    form = Captcha()
+    usr = GLUser(current_user.get_id())
+    images = usr.startCaptcha()
+    return render_template('captcha.html', source=images['image'], form=form)
 
 
 @app.route('/captcha/data', methods=['GET'])
 @login_required
 def captcha_get():
+#    usr = GLUser(current_user.get_id())
+#    try:
+#        data = usr.startCaptcha()
+#        app.logger.debug(data)
+#        res = make_response(json.dumps(data))
+#    except Exception as e:
+#        return bad_request(e)
+#    else:
+#        res.headers.set('Content-Type', 'application/json')
+#        return res
     test_images = ["static/img/test.png", "static/img/test_alt.png"]
-    stuff = {'image': test_images, 'tags': ['house', 'sun', 'flower']}
-    data = '{"OK":"200", "message":"' + json.dumps(stuff) + '"}'
+    data = {'image': test_images, 'tags': ['house', 'sun', 'flower']}
     res = make_response(data)
-    res.headers.set('Content-Type', 'application/json')
-
-
-    res = make_response(stuff)
     res.headers.set('Content-Type', 'application/json')
     return res
 
@@ -132,11 +140,13 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+
 @app.route('/highscore')
 def highscore():
     test_scores = [('Magrat Garlick', 3242), ('King Verence', 2564), ('Nanny Ogg', 231), ('Granny Weatherwax', 1), ('Gaspode', 0)]
     print(test_scores[0][1])
     return render_template('highscore.html', highscore=test_scores)
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():

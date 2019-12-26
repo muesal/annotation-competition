@@ -52,6 +52,10 @@ def UniqueName(form, field):
         raise ValidationError('This username is already taken, please choose another one')
 
 
+class Captcha(FlaskForm):
+    csrf = CSRFProtect(app)
+
+
 class Classic(FlaskForm):
     csrf = CSRFProtect(app)
 

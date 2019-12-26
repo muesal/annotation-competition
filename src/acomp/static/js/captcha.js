@@ -3,13 +3,14 @@
 
 const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
+const csrf_token = document.getElementById("csrf_token");
 getCaptchaData();
 
 
 async function getCaptchaData() {
     console.log("Getting data");
     try {
-        const response = await fetch('/data');
+        const response = await fetch(requestUrl);
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
@@ -31,11 +32,12 @@ async function sendSelection(num) {
 
     const payload = JSON.stringify(values);
     try {
-        const response = await fetch('/data', {
+        const response = await fetch(requestUrl, {
             method: 'POST',
             body: payload,
             headers: {
                 'Content-Type': 'application/json'
+                'X-CSRFToken': csrf_token.value,
             }
         });
         console.log('Sent:', payload);
