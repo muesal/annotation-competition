@@ -7,7 +7,9 @@ const tutorialText = document.getElementById("instruction");
 const timemeter = document.getElementById('timemeter');
 const timer = document.getElementById('timer');
 const score = document.getElementById('score');
+const img = document.getElementById('tagImage');
 const initialTime = 34;
+var deadline = 3;
 
 
 skipButton.addEventListener("click", handleSkip);
@@ -36,9 +38,9 @@ function handleSubmit(e) {
 
 function handleSkip(e) {
     e.preventDefault();
-    if (tutorialState == 5 || tutorialState == 6){
-        advanceState();
-    }
+    console.log("Skip called");
+    console.log("Advancing from Skip function");
+    advanceState();
 }
 
 function setInitialSate() {
@@ -77,10 +79,24 @@ function reactToTag() {
         "\n Press enter to continue";
 }
 
+function updateTimer() {
+    deadline--;
+    document.getElementById("timer").innerHTML = deadline + " s";
+    document.getElementById("timemeter").value = deadline;
+    if (deadline <= 0) {
+        document.getElementById('btnSubmit').disabled = true;
+        document.getElementById('btnSubmit').value = "Time is over!";
+        document.getElementById('btnSkip').value = "Restart";
+        document.getElementById('btnSkip').disabled = false;
+    }
+}
+
 function explainTimer() {
-    setInterval()
+    setInterval(updateTimer, 1000);
+
     tutorialText.innerText = "The game is on a timer\n" +
-        "Wait until the time is up"
+        "Wait until the time is up\n" +
+        "Then press the \"Restart\" to get a new image"
 
 }
 
@@ -91,12 +107,25 @@ function promptnewImage() {
 }
 
 function promptSkip() {
+    deadline = 100000;
+    document.getElementById('btnSkip').value = "Skip";
+
     tutorialText.innerText = "You can also skip an image by pressing Skip";
 
 }
 
 function displayDone() {
     tutorialText.innerText = "Congratulations, you've completed the tutorial!"
+
+}
+
+function setImgToSkip() {
+    img.src = "../static/img/tutorial_2.jpg";
+}
+
+function setLastImage() {
+    img.src = "../static/img/tutorial_3.jpg";
+
 
 }
 
@@ -117,13 +146,11 @@ function advanceState() {
             explainTimer();
             break;
         case tutorialState = 5:
-            promptnewImage();
-
-            break;
-        case tutorialState = 6:
+            setImgToSkip();
             promptSkip();
             break;
-        case tutorialState = 7:
+        case tutorialState = 6:
+            setLastImage();
             displayDone();
             break;
         default:
