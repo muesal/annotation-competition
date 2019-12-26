@@ -132,6 +132,11 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/highscore')
+def highscore():
+    test_scores = [('Magrat Garlick', 3242), ('King Verence', 2564), ('Nanny Ogg', 231), ('Granny Weatherwax', 1), ('Gaspode', 0)]
+    print(test_scores[0][1])
+    return render_template('highscore.html', highscore=test_scores)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
