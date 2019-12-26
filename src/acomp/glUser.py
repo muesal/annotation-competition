@@ -193,10 +193,12 @@ class GLUser:
         gl_image = GLImage(image.id)
 
         session['tags'] = dumps(gl_image.getCaptchaTags())
-        data: dict = {'images': filenames,
-                      'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
-                      'tags': session['tags'],
-                      'score': self.getScore()}
+        data: dict = {
+            'images': filenames,
+            'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
+            'tags': session['tags'],
+            'score': self.getScore()
+        }
         return data
 
     def capCaptcha(self, cap: int) -> (int, str):
