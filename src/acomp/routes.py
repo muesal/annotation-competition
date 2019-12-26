@@ -159,7 +159,7 @@ def signup_post():
 @app.route('/tutorial')
 def tutorial():
     form = Classic()
-    return render_template('tutorial.html', source='../static/img/tutorial.jp', form=form)
+    return render_template('tutorial.html', source='../static/img/tutorial.js', form=form)
 
 
 @app.errorhandler(400)
