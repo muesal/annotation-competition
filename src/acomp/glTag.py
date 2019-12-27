@@ -54,7 +54,7 @@ class GLTag:
 
     def mentioned(self):
         """
-            Increases frequency of Tag for this image by 1
+        Increases frequency of Tag for this image by 1
         """
         it = ImageTag.query.filter_by(
             tag_id=self.id, image_id=self.imageID).one_or_none()
@@ -62,12 +62,14 @@ class GLTag:
 
     def getFrequency(self) -> int:
         """
-            :return frequency of Tag
+        :return: frequency of this Tag for this image
         """
         frequency = ImageTag.query.filter_by(
             tag_id=self.id, image_id=self.imageID).one_or_none().frequency
         return frequency
 
     def getWord(self) -> str:
-        """ :return word of this Tag """
+        """
+        :return: word of this Tag
+        """
         return self.name

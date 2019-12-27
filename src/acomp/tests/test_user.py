@@ -31,7 +31,7 @@ class TestUser(TestCase):
         self.assertEqual(val, 0)
         self.assertEqual(mes, 'first')
         self.assertEqual(self.user.getScore(), 1)
-        self.assertIsNotNone(self.image.getTag('first'))
+        self.assertIsNotNone(self.image.hasTag('first'))
 
     def test_tagImage_wrongGameMode(self):
         self.user.startCaptcha()

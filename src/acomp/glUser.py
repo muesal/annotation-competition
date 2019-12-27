@@ -22,7 +22,7 @@ class GLUser:
         tags ([str]): tags user has provided during this round for this image, or tags of captcha image if captcha mode
     """
 
-    def __init__(self, id: int):
+    def __init__(self, id: int, language='en'):
         self.user = User.query.filter_by(id=id).one_or_none()
 
         if self.user is None:
@@ -46,15 +46,18 @@ class GLUser:
             session['cap_captcha'] = 0
         if 'tags' not in session:
             session['tags'] = '[]'
+        if 'languge' not in session:
+            session['language'] = language
 
     def getScore(self) -> int:
         """ :return score of the user """
         return self.user.score
 
     def startClassic(self) -> dict:
-        """ Start a game in classic mode. Select an image the user has not seen before
+        """
+        Start a game in classic mode. Select an image the user has not seen before
 
-            :return the image
+        :return: the image
         """
         session['game_mode'] = 0
         session['num_tags'] = 0
@@ -106,14 +109,15 @@ class GLUser:
         return data
 
     def tagImage(self, tag: str, image=None) -> (int, str):
-        """ Tag the image with the given Tag, add the reached points to the score
-            Return -1 and error message, if an error occurred, else 1 and the tag which was added.
-            Return -2 if the game is over (time's up)
+        """
+        Tag the image with the given Tag, add the reached points to the score
+        Return -1 and error message, if an error occurred, else 1 and the tag which was added.
+        Return -2 if the game is over (time's up)
 
-            :param tag: the word to tag
-            :param image: GLImage to tag, or none to tag the image this user is playing with
+        :param tag: the word to tag
+        :param image: GLImage to tag, or none to tag the image this user is playing with
 
-            :returns (validation, message)
+        :return: (validation, message)
         """
         if session['image_id'] == 0:
             raise Exception('No image in DB')
@@ -136,7 +140,10 @@ class GLUser:
         if image is None:
             image = GLImage(session['image_id'])
 
-        points, tag = image.addTag(tag, session['image_level'])
+        try:
+            points, tag = image.addTag(tag, session['image_level'], language=session['language'])
+        except Exception as e:
+            return -1, e.args[0]
 
         tags = loads(session['tags'])
         if tag not in tags:
@@ -149,10 +156,11 @@ class GLUser:
         return -1, "You may not mention this tag again for this image"
 
     def startCaptcha(self) -> dict:
-        """ Start a game in Captcha mode, select one main and n other images, to validate the tags of the main.
-            The main is at a random position of the image list.
+        """
+        Start a game in Captcha mode, select one main and n other images, to validate the tags of the main.
+        The main is at a random position of the image list.
 
-            :return the images, and the tags to validate
+        :return: the images, and the tags to validate
         """
         session['game_mode'] = 1
         session['timestamp'] = time.time()
@@ -192,23 +200,23 @@ class GLUser:
         filenames[session['cap_captcha']] = url_for('static', filename='images/' + image.filename)
         gl_image = GLImage(image.id)
 
-        session['tags'] = dumps(gl_image.getCaptchaTags())
+        session['tags'] = dumps(gl_image.getCaptchaTags(language=session['language']))
         data: dict = {
             'images': filenames,
             'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
             'tags': session['tags'],
-            'score': self.getScore()
-        }
+            'score': self.getScore()}
         return data
 
     def capCaptcha(self, cap: int) -> (int, str):
-        """ Validate, whether the user chose the main image, and validate the tags. User gets 10 points, if correct cap.
-            Return -1 and error message, if an error occurred, 0 for wrong and 1 for correct captcha.
-            Return -2 if the game is over (time's up)
+        """
+        Validate, whether the user chose the main image, and validate the tags. User gets 10 points, if correct cap.
+        Return -1 and error message, if an error occurred, 0 for wrong and 1 for correct captcha.
+        Return -2 if the game is over (time's up)
 
-            :param cap: the image the user chose for this tag
+        :param cap: the image the user chose for this tag
 
-            :return true, if it is the main image, false if not
+        :return: true, if it is the main image, false if not
         """
         # if user is playing classic or this is not the correct cap_captcha return False
         if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
@@ -219,19 +227,20 @@ class GLUser:
 
         gl_image = GLImage(session['image_id'])
         if cap != session['cap_captcha']:
-            gl_image.verifyTags(loads(session['tags']), False)
+            gl_image.verifyTags(loads(session['tags']), False, language=session['language'])
             return 0, 'image {} is not the fitting image'.format(cap)
 
-        gl_image.verifyTags(loads(session['tags']), True)
+        gl_image.verifyTags(loads(session['tags']), True, language=session['language'])
         self.user.score = self.user.score + 10
         db.session.commit()
 
         return 1, '{}'.format(self.user.score)
 
     def end(self) -> int:
-        """ end the current game, no matter which game mode.
+        """
+        End the current game, no matter which game mode.
 
-            :return current score of the user
+        :return: current score of the user
         """
         session['game_mode'] = -1
         session['image_id'] = 0
@@ -243,9 +252,10 @@ class GLUser:
         return self.user.score
 
     def skip(self) -> int:
-        """ User skips an image, no matter which game mode, then end the game and add a skip to the image table.
+        """
+        User skips an image, no matter which game mode, then end the game and add a skip to the image table.
 
-            :return score of user
+        :return: score of user
         """
         if session['game_mode'] != -1 and session['image_id'] != 0:
             # else there is no image in database, or user is not playing
@@ -253,3 +263,17 @@ class GLUser:
             image.skips = image.skips + 1
             db.session.commit()
         return self.end()
+
+    def getHighscore(self) -> dict:
+        """
+        Get the high score of points over all users in the database.
+
+        :return: dictionary with list of the top users (username, score)
+        """
+        sorted_by_score = User.query.order_by(User.score.desc()).all()
+        highscores = []
+        for i in range(app.config['ACOMP_NUM_HIGHSCORE']):
+            highscores.append((sorted_by_score[i].name, sorted_by_score[i].score))
+        hs_as_jsn = dumps(highscores)
+        data: dict = {'highscores': hs_as_jsn}
+        return data
