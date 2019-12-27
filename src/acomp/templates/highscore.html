@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+
+{% block highscorelink %}
+    <u>High Score</u>
+{% endblock %}
+
+
+{% block main %}
+
+    <h1> 🏆🏆&#x1F3C6; </h1>
+
+    {% for item in highscore %}
+        {% if loop.index is eq 1 %}<h2> &#x1F947; {{ item[0] }}: {{ item[1] }} </h2> {% endif %}
+        {% if loop.index is eq 2 %}<h2> &#x1F948; {{ item[0] }}: {{ item[1] }}  </h2> {% endif %}
+        {% if loop.index is eq 3 %}<h2> &#x1F949; {{ item[0] }}: {{ item[1] }}  </h2> {% endif %}
+        {% if loop.index is gt 3 %}<h2> {{ loop.index }}th {{ item[0] }}: {{ item[1] }} </h2> {% endif %}
+    {% endfor %}
+
+
+{% endblock %}

@@ -4,10 +4,8 @@ var score = 0;
 var deadline = 60;
 var timer = setInterval(updateTimer, 1000);
 var mentionedTags = [];
+const csrf_token = document.getElementById("csrf_token");
 const tagForm = document.getElementById("tagForm");
-// TODO: use absolute immutable url
-const currentUrl = window.location.href;
-const requestUrl = currentUrl + "classic/data";
 tagForm.addEventListener("reset", resetTotal);
 tagForm.addEventListener("submit", handleInput);
 
@@ -38,6 +36,7 @@ function handleInput(event) {
 function updateTimer() {
     deadline--;
     document.getElementById("timer").innerHTML = deadline + " s";
+    document.getElementById("timemeter").value = deadline;
     if (deadline <= 0) {
         clearInterval(timer);
         document.getElementById('btnSubmit').disabled = true;
@@ -94,7 +93,7 @@ function resetTags() {
 
 async function getClassicData() {
     try {
-        const response = await fetch(requestUrl);
+        const response = await fetch(tagForm.dataset.datauri);
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
@@ -102,7 +101,9 @@ async function getClassicData() {
             setImg(json.images);
             setScore(json.score);
         } else {
-            console.error('Error:', response.statusText); // TODO: notify user
+            console.error('Error:', response.statusText);
+            notifyUser(response.statusText);
+
         }
     } catch (err) {
         console.error('Error:', err);
@@ -113,11 +114,12 @@ async function sendTag(submittedTag) {
     const payload = writeTagToJson(submittedTag);
 
     try {
-        const response = await fetch(requestUrl, {
+        const response = await fetch(tagForm.dataset.datauri, {
             method: 'POST',
             body: payload,
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token.value,
             }
         });
         console.log('Sent:', payload);
@@ -126,7 +128,8 @@ async function sendTag(submittedTag) {
             console.log('Success:', JSON.stringify(json));
             writeToMentionedTags(json.message);
         } else {
-            console.error('Error:', response.statusText); // TODO: notify user
+            console.error('Error:', response.statusText);
+            notifyUser(response.statusText);
         }
     } catch (err) {
         console.error('Error:', err);
@@ -152,5 +155,20 @@ function setTimer(newTime) {
     deadline = newTime;
     clearInterval(timer);
     timer = setInterval(updateTimer, 1000);
+    var timerMeter = document.getElementById("timemeter");
+
+    document.getElementById("timemeter").value = newTime;
+    timerMeter.max=newTime;
+    timerMeter.low=newTime/4;
+    timerMeter.high=timerMeter/2;
+    timerMeter.optimum=(3 * timerMeter) / 4;
+
     document.getElementById("timer").innerHTML = deadline + " s";
+}
+
+
+function notifyUser(msg) {
+    const snackbarContainer = document.querySelector('#demo-toast-example');
+    const data = {message: msg};
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
 }
