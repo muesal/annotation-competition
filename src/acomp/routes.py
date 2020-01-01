@@ -142,6 +142,7 @@ def logout():
 
 
 @app.route('/highscore')
+@login_required
 def highscore():
     usr = GLUser(current_user.get_id())
     return render_template('highscore.html', highscore=usr.getHighscore())
