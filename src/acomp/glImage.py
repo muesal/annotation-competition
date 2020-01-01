@@ -4,6 +4,7 @@ from acomp import app, db
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glTag import GLTag
 from nltk import pos_tag
+from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 from googletrans import Translator
 
@@ -48,7 +49,7 @@ class GLImage:
         self.levelUp()
         return self.level
 
-    def lemmatizeTag(self, tag: [str], origin_tag: str) -> str:
+    def lemmatizeTag(self, tag: [str], origin_tag: str) -> (str, str):
         """
         Check whether the words are spelled correctly, auto-correct them if possible. Get their Part-of-Speech and stem
         it them to the root form. Verbs will be put a to in front, adverbs are only allowed in combination with an verb.
@@ -56,75 +57,67 @@ class GLImage:
         :param tag: the tag
         :param origin_tag: the tag the user gave, e.g. a german expression of the tag
 
-        :return: the correct tag
+        :return: the correct tag and it's root synonym
         """
         sc = SpellChecker(distance=1)
         wl = WordNetLemmatizer()
 
-        word = tag[0]
-
         # if unknown to dictionary: correct if minor error, else Tag is invalid
-        wrong = list(sc.unknown([word]))
-        if len(wrong) > 0:
-            word = sc.correction(wrong[0])
-            if word == wrong[0]:
-                raise Exception("\'{}\' could not be found in our dictionary.".format(origin_tag))
+        for i in range(len(tag)):
+            wrong = list(sc.unknown([tag[i]]))
+            if len(wrong) > 0:
+                tag[i] = sc.correction(wrong[0])
+                if tag[i] == wrong[0]:
+                    raise Exception("\'{}\' could not be found in our dictionary.".format(origin_tag))
 
-        pos = pos_tag([word])[0][1]
+        pos = pos_tag(tag)
+
         to = ''
         # todo: switch case?
-        if pos in ['NN', 'NNS', 'NNP', 'NNPS']:
+        if pos[0][1] in ['NN', 'NNS', 'NNP', 'NNPS']:
             # noun, e.g. house
             pos_one = 'n'
-        elif pos in ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']:
+        elif pos[0][1] in ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']:
             # verb, e.g. to go
             pos_one = 'v'
             to = 'to '
-        elif pos in ['JJ', 'JJR', 'JJS']:
+        elif pos[0][1] in ['JJ', 'JJR', 'JJS']:
             # adjective, e.g. red
             pos_one = 'a'
-        elif pos in ['RB', 'RBR', 'RBS']:
+        elif pos[0][1] in ['RB', 'RBR', 'RBS']:
             # adverb, e.g. silently
             pos_one = 'r'
         else:
-            # todo: find an example for a adjective which was misscaluated as noun
+            # todo: find an example for a adjective which was miscalculated as noun
             raise Exception("Your tag has to bee either a noun, verb or adjective. If \'{}\' is of these part-of-speech"
                             ", try to reformulate it (e.g. looking instead of look)".format(origin_tag))
 
-        correct_tag = to + wl.lemmatize(word, pos=pos_one)
+        correct_tag = to + wl.lemmatize(tag[0], pos=pos_one)
 
-        # if the tag consists of two words repeat:
-        if len(tag) > 1:
-            word = tag[1]
-            # if unknown to dictionary: correct if minor error, else Tag is invalid
-            wrong = list(sc.unknown([word]))
-            if len(wrong) > 0:
-                word = sc.correction(wrong[0])
-                if word == wrong[0]:
-                    raise Exception("\'{}\' could not be found in our dictionary.".format(origin_tag))
+        # if the tag consists of only one word, look for it's main synonym (e.g. large for big):
+        if len(tag) == 1:
+            syns = wordnet.synsets(correct_tag, pos=pos_one)
+            return correct_tag, correct_tag if len(syns) == 0 else syns[0].lemmas()[0].name()
 
-            pos = pos_tag([word])[0][1]
-            pos_two = None
-            if pos_one == 'n' and pos in ['NN', 'NNS', 'NNP', 'NNPS']:
-                # e.g. Sherlock Holmes
-                pos_two = 'n'
-            elif pos_one == 'v':
-                if pos in ['RB', 'RBR', 'RBS']:
-                    # e.g. to walk silently
-                    pos_two = 'r'
-                if pos in ['RP', 'IN']:
-                    # eg. to give up or to look after; these words should not be lemmatized
-                    pos_two = None
-            else:
-                pos_two = pos
-                raise Exception("Our natural language processor supposes you meant {} {}. "
-                                "\'{}\'({}) in combination with \'{}\'({}) does not make sense to it. "
-                                "Try to reformulate it (e.g. looking after instead of look after). "
-                                "If you think we're wrong please contact us."
-                                .format(tag[0], word, word, pos_two, tag[0], pos_one))
-            correct_tag += ' ' + (wl.lemmatize(word, pos=pos_two) if pos_two is not None else word)
-
-        return correct_tag
+        pos_two = None
+        if pos_one == 'n' and pos[1][1] in ['NN', 'NNS', 'NNP', 'NNPS']:
+            # e.g. Sherlock Holmes
+            pos_two = 'n'
+        elif pos_one == 'v':
+            if pos[1][1] in ['RB', 'RBR', 'RBS']:
+                # e.g. to walk silently
+                pos_two = 'r'
+            if pos[1][1] in ['RP', 'IN']:
+                # eg. to give up or to look after; these words should not be lemmatized
+                pos_two = None
+        else:
+            raise Exception("Our natural language processor supposes you meant {} {}. "
+                            "\'{}\'({}) in combination with \'{}\'({}) does not make sense to it. "
+                            "Try to reformulate it (e.g. looking after instead of look after). "
+                            "If you think we're wrong please contact us."
+                            .format(tag[0], tag[1], tag[1], pos, tag[0], pos_one))
+        correct_tag += ' ' + (wl.lemmatize(tag[1], pos=pos_two) if pos_two is not None else tag[1])
+        return correct_tag, correct_tag
 
     def translateTags(self, tags: [str], src_language: str, dest_language: str) -> [str]:
         """
@@ -166,16 +159,18 @@ class GLImage:
             raise Exception("A tag may not be longer than two words.")
 
         # lemmatize it
-        word = self.lemmatizeTag(word, tag)
+        word, syn = self.lemmatizeTag(word, tag)
 
-        # invalid if image is level 2 and Tag is forbidden
-        if self.level == 2 and word in self.forbiddenTags:
-            raise Exception("'{}' has been mentioned very often for this image, we cannot give you points for this."
-                            "\n(Not allowed tags may be seen above, under \'mentioned Tags\')".format(tag))
+        # invalid if image is level 2 and Tag is forbidden (TODO: check if image is in level two for the user)
+        if self.level == 2 and syn in self.forbiddenTags:
+            raise Exception("'{}' and synonyms have been mentioned very often for this image, we cannot give you points"
+                            " for this.\n(Not allowed tags may be seen above, under \'mentioned Tags\'; their synonyms"
+                            " are not allowed as well)".format(tag))
 
         # Tag is valid: add Tag or increase its frequency, return 0 if the tag was already known, 1 otherwise
-        GLTag(word, self.id)
-        return self.hasTag(word), self.translateTags([word], 'en', language)[0]
+        GLTag(syn, self.id)
+        # TODO: this does not work, tag will always be known after GLTag is initalized
+        return self.hasTag(syn), self.translateTags([word], 'en', language)[0]
 
     def addTag(self, tag: str, level=None, language='en') -> (int, str):
         """ 
@@ -269,6 +264,7 @@ class GLImage:
 
         # choose random entries, until we have enough tags
         while len(captcha_tags) < num_tags:
+            # TODO: prevent that a tag is chosen twice
             rand = randbelow(db.session.query(all_tags).count())
             tag_id = db.session.query(all_tags)[rand].tag_id
             captcha_tags.append(Tag.query.filter_by(id=tag_id).one_and_only().name)
@@ -279,15 +275,15 @@ class GLImage:
         """
         Verify the captcha tags based on whether the user chose the correct image or not.
 
-        :param tags: the tags the user validated TODO: the english ones?
+        :param tags: the tags the user validated TODO: the english ones? -> ids of tags!
         :param correct: boolean whether
         :param language: language the tags should be in
         """
         tags = self.translateTags(tags, 'en', language)
         # TODO: this translation may lead to words we do not have in our database -> solution?
-        for tag in tags:
-            gl_tag = GLTag(tag, self.id, self.image)
-            image_tag = ImageTag.query.filter_by(image_id=self.id, tag_id=gl_tag.id).one_or_none()
+        for name in tags:
+            tag = Tag.query.filter_by(name=name).one_or_none()
+            image_tag = ImageTag.query.filter_by(image_id=self.id, tag_id=tag.id).one_or_none()
             image_tag.total_verified += 1
             if correct:
                 image_tag.successful_verified += 1
