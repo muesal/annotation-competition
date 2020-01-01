@@ -180,20 +180,19 @@ class GLUser:
         # cap is a random one of these images
         session['cap_captcha'] = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
 
-        i = 0
+        iter = 0
         # count how many tags this image is connected with
         image = images[session['cap_captcha']]
-        image_tags = ImageTag.query.filter_by(image_id=image.id).all()
-        num_image_tags = db.session.query(image_tags).count()
+        num_tags = len(ImageTag.query.filter_by(image_id=image.id).all())
 
         # get an image for cap, which has more than three tags, if possible
-        while num_image_tags < app.config['ACOMP_CAPTCHA_NUM_TAGS'] and i < num_images:
+        while num_tags < app.config['ACOMP_CAPTCHA_NUM_TAGS'] and iter < num_images:
             # get a random image_id
             image_id = randbelow(num_images) + 1
             image = Image.query.get(image_id)
             # count how many tags the image is connected with
-            image_tags = ImageTag.query.filter_by(image_id=image_id).all()
-            num_image_tags = db.session.query(image_tags).count()
+            num_tags = len(ImageTag.query.filter_by(image_id=image.id).all())
+            iter += 1
 
         session['image_id'] = image.id
         images[session['cap_captcha']] = image
@@ -219,7 +218,7 @@ class GLUser:
         :return: true, if it is the main image, false if not
         """
         # if user is playing classic or this is not the correct cap_captcha return False
-        if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
+        if abs(time.time() - session['timestamp']) > app.config['ACOMP_CAPTCHA_TIMELIMIT']:
             self.end()
             return -2, "{}".format(self.user.score)
         if session['game_mode'] != 1:

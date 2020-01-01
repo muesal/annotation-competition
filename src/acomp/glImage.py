@@ -242,9 +242,9 @@ class GLImage:
         num_tags = app.config['ACOMP_CAPTCHA_NUM_TAGS']
 
         # if there are less or exactly as many tags for this image as wanted, just take them all.
-        if num_tags <= db.session.query(all_tags).count():
+        if num_tags <= len(all_tags):
             for elem in all_tags:
-                captcha_tags.append(Tag.query.filter_by(id=elem.tag_id).one_and_only().name)
+                captcha_tags.append(Tag.query.filter_by(id=elem.tag_id).one_or_none().name)
                 elem.total_verified = elem.total_verified + 1
             return self.translateTags(captcha_tags, 'en', language)
 
