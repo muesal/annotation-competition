@@ -273,7 +273,5 @@ class GLUser:
         sorted_by_score = User.query.order_by(User.score.desc()).all()
         highscores = []
         for i in range(app.config['ACOMP_NUM_HIGHSCORE']):
-            highscores.append((sorted_by_score[i].name, sorted_by_score[i].score))
-        hs_as_jsn = dumps(highscores)
-        data: dict = {'highscores': hs_as_jsn}
-        return data
+            highscores.append((sorted_by_score[i].username, sorted_by_score[i].score))
+        return highscores
