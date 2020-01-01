@@ -171,6 +171,12 @@ def signup_post():
             return '{"available":"1", "message":"Username available"}'
 
 
+@app.route('/tutorial')
+def tutorial():
+    form = Classic()
+    return render_template('tutorial.html', source='../static/img/tutorial_1.jpg', form=form)
+
+
 @app.errorhandler(400)
 def bad_request(e):
     return render_template('4xx.html', error_msg=e), 400
