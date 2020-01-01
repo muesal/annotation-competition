@@ -90,7 +90,7 @@ def captcha():
     form = Captcha()
     usr = GLUser(current_user.get_id())
     images = usr.startCaptcha()
-    return render_template('captcha.html', source=images['image'], form=form)
+    return render_template('captcha.html', source=images['images'], form=form)
 
 
 @app.route('/captcha/data', methods=['GET'])
