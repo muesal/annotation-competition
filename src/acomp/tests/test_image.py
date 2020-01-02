@@ -107,17 +107,17 @@ class TestImage(TestCase):
         self.assertNotEqual(self.image.validate('ertz'), -1)
 
     def test_validate_uppercase(self):
-        self.image.addTag('SHERLOCK')
+        self.image.tag('SHERLOCK')
         self.assertIsNotNone(self.image.hasTag('sherlock'))
 
     def test_validate_twoWords(self):
-        self.assertNotEqual(self.image.addTag('Sherlock Holmes')[0], 0)
+        self.assertNotEqual(self.image.tag('Sherlock Holmes')[0], 0)
         self.assertIsNotNone(self.image.hasTag('Sherlock Holmes'))
         self.assertRaises(Exception, self.image.validate, 'Sh er lock')
 
     def test_getTag(self):
-        self.image.addTag('y')
-        self.image.addTag('y')
+        self.image.tag('y')
+        self.image.tag('y')
         tag = self.image.hasTag('y')
         self.assertEqual(tag.getFrequency(), 2)
         self.assertEqual(tag.getWord(), 'y')

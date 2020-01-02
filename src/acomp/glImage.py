@@ -2,7 +2,6 @@ from spellchecker.spellchecker import SpellChecker
 from secrets import randbelow
 from acomp import app, db
 from acomp.models import Image, Tag, User, ImageTag, user_image
-from acomp.glTag import GLTag
 from nltk import pos_tag
 from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
@@ -14,7 +13,7 @@ class GLImage:
     A class used to represent an image
 
     Attributes:
-        image (Image); the image
+        image (Image): the image
         id (int): id of the image
         forbiddenTags ([str]): string list of words which are forbidden to tag if image is in level 2
         level (int): level of this image (corresponds with the amount of provided Tags)
@@ -168,11 +167,9 @@ class GLImage:
                             " are not allowed as well)".format(tag))
 
         # Tag is valid: add Tag or increase its frequency, return 0 if the tag was already known, 1 otherwise
-        GLTag(syn, self.id)
-        # TODO: this does not work, tag will always be known after GLTag is initalized
-        return self.hasTag(syn), self.translateTags([word], 'en', language)[0]
+        return self.addTag(word), self.translateTags([word], 'en', language)[0]
 
-    def addTag(self, tag: str, level=None, language='en') -> (int, str):
+    def tag(self, tag: str, level=None, language='en') -> (int, str):
         """ 
         Add a Tag to this image and return the points, depending on the level of the image and whether the Tag is
         new or was already known. If level is none, the actual level of the image is used, add a value to prevent
@@ -214,6 +211,39 @@ class GLImage:
 
         # make sure it is connected with this image
         return 0 if ImageTag.query.filter_by(tag_id=tag.id, image_id=self.id).one_or_none() is None else 1
+
+    def addTag(self, name: str) -> int:
+        """
+        Add this tag to the database if it never occurred before.
+        Else get it from the db and either connect it with the image ore increase its frequency.
+
+        :param tag: the tag to add to this image
+
+        :return: 0 if a Tag matching this word didn't exist for this image or 1 if it did
+        """
+        tag = Tag.query.filter_by(name=name).one_or_none()
+        if tag is None:
+            try:
+                tag = Tag(name)
+                db.session.add(tag)
+                db.session.commit()
+            except Exception:  # TODO: SQLException instead of any
+                # The tag is already known to the db
+                db.session.rollback()
+
+        known = 0
+        try:
+            it = ImageTag(image_id=self.id, tag_id=tag.id, frequency=1, successful_verified=0, total_verified=0)
+            it.tag = tag
+            it.image = self.image
+            db.session.commit()
+        except Exception:
+            # The tag and this image are already connected, the frequency has to be increased with mentioned()
+            db.session.rollback()
+            known = 1
+            it = ImageTag.query.filter_by(tag_id=tag.id, image_id=self.id).one_or_none()
+            it.frequency = it.frequency + 1
+        return known
 
     def getForbiddenTags(self, language='en') -> [str]:
         """

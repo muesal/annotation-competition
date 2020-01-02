@@ -141,7 +141,7 @@ class GLUser:
             image = GLImage(session['image_id'])
 
         try:
-            points, tag = image.addTag(tag, session['image_level'], language=session['language'])
+            points, tag = image.tag(tag, session['image_level'], language=session['language'])
         except Exception as e:
             return -1, e.args[0]
 
