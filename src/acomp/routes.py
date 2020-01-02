@@ -90,7 +90,7 @@ def captcha():
     form = Captcha()
     usr = GLUser(current_user.get_id())
     images = usr.startCaptcha()
-    return render_template('captcha.html', source=images['image'], form=form)
+    return render_template('captcha.html', source=images['images'], form=form)
 
 
 @app.route('/captcha/data', methods=['GET'])
@@ -142,10 +142,10 @@ def logout():
 
 
 @app.route('/highscore')
+@login_required
 def highscore():
-    test_scores = [('Magrat Garlick', 3242), ('King Verence', 2564), ('Nanny Ogg', 231), ('Granny Weatherwax', 1), ('Gaspode', 0)]
-    print(test_scores[0][1])
-    return render_template('highscore.html', highscore=test_scores)
+    usr = GLUser(current_user.get_id())
+    return render_template('highscore.html', highscore=usr.getHighscore())
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -169,6 +169,12 @@ def signup_post():
             return '{"available":"0", "message":"Username not available"}'
         else:
             return '{"available":"1", "message":"Username available"}'
+
+
+@app.route('/tutorial')
+def tutorial():
+    form = Classic()
+    return render_template('tutorial.html', source='../static/img/tutorial_1.jpg', form=form)
 
 
 @app.errorhandler(400)
