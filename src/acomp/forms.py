@@ -97,33 +97,32 @@ class Signin(FlaskForm):
 
 
 class SettingsUserName(FlaskForm):
-    loginname = StringField("Name")
-    nameButton = SubmitField("Change Name")
-
-
-class SettingsChangePassword(FlaskForm):
-    newpswd = PasswordField("New password", validators=[
-    ], widget=HTML5TextWidget())
-    newpswdConfirm = PasswordField("Confirm new password", validators=[
-    ], widget=HTML5TextWidget())
-    password = SubmitField("Change Password")
-
-
-class SettingsDeleteAccount(FlaskForm):
-    delete = SubmitField("Delete Account")
-
-
-class SettingsEnterPassword(FlaskForm):
+    csrf = CSRFProtect(app)
     loginpswd = PasswordField("Password", validators=[
         InputRequired(message='Password must be provided'),
         Length(min=1, max=512, message='Password too long'),
     ])
+    loginname = StringField("Name")
+    submit = SubmitField("Submit")
 
 
-class Settings(FlaskForm):
+class SettingsChangePassword(FlaskForm):
     csrf = CSRFProtect(app)
-    name = FormField(SettingsUserName)
-    delete = FormField(SettingsDeleteAccount)
-    password = FormField(SettingsEnterPassword)
-    changepassowrd = FormField(SettingsChangePassword)
+    loginpswd = PasswordField("Password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=1, max=512, message='Password too long'),
+    ])
+    newpswd = PasswordField("New password", validators=[
+    ], widget=HTML5TextWidget())
+    newpswdConfirm = PasswordField("Confirm new password", validators=[
+    ], widget=HTML5TextWidget())
+    submit = SubmitField("Submit")
 
+
+class SettingsDeleteAccount(FlaskForm):
+    csrf = CSRFProtect(app)
+    loginpswd = PasswordField("Password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=1, max=512, message='Password too long'),
+    ])
+    submit = SubmitField("Delete")

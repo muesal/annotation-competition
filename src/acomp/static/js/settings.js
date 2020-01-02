@@ -11,7 +11,19 @@ const newpassword = document.getElementById("newpswd");
 const newpasswordConfirm = document.getElementById("newpswdConfirm");
 const loginname = document.getElementById("login/name");
 const deletebutton = document.getElementById("");
+const showPasswordButton = document.getElementById("btnShowChangePassword");
+const showDeleteButton = document.getElementById("btnShowDeleteAccount");
+const showChangeNameButton = document.getElementById("btnShowChangeName");
+showPasswordButton.addEventListener("click", showPasswordChange);
+showDeleteButton.addEventListener("click", showDelete);
+showChangeNameButton.addEventListener("click", showChangeName);
 
+
+
+
+document.getElementById("NameForm").style.display = "none";
+document.getElementById("PasswordForm").style.display = "none";
+document.getElementById("DeleteForm").style.display = "none";
 
 
 async function checkLoginname(e) {
@@ -78,9 +90,30 @@ async function checkPasswords(e) {
     }
 }
 
-function handleDelete(event){
-    event.preventDefault()
-        console.log("Delete");
+function handleDelete(event) {
+    event.preventDefault();
+    console.log("Delete");
 
 }
 
+function showDelete() {
+    document.getElementById("NameForm").style.display = "none";
+    document.getElementById("PasswordForm").style.display = "none";
+    document.getElementById("DeleteForm").style.display = "block";
+}
+
+function showChangeName() {
+    event.preventDefault();
+    document.getElementById("NameForm").style.display = "block";
+    document.getElementById("PasswordForm").style.display = "none";
+    document.getElementById("DeleteForm").style.display = "none";
+
+
+}
+
+function showPasswordChange() {
+    document.getElementById("NameForm").style.display = "none";
+    document.getElementById("PasswordForm").style.display = "block";
+    document.getElementById("DeleteForm").style.display = "none";
+
+}

@@ -15,49 +15,95 @@
 
 {% block main %}
 
-    <form id="SettingsForm" method="post">
-        <div class="mdl-textfield mdl-js-textfield" id="namefield">
-            {{ form.name.loginname.label(class="mdl-textfield__label") }}
-            {{ form.name.loginname(autofocus=true, class="mdl-textfield__input") }}
-            {% if form.name.loginname.errors %}
-                <ul class="errors">{% for error in form.name.loginname.errors %}
+
+    <input id="btnShowDeleteAccount" type="button" value="Delete Account"
+           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+
+
+    <form id="DeleteForm" method="post">
+        {{ deleteform.csrf_token }}
+
+        <h2>Delete Account</h2>
+        <div class="mdl-textfield mdl-js-textfield" id="deletepswd">
+
+            {{ passwordform.loginpswd.label(class="mdl-textfield__label") }}
+            {{ passwordform.loginpswd(class="mdl-textfield__input") }}
+            {% if passwordform.loginpswd.errors %}
+                <ul class="errors">{% for error in passwordform.errors %}
                     <li>{{ error }}</li>{% endfor %}</ul>
             {% endif %}
         </div>
-        <div class="mdl-textfield mdl-js-textfield" id="oldpswdfield">
+        {{ deleteform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent") }}
 
-            {{ form.password.loginpswd.label(class="mdl-textfield__label") }}
-            {{ form.password.loginpswd(class="mdl-textfield__input") }}
-            {% if form.password.loginpswd.errors %}
+    </form>
+
+
+    <input id="btnShowChangeName" type="button" value="Change Name"
+           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+
+
+    <form id="NameForm" method="post">
+        <h2>Change Name</h2>
+
+        {{ nameform.csrf_token }}
+
+        <div class="mdl-textfield mdl-js-textfield" id="namefield">
+            {{ nameform.loginname.label(class="mdl-textfield__label") }}
+            {{ nameform.loginname(autofocus=true, class="mdl-textfield__input") }}
+            {% if nameform.loginname.errors %}
+                <ul class="errors">{% for error in nameform.loginname.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
+            {% endif %}
+        </div>
+        {{ nameform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
+        <div class="mdl-textfield mdl-js-textfield" id="namepswd">
+
+            {{ nameform.loginpswd.label(class="mdl-textfield__label") }}
+            {{ nameform.loginpswd(class="mdl-textfield__input") }}
+            {% if nameform.loginpswd.errors %}
                 <ul class="errors">{% for error in pswd.loginpswd.errors %}
                     <li>{{ error }}</li>{% endfor %}</ul>
             {% endif %}
         </div>
 
-        <div class="mdl-textfield mdl-js-textfield" id="newpswdfield">
-            {{ form.changepassowrd.newpswd.label(class="mdl-textfield__label") }}
-            {{ form.changepassowrd.newpswd(class="mdl-textfield__input") }}
-            {% if form.changepassowrd.errors %}
-                <ul class="errors">{% for error in pswd.newpswd.errors %}
+    </form>
+    <input id="btnShowChangePassword" type="button" value="Change Password"
+           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+
+
+    <form id="PasswordForm" method="post">
+        <h2>Change Password</h2>
+
+        <div class="mdl-textfield mdl-js-textfield" id="namepswd">
+            {{ passwordform.csrf_token }}
+
+            {{ passwordform.loginpswd.label(class="mdl-textfield__label") }}
+            {{ passwordform.loginpswd(class="mdl-textfield__input") }}
+            {% if passwordform.loginpswd.errors %}
+                <ul class="errors">{% for error in passwordform.errors %}
                     <li>{{ error }}</li>{% endfor %}</ul>
             {% endif %}
-        </div>
-        <div class="mdl-textfield mdl-js-textfield" id="confirmnewpswd">
-            {{ form.changepassowrd.newpswdConfirm.label(class="mdl-textfield__label") }}
-            {{ form.changepassowrd.newpswdConfirm(class="mdl-textfield__input") }}
-            {% if form.changepassowrd.newpswdConfirm.errors %}
-                <ul class="errors">{% for error in form.newpswdConfirm.errors %}
-                    <li>{{ error }}</li>{% endfor %}</ul>
-            {% endif %}
-        </div>
-        {{ form.csrf_token }}
-        {{ form.changepassowrd.password(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
+            <div class="mdl-textfield mdl-js-textfield" id="newpswdfield">
+                {{ passwordform.newpswd.label(class="mdl-textfield__label") }}
+                {{ passwordform.newpswd(class="mdl-textfield__input") }}
+                {% if passwordform.errors %}
+                    <ul class="errors">{% for error in pswd.newpswd.errors %}
+                        <li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+            <div class="mdl-textfield mdl-js-textfield" id="confirmnewpswd">
+                {{ passwordform.newpswdConfirm.label(class="mdl-textfield__label") }}
+                {{ passwordform.newpswdConfirm(class="mdl-textfield__input") }}
+                {% if passwordform.newpswdConfirm.errors %}
+                    <ul class="errors">{% for error in passwordform.newpswdConfirm.errors %}
+                        <li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
 
-        {{ form.name.nameButton(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
-
-        {{ form.delete.delete(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent") }}
+            {{ passwordform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
 
     </form>
+
 
     <p id="feedbackParagraph"></p>
 

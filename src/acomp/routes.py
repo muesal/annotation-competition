@@ -5,7 +5,8 @@ from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
 from acomp.auth import auth
 
-from acomp.forms import Captcha, Classic, Signup, Signin, SettingsChangePassword, Settings
+from acomp.forms import Captcha, Classic, Signup, Signin, SettingsUserName, SettingsUserName, SettingsChangePassword, SettingsDeleteAccount
+from acomp.forms import Signup, Signin,
 import json
 
 loginmanager.login_view = 'login'
@@ -176,8 +177,10 @@ def tutorial():
 @app.route('/settings')
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    form = Settings()
-    return render_template('settings.html', form=form)
+    nameform = SettingsUserName()
+    passwordform = SettingsChangePassword()
+    deleteform = SettingsDeleteAccount()
+    return render_template('settings.html', nameform=nameform, deleteform=deleteform, passwordform=passwordform)
 
 
 @app.route('/settings/data', methods=['POST'])
