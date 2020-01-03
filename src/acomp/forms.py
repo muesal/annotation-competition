@@ -103,7 +103,7 @@ class SettingsUserName(FlaskForm):
         Length(min=1, max=512, message='Password too long'),
     ])
     loginname = StringField("Name")
-    submit = SubmitField("Submit")
+    submit = SubmitField("Confirm Name Change")
 
 
 class SettingsChangePassword(FlaskForm):
@@ -116,7 +116,7 @@ class SettingsChangePassword(FlaskForm):
     ], widget=HTML5TextWidget())
     newpswdConfirm = PasswordField("Confirm new password", validators=[
     ], widget=HTML5TextWidget())
-    submit = SubmitField("Submit")
+    submit = SubmitField("Confirm Password Change")
 
 
 class SettingsDeleteAccount(FlaskForm):
