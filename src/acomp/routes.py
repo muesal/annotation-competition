@@ -6,7 +6,6 @@ from acomp.glUser import GLUser
 from acomp.auth import auth
 
 from acomp.forms import Captcha, Classic, Signup, Signin, SettingsUserName, SettingsUserName, SettingsChangePassword, SettingsDeleteAccount
-from acomp.forms import Signup, Signin,
 import json
 
 loginmanager.login_view = 'login'
