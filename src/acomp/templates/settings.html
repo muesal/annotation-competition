@@ -71,10 +71,12 @@
            class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
 
 
+    <p id="feedbackParagraph"></p>
+
     <form id="PasswordForm" method="post">
         <h2>Change Password</h2>
 
-        <div class="mdl-textfield mdl-js-textfield" id="namepswd">
+        <div class="mdl-textfield mdl-js-textfield" id="pswdpswd">
             {{ passwordform.csrf_token }}
 
             {{ passwordform.loginpswd.label(class="mdl-textfield__label") }}
@@ -104,8 +106,6 @@
 
     </form>
 
-
-    <p id="feedbackParagraph"></p>
 
 
     {% with messages = get_flashed_messages() %}

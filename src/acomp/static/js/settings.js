@@ -5,19 +5,20 @@
 const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
 
-const csrf_token = document.getElementById("csrf_token");
-const password = document.getElementById("loginpswd");
-const newpassword = document.getElementById("newpswd");
-const newpasswordConfirm = document.getElementById("newpswdConfirm");
-const loginname = document.getElementById("login/name");
-const deletebutton = document.getElementById("");
+const password = document.getElementById("newpswd");
+password.addEventListener("input", checkPasswords);
+const passwordConfirm = document.getElementById("newpswdConfirm");
+passwordConfirm.addEventListener("input", checkPasswords);
+const loginname = document.getElementById("loginname");
+loginname.addEventListener("input", checkLoginname);
+
 const showPasswordButton = document.getElementById("btnShowChangePassword");
 const showDeleteButton = document.getElementById("btnShowDeleteAccount");
 const showChangeNameButton = document.getElementById("btnShowChangeName");
 showPasswordButton.addEventListener("click", showPasswordChange);
 showDeleteButton.addEventListener("click", showDelete);
 showChangeNameButton.addEventListener("click", showChangeName);
-
+const paragraph = document.getElementById("feedbackParagraph");
 
 
 
@@ -89,6 +90,17 @@ async function checkPasswords(e) {
         console.error('Error:', err);
     }
 }
+
+// https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#Converting_a_digest_to_a_hex_string
+async function digest(str) {
+    const strUint8 = new TextEncoder().encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-1', strUint8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    console.log('SHA-1:', hashHex);
+    return hashHex;
+}
+
 
 function handleDelete(event) {
     event.preventDefault();
