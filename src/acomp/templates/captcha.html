@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block captchalink %}
-<u>Rev. Captcha</u>
+    <u>Rev. Captcha</u>
 {% endblock %}
 
 {% block js %}
@@ -13,8 +13,18 @@
 
 {% block main %}
     <main class="mdl-layout__content">
+        <form id="skipForm">
+            <input id="btnSkip" type="reset" value="Skip"
+                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+        </form>
+
         <p id="captchaTags"></p>
-        <p id="time"></p>
+        <meter id="timemeter" class="mdl-progress" min="0" max="60" value="12" low="15" high="30"
+               optimum="45"></meter>
+        <output id="timer">0</output>
+        <br>
+        <label for="score">Score: </label>
+        <output id="score">0</output>
 
         Choose the image that best matches the tags
 
