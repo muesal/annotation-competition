@@ -24,29 +24,17 @@ class GLUser:
 
     def __init__(self, id: int, language='en'):
         self.user = User.query.filter_by(id=id).one_or_none()
-
         if self.user is None:
             raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
 
-        # TODO: nicer way
-        if db.session.query(Image).count() <= 0:
-            app.logger('There are no images in our database')
-
-        if 'game_mode' not in session:
+        if 'timestamp' not in session or time.time() - session['timestamp'] > app.config['ACOMP_LIFETIME_USER']:
             session['game_mode'] = -1
-        if 'image_id' not in session:
             session['image_id'] = 0
-        if 'timestamp' not in session:
             session['timestamp'] = time.time()
-        if 'image_level' not in session:
             session['image_level'] = 0
-        if 'num_tags' not in session:
             session['num_tags'] = 0
-        if 'cap_captcha' not in session:
             session['cap_captcha'] = 0
-        if 'tags' not in session:
             session['tags'] = '[]'
-        if 'languge' not in session:
             session['language'] = language
 
     def getScore(self) -> int:
@@ -102,7 +90,7 @@ class GLUser:
         data: dict = {
             'images': url_for('static', filename='images/' + image.filename),
             'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
-            'accepted': session['tags'],
+            'accepted': gl_image.getForbiddenTags(),
             'score': self.getScore(),
             'user': self.user.id
         }
@@ -125,7 +113,7 @@ class GLUser:
         if session['game_mode'] != 0:
             raise Exception('Wrong game mode')
         # if the time is up end this game
-        if abs(time.time() - session['timestamp']) > app.config['ACOMP_CLASSIC_TIMELIMIT']:
+        if time.time() - session['timestamp'] > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
             return -2, "{}".format(self.user.score)
         # check if the tagging rate is okay
@@ -197,14 +185,17 @@ class GLUser:
         session['image_id'] = image.id
         images[session['cap_captcha']] = image
         filenames[session['cap_captcha']] = url_for('static', filename='images/' + image.filename)
-        gl_image = GLImage(image.id)
 
-        session['tags'] = dumps(gl_image.getCaptchaTags(language=session['language']))
+        gl_image = GLImage(image.id)
+        ids, tags = gl_image.getCaptchaTags(language=session['language'])
+        session['tags'] = dumps(ids)
+
         data: dict = {
             'images': filenames,
             'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
-            'tags': session['tags'],
-            'score': self.getScore()}
+            'tags': tags,
+            'score': self.getScore()
+        }
         return data
 
     def capCaptcha(self, cap: int) -> (int, str):
@@ -226,10 +217,10 @@ class GLUser:
 
         gl_image = GLImage(session['image_id'])
         if cap != session['cap_captcha']:
-            gl_image.verifyTags(loads(session['tags']), False, language=session['language'])
+            gl_image.verifyTags(loads(session['tags']), False)
             return 0, 'image {} is not the fitting image'.format(cap)
 
-        gl_image.verifyTags(loads(session['tags']), True, language=session['language'])
+        gl_image.verifyTags(loads(session['tags']), True)
         self.user.score = self.user.score + 10
         db.session.commit()
 
@@ -269,8 +260,9 @@ class GLUser:
 
         :return: dictionary with list of the top users (username, score)
         """
-        sorted_by_score = User.query.order_by(User.score.desc()).all() # TODO: limit in query
+        sorted_by_score = User.query.order_by(User.score.desc()).limit(app.config['ACOMP_NUM_HIGHSCORE'])
         highscores = []
-        for i in range(app.config['ACOMP_NUM_HIGHSCORE']):
-            highscores.append((sorted_by_score[i].username, sorted_by_score[i].score))
-        return highscores
+        for user in sorted_by_score:
+            highscores.append((user.username, user.score))
+        data: dict = {'highscores': dumps(highscores)}
+        return data

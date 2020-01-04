@@ -104,7 +104,7 @@ class TestImage(TestCase):
         self.assertRaises(Exception, self.image.validate, 'blublio')
 
     def test_validate_misspelled(self):
-        self.assertNotEqual(self.image.validate('ertz'), -1)
+        self.assertNotEqual(self.image.validate('ertz', None), -1)
 
     def test_validate_uppercase(self):
         self.image.tag('SHERLOCK')
