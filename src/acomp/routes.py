@@ -96,21 +96,16 @@ def captcha():
 @app.route('/captcha/data', methods=['GET'])
 @login_required
 def captcha_get():
-#    usr = GLUser(current_user.get_id())
-#    try:
-#        data = usr.startCaptcha()
-#        app.logger.debug(data)
-#        res = make_response(json.dumps(data))
-#    except Exception as e:
-#        return bad_request(e)
-#    else:
-#        res.headers.set('Content-Type', 'application/json')
-#        return res
-    test_images = ["static/img/test.png", "static/img/test_alt.png"]
-    data = {'image': test_images, 'tags': ['house', 'sun', 'flower']}
-    res = make_response(data)
-    res.headers.set('Content-Type', 'application/json')
-    return res
+    usr = GLUser(current_user.get_id())
+    try:
+        data = usr.startCaptcha()
+        app.logger.debug(data)
+        res = make_response(json.dumps(data))
+    except Exception as e:
+        return bad_request(e)
+    else:
+        res.headers.set('Content-Type', 'application/json')
+        return res
 
 
 @app.route('/captcha/data', methods=['POST'])
@@ -124,11 +119,11 @@ def captcha_post():
     else:
         usr = GLUser(current_user.get_id())
         try:
-            tag = usr.tagImage(data['tag'])
+            captcha = usr.capCaptcha(data['captcha'])
         except Exception as e:
             return bad_request(e)
         else:
-            data = '{"OK":"200", "message":"' + tag[1] + '"}'
+            data = '{"OK":"200", "message":"' + captcha[1] + '"}'
             res = make_response(data)
             res.headers.set('Content-Type', 'application/json')
             return res

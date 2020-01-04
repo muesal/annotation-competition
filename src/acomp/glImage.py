@@ -6,6 +6,7 @@ from nltk import pos_tag
 from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 from googletrans import Translator
+from sqlalchemy import func
 
 
 class GLImage:
@@ -20,10 +21,11 @@ class GLImage:
     """
 
     def __init__(self, id: int):
-        # Todo: try....except for image query
         if id < 1:
             id = 1
         self.image = Image.query.get(id)
+        if self.image is None:
+            raise Exception('A Image with this ID could not be found. The ID was: {}'.format(id))
         self.id = id
         self.forbiddenTags = []
         self.level = 0
@@ -87,7 +89,6 @@ class GLImage:
             # adverb, e.g. silently
             pos_one = 'r'
         else:
-            # todo: find an example for a adjective which was miscalculated as noun
             raise Exception("Your tag has to bee either a noun, verb or adjective. If \'{}\' is of these part-of-speech"
                             ", try to reformulate it (e.g. looking instead of look)".format(origin_tag))
 
@@ -130,23 +131,24 @@ class GLImage:
         """
         if src_language != dest_language:
             tl = Translator()
+            translation = tl.translate(tags, src=src_language, dest=dest_language)
             for i in range(len(tags)):
-                tags[i] = tl.translate(tags[i], src=src_language, dest=dest_language).text
+                tags[i] = translation[i].text
         return tags
 
-    def validate(self, tag: str, language='en') -> (int, str):
+    def validate(self, tag: str, level, language='en') -> (int, str):
         """
         Validates the Tag regarding his spelling (minor misspellings are corrected with frequency list algorithm of
         SpellChecker) and forbidden Tag list, if image in level 2.
 
         :param tag: Tag to validate
+        :param level: the level of the image
         :param language:language of the tag (google code)
 
         :raise exception, if more than two words, not in dictionary, or in forbidden tags.
 
         :return: 0 if the tag was already known, 1 if he is valid and new for this picture
         """
-        # TODO: check the language code
         # translate the word to english
         word = self.translateTags([tag], language, 'en')[0]
 
@@ -160,8 +162,8 @@ class GLImage:
         # lemmatize it
         word, syn = self.lemmatizeTag(word, tag)
 
-        # invalid if image is level 2 and Tag is forbidden (TODO: check if image is in level two for the user)
-        if self.level == 2 and syn in self.forbiddenTags:
+        # invalid if image is level 2 and Tag is forbidden
+        if level == 2 and syn in self.forbiddenTags:
             raise Exception("'{}' and synonyms have been mentioned very often for this image, we cannot give you points"
                             " for this.\n(Not allowed tags may be seen above, under \'mentioned Tags\'; their synonyms"
                             " are not allowed as well)".format(tag))
@@ -170,7 +172,7 @@ class GLImage:
         return self.addTag(word), self.translateTags([word], 'en', language)[0]
 
     def tag(self, tag: str, level=None, language='en') -> (int, str):
-        """ 
+        """
         Add a Tag to this image and return the points, depending on the level of the image and whether the Tag is
         new or was already known. If level is none, the actual level of the image is used, add a value to prevent
         changing the level for one user in the middle of his game because of another user.
@@ -181,10 +183,10 @@ class GLImage:
 
         :return: points a user gets for this Task
         """
-        points = 1
-        val, tag = self.validate(tag, language)
-
         lev = self.level if ((level is None) or (level < 0) or (level > 2)) else level
+
+        points = 1
+        val, tag = self.validate(tag, lev, language)
 
         if lev == 1 and val == 0:
             # a already known tag for a level 1 image gives 2 points
@@ -192,7 +194,6 @@ class GLImage:
         if lev == 2:
             points = 2
 
-        self.levelUp()
         return points, tag
 
     def hasTag(self, name: str) -> int:
@@ -248,35 +249,33 @@ class GLImage:
     def getForbiddenTags(self, language='en') -> [str]:
         """
         Get the tags which are forbidden for this image.
-        
+
         :param language: language the tags should be in
-        
+
         :return: list of the tags in the given language
         """
         self.levelUp()
         return self.translateTags(self.forbiddenTags, 'en', language)
 
-    def getCaptchaTags(self, language='en') -> [str]:
+    def getCaptchaTags(self, language='en') -> ([int], [str]):
         """
         Get some tags describing this image for the Captcha game-mode. Tha tags are chosen randomly.
-        
+
         :param language: language the tags should be in
-        
-        :return: list of the tags in the recommended language 
+
+        :return: list of id of the tags, list of the tags in the requested language
         """
-        # TODO: the tags should be returned in english (original tags)
-        #  and translated, to prevent problems in self.verifyTags
-
+        captcha_ids = []
         captcha_tags = []
-        all_tags = ImageTag.query.filter_by(image_id=self.id).all()
         num_tags = app.config['ACOMP_CAPTCHA_NUM_TAGS']
+        random_tags = ImageTag.query.filter_by(image_id=self.id).order_by(func.random()).limit(num_tags).all()
 
-        # if there are less or exactly as many tags for this image as wanted, just take them all.
-        if num_tags <= len(all_tags):
-            for elem in all_tags:
-                captcha_tags.append(Tag.query.filter_by(id=elem.tag_id).one_or_none().name)
-                elem.total_verified = elem.total_verified + 1
-            return self.translateTags(captcha_tags, 'en', language)
+        # return the random tags (acomp_captcha_num_tags or the number of tags this image is connected with)
+        for elem in random_tags:
+            captcha_ids.append(elem.tag_id)
+            captcha_tags.append(Tag.query.filter_by(id=elem.tag_id).one_or_none().name)
+            elem.total_verified = elem.total_verified + 1
+        return captcha_ids, self.translateTags(captcha_tags, 'en', language)
 
         '''
         # else choose tags with very complex and thoughtful algorithm
@@ -292,28 +291,15 @@ class GLImage:
                 break
         '''
 
-        # choose random entries, until we have enough tags
-        while len(captcha_tags) < num_tags:
-            # TODO: prevent that a tag is chosen twice
-            rand = randbelow(db.session.query(all_tags).count())
-            tag_id = db.session.query(all_tags)[rand].tag_id
-            captcha_tags.append(Tag.query.filter_by(id=tag_id).one_and_only().name)
-
-        return self.translateTags(captcha_tags, 'en', language)
-
-    def verifyTags(self, tags: [str], correct: bool, language='en'):
+    def verifyTags(self, tags: [str], correct: bool):
         """
         Verify the captcha tags based on whether the user chose the correct image or not.
 
-        :param tags: the tags the user validated TODO: the english ones? -> ids of tags!
+        :param tags: the ids of the tags the user validated
         :param correct: boolean whether
-        :param language: language the tags should be in
         """
-        tags = self.translateTags(tags, 'en', language)
-        # TODO: this translation may lead to words we do not have in our database -> solution?
-        for name in tags:
-            tag = Tag.query.filter_by(name=name).one_or_none()
-            image_tag = ImageTag.query.filter_by(image_id=self.id, tag_id=tag.id).one_or_none()
+        for id in tags:
+            image_tag = ImageTag.query.filter_by(image_id=self.id, tag_id=id).one_or_none()
             image_tag.total_verified += 1
             if correct:
                 image_tag.successful_verified += 1
