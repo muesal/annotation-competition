@@ -9,7 +9,7 @@ const password = document.getElementById("newpswd");
 password.addEventListener("input", checkPasswords);
 const passwordConfirm = document.getElementById("newpswdConfirm");
 passwordConfirm.addEventListener("input", checkPasswords);
-const loginname = document.getElementById("loginname");
+const loginname = document.getElementById("login/name");
 loginname.addEventListener("input", checkLoginname);
 
 const showPasswordButton = document.getElementById("btnShowChangePassword");
