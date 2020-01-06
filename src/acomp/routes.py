@@ -5,7 +5,7 @@ from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
 from acomp.auth import auth
 
-from acomp.forms import Captcha, Classic, Signup, Signin, SettingsUserName, SettingsUserName, SettingsChangePassword, SettingsDeleteAccount
+from acomp.forms import Captcha, Classic, Signup, Signin, SettingsUserName, SettingsChangePassword, SettingsDeleteAccount
 import json
 
 loginmanager.login_view = 'login'
