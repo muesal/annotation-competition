@@ -173,15 +173,15 @@ def tutorial():
     return render_template('tutorial.html', source='../static/img/tutorial_1.jpg', form=form)
 
 
-@app.route('/settings')
 @app.route('/settings', methods=['GET', 'POST'])
+@login_required
 def settings():
     nameform = SettingsUserName()
     passwordform = SettingsChangePassword()
     deleteform = SettingsDeleteAccount()
     return render_template('settings.html', nameform=nameform, deleteform=deleteform, passwordform=passwordform)
 
-
+@login_required
 @app.route('/settings/data', methods=['POST'])
 def settings_post():
     data = request.get_json()
