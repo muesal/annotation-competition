@@ -11,30 +11,12 @@
 
 {% block main %}
 
-    <input id="btnShowDeleteAccount" type="button" value="Delete Account"
-           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
     <input id="btnShowChangeName" type="button" value="Change Name"
            class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
     <input id="btnShowChangePassword" type="button" value="Change Password"
            class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-
-    <form id="DeleteForm" method="post">
-        <h2>Delete Account</h2>
-
-        <div class="mdl-textfield mdl-js-textfield" id="deletepswd">
-            {{ deleteform.loginpswd.label(class="mdl-textfield__label") }}
-            {{ deleteform.loginpswd(class="mdl-textfield__input") }}
-            {% if deleteform.loginpswd.errors %}
-                <ul class="errors">{% for error in deleteform.loginpswd.errors %}
-                    <li>{{ error }}</li>{% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-
-        {{ deleteform.csrf_token }}
-        {{ deleteform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent") }}
-    </form>
-
+    <input id="btnShowDeleteAccount" type="button" value="Delete Account"
+           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
 
     <form id="NameForm" method="post">
         <h2>Change Name</h2>
@@ -96,6 +78,24 @@
         {{ passwordform.csrf_token }}
         {{ passwordform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
     </form>
+
+    <form id="DeleteForm" method="post">
+        <h2>Delete Account</h2>
+
+        <div class="mdl-textfield mdl-js-textfield" id="deletepswd">
+            {{ deleteform.loginpswd.label(class="mdl-textfield__label") }}
+            {{ deleteform.loginpswd(class="mdl-textfield__input") }}
+            {% if deleteform.loginpswd.errors %}
+                <ul class="errors">{% for error in deleteform.loginpswd.errors %}
+                    <li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        {{ deleteform.csrf_token }}
+        {{ deleteform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent") }}
+    </form>
+
 
     <p id="feedbackParagraph"></p>
 
