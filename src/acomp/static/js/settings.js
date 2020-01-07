@@ -1,35 +1,35 @@
 'use strict';
 
-
 // TODO: use absolute immutable url
 const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
 
-const password = document.getElementById("newpswd");
-password.addEventListener("input", checkPasswords);
-const passwordConfirm = document.getElementById("newpswdConfirm");
-passwordConfirm.addEventListener("input", checkPasswords);
-const loginname = document.getElementById("login/name");
-loginname.addEventListener("input", checkLoginname);
-
-const showPasswordButton = document.getElementById("btnShowChangePassword");
-const showDeleteButton = document.getElementById("btnShowDeleteAccount");
-const showChangeNameButton = document.getElementById("btnShowChangeName");
-showPasswordButton.addEventListener("click", showPasswordChange);
-showDeleteButton.addEventListener("click", showDelete);
-showChangeNameButton.addEventListener("click", showChangeName);
+const loginname = document.getElementById("loginname");
 const paragraph = document.getElementById("feedbackParagraph");
-
-
+const password = document.getElementById("newpswd");
+const passwordConfirm = document.getElementById("newpswdConfirm");
+const showChangeNameButton = document.getElementById("btnShowChangeName");
+const showDeleteButton = document.getElementById("btnShowDeleteAccount");
+const showPasswordButton = document.getElementById("btnShowChangePassword");
+loginname.addEventListener("input", checkLoginname);
+password.addEventListener("input", checkPasswords);
+passwordConfirm.addEventListener("input", checkPasswords);
+showChangeNameButton.addEventListener("click", showChangeName);
+showDeleteButton.addEventListener("click", showDelete);
+showPasswordButton.addEventListener("click", showPasswordChange);
 
 document.getElementById("NameForm").style.display = "none";
 document.getElementById("PasswordForm").style.display = "none";
 document.getElementById("DeleteForm").style.display = "none";
 
+function writeToJson(username) {
+    const obj = {
+        name: username,
+    };
+    return JSON.stringify(obj);
+}
 
 async function checkLoginname(e) {
-
-
     const payload = writeToJson(loginname.value);
 
     try {
@@ -101,11 +101,9 @@ async function digest(str) {
     return hashHex;
 }
 
-
 function handleDelete(event) {
     event.preventDefault();
     console.log("Delete");
-
 }
 
 function showDelete() {
@@ -119,13 +117,10 @@ function showChangeName() {
     document.getElementById("NameForm").style.display = "block";
     document.getElementById("PasswordForm").style.display = "none";
     document.getElementById("DeleteForm").style.display = "none";
-
-
 }
 
 function showPasswordChange() {
     document.getElementById("NameForm").style.display = "none";
     document.getElementById("PasswordForm").style.display = "block";
     document.getElementById("DeleteForm").style.display = "none";
-
 }

@@ -11,6 +11,13 @@
 
 {% block main %}
 
+    <input id="btnShowDeleteAccount" type="button" value="Delete Account"
+           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+    <input id="btnShowChangeName" type="button" value="Change Name"
+           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+    <input id="btnShowChangePassword" type="button" value="Change Password"
+           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+
     <form id="DeleteForm" method="post">
         <h2>Delete Account</h2>
 
@@ -45,7 +52,7 @@
             {{ nameform.loginpswd.label(class="mdl-textfield__label") }}
             {{ nameform.loginpswd(class="mdl-textfield__input") }}
             {% if nameform.loginpswd.errors %}
-                <ul class="errors">{% for error in pswd.loginpswd.errors %}
+                <ul class="errors">{% for error in nameform.loginpswd.errors %}
                     <li>{{ error }}</li>{% endfor %}
                 </ul>
             {% endif %}
@@ -71,7 +78,7 @@
             {{ passwordform.newpswd.label(class="mdl-textfield__label") }}
             {{ passwordform.newpswd(class="mdl-textfield__input") }}
             {% if passwordform.errors %}
-                <ul class="errors">{% for error in pswd.newpswd.errors %}
+                <ul class="errors">{% for error in passwordform.newpswd.errors %}
                     <li>{{ error }}</li>{% endfor %}
                 </ul>
             {% endif %}
