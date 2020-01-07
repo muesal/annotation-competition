@@ -93,7 +93,7 @@ class auth:
         if newToken != newTokenVerify:
             raise Exception('The given passwords do not match.')
 
-        newTokenHash = bcrypt.generate_password_hash(token)
+        newTokenHash = bcrypt.generate_password_hash(newToken)
 
         if bcrypt.check_password_hash(usr.secret, token):
             app.logger.debug('Verify: {}'.format(usr.username))
@@ -125,7 +125,7 @@ class auth:
             try:
                 db.session.delete(usr)
                 db.session.commit()
-                logout_user(usr)
+                logout_user()
                 app.logger.debug("Drop user with username {}".format(usr.username))
             except Exception as e:
                 app.logger.warn(e)

@@ -98,7 +98,7 @@ class Signin(FlaskForm):
 
 class SettingsUserName(FlaskForm):
     csrf = CSRFProtect(app)
-    loginname = StringField("Name", validators=[
+    newloginname = StringField("Name", validators=[
         InputRequired(message='Username must be provided'),
         Length(min=1, max=512, message='Please use not more than 512 characters'),
         Regexp('^\\w+$', message='Please use alphanumeric characters'),
@@ -113,7 +113,7 @@ class SettingsUserName(FlaskForm):
 
 class SettingsChangePassword(FlaskForm):
     csrf = CSRFProtect(app)
-    loginpswd = PasswordField("Password", validators=[
+    oldpswd = PasswordField("Password", validators=[
         InputRequired(message='Password must be provided'),
         Length(min=1, max=512, message='Password too long'),
     ])
@@ -124,14 +124,14 @@ class SettingsChangePassword(FlaskForm):
     newpswdConfirm = PasswordField("Confirm new password", validators=[
         InputRequired(message='Password must be confirmed'),
         Length(min=14, max=512, message='Please make sure to confirm your password'),
-        EqualTo('loginpswd', message='Please make sure to confirm your password'),
+        EqualTo('newpswd', message='Please make sure to confirm your password'),
     ], widget=HTML5TextWidget())
     submit = SubmitField("Confirm Password Change")
 
 
 class SettingsDeleteAccount(FlaskForm):
     csrf = CSRFProtect(app)
-    loginpswd = PasswordField("Password", validators=[
+    loginpswddelform = PasswordField("Password", validators=[
         InputRequired(message='Password must be provided'),
         Length(min=1, max=512, message='Password too long'),
     ])

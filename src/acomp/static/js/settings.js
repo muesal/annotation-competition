@@ -4,7 +4,7 @@
 const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
 
-const loginname = document.getElementById("loginname");
+const loginname = document.getElementById("newloginname");
 const paragraph = document.getElementById("feedbackParagraph");
 const password = document.getElementById("newpswd");
 const passwordConfirm = document.getElementById("newpswdConfirm");

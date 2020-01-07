@@ -183,8 +183,8 @@ def settings():
 
     if nameform.validate_on_submit():
         try:
-            app.logger.debug('Change name to {}'.format(nameform.loginname.data))
-            usrname = auth.changename(current_user.get_id(), nameform.loginname.data, nameform.loginpswd.data)
+            app.logger.debug('Change name to {}'.format(nameform.newloginname.data))
+            usrname = auth.changename(current_user.get_id(), nameform.newloginname.data, nameform.loginpswd.data)
             flash('Name change successful')
             app.logger.debug('Current user id {}'.format(current_user.get_id()))
             app.logger.debug('Name change for {}'.format(usrname))
@@ -193,7 +193,7 @@ def settings():
 
     if passwordform.validate_on_submit():
         try:
-            usr_id = auth.changetoken(current_user.get_id(), passwordform.loginpswd.data, passwordform.newpswd.data, passwordform.newpswdConfirm.data)
+            usr_id = auth.changetoken(current_user.get_id(), passwordform.oldpswd.data, passwordform.newpswd.data, passwordform.newpswdConfirm.data)
             if usr_id > 0:
                 flash('Password change successful')
                 app.logger.debug('Current user id {}'.format(current_user.get_id()))
@@ -204,7 +204,7 @@ def settings():
     if deleteform.validate_on_submit():
         try:
             app.logger.debug('Delete user id {}'.format(current_user.get_id()))
-            usrname = auth.delete(current_user.get_id(), deleteform.loginpswd.data)
+            usrname = auth.delete(current_user.get_id(), deleteform.loginpswddelform.data)
             app.logger.debug('Deleted user {}'.format(usrname))
             flash('User deleted')
             return redirect(url_for('login'))
