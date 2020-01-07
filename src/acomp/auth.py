@@ -1,5 +1,5 @@
 from flask_bcrypt import Bcrypt
-from flask_login import login_user
+from flask_login import login_user, logout_user
 from acomp import app, db, loginmanager
 from acomp.models import User
 
@@ -33,7 +33,7 @@ class auth:
 
         return usr_id
 
-    """ :return  the id of the registered user """
+    """ :return the id of the registered user """
     def register(username: str, token: str, tokenVerify: str) -> int:
         bcrypt = Bcrypt(app)
 
@@ -56,3 +56,83 @@ class auth:
             db.session.rollback()
 
         return usr.id
+
+    """ :return the name of the changed user """
+    def changename(userid: int, newname: str, token: str) -> str:
+        bcrypt = Bcrypt(app)
+
+        usr = User.query.get(userid)
+        if usr is None:
+            raise Exception('A user with this id could not be found. The id was: {}'.format(userid))
+
+        if bcrypt.check_password_hash(usr.secret, token):
+            app.logger.debug('Verify: {}'.format(usr.username))
+            try:
+                usr.username = newname
+                db.session.commit()
+                app.logger.debug("Update username to: {}".format(newname))
+            except Exception as e:
+                app.logger.warn(e)
+                db.session.rollback()
+                raise Exception('Failed to update user')
+        else:
+            app.logger.debug('Failed to verify: '.format(usr.username))
+            raise Exception('Username/Password combination not found')
+
+        return usr.username
+
+    """ :return the id of the updated user """
+    def changetoken(userid: int, token: str, newToken: str, newTokenVerify: str) -> int:
+        usr_id = -1
+        bcrypt = Bcrypt(app)
+
+        usr = User.query.get(userid)
+        if usr is None:
+            raise Exception('A user with this id could not be found. The id was: {}'.format(userid))
+
+        if newToken != newTokenVerify:
+            raise Exception('The given passwords do not match.')
+
+        newTokenHash = bcrypt.generate_password_hash(token)
+
+        if bcrypt.check_password_hash(usr.secret, token):
+            app.logger.debug('Verify: {}'.format(usr.username))
+            try:
+                usr.secret = newTokenHash
+                db.session.commit()
+                app.logger.debug("Update secret for: {}".format(usr.username))
+                usr_id = usr.id
+            except Exception as e:
+                app.logger.warn(e)
+                db.session.rollback()
+                raise Exception('Failed to update user')
+        else:
+            app.logger.debug('Failed to verify: '.format(usr.username))
+            raise Exception('Username/Password combination not found')
+
+        return usr_id
+
+    """ :return the name of the deleted user """
+    def delete(userid: int, token: str) -> str:
+        bcrypt = Bcrypt(app)
+
+        usr = User.query.get(userid)
+        if usr is None:
+            raise Exception('A user with this id could not be found. The id was: {}'.format(userid))
+
+        if bcrypt.check_password_hash(usr.secret, token):
+            app.logger.debug('Verify: {}'.format(usr.username))
+            try:
+                db.session.delete(usr)
+                db.session.commit()
+                logout_user(usr)
+                app.logger.debug("Drop user with username {}".format(usr.username))
+            except Exception as e:
+                app.logger.warn(e)
+                db.session.rollback()
+                raise Exception('Failed to drop user')
+        else:
+            app.logger.debug('Failed to verify: '.format(usr.username))
+            raise Exception('Username/Password combination not found')
+
+        return usr.username
