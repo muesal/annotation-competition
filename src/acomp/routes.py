@@ -4,7 +4,8 @@ from flask_login import current_user, login_required, logout_user
 from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
 from acomp.auth import auth
-from acomp.forms import Captcha, Classic, Signup, Signin
+
+from acomp.forms import Captcha, Classic, Signup, Signin, SettingsUserName, SettingsChangePassword, SettingsDeleteAccount
 import json
 
 loginmanager.login_view = 'login'
@@ -15,7 +16,7 @@ def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
-        ref_url.netloc == test_url.netloc
+           ref_url.netloc == test_url.netloc
 
 
 @app.route('/home')
@@ -153,6 +154,7 @@ def signup():
 
 
 @app.route('/signup/data', methods=['POST'])
+@app.route('/settings/data', methods=['POST'])
 def signup_post():
     data = request.get_json()
     if data is None:
@@ -170,6 +172,46 @@ def signup_post():
 def tutorial():
     form = Classic()
     return render_template('tutorial.html', source='../static/img/tutorial_1.jpg', form=form)
+
+
+@app.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    nameform = SettingsUserName()
+    passwordform = SettingsChangePassword()
+    deleteform = SettingsDeleteAccount()
+
+    if nameform.validate_on_submit():
+        try:
+            app.logger.debug('Change name to {}'.format(nameform.newloginname.data))
+            usrname = auth.changename(current_user.get_id(), nameform.newloginname.data, nameform.loginpswd.data)
+            flash('Name change successful')
+            app.logger.debug('Current user id {}'.format(current_user.get_id()))
+            app.logger.debug('Name change for {}'.format(usrname))
+        except Exception as e:
+            flash(e)
+
+    if passwordform.validate_on_submit():
+        try:
+            usr_id = auth.changetoken(current_user.get_id(), passwordform.oldpswd.data, passwordform.newpswd.data, passwordform.newpswdConfirm.data)
+            if usr_id > 0:
+                flash('Password change successful')
+                app.logger.debug('Current user id {}'.format(current_user.get_id()))
+                app.logger.debug('Change password for {}'.format(usr_id))
+        except Exception as e:
+            flash(e)
+
+    if deleteform.validate_on_submit():
+        try:
+            app.logger.debug('Delete user id {}'.format(current_user.get_id()))
+            usrname = auth.delete(current_user.get_id(), deleteform.loginpswddelform.data)
+            app.logger.debug('Deleted user {}'.format(usrname))
+            flash('User deleted')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(e)
+
+    return render_template('settings.html', nameform=nameform, deleteform=deleteform, passwordform=passwordform)
 
 
 @app.errorhandler(400)

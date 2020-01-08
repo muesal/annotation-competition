@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, SubmitField, PasswordField, ValidationError
+from wtforms import Form, StringField, SubmitField, PasswordField, ValidationError, FormField
 from wtforms.validators import InputRequired, EqualTo, Length, Regexp
 from wtforms.widgets import HTMLString, html_params
 from flask_wtf import FlaskForm
@@ -94,3 +94,45 @@ class Signin(FlaskForm):
         Length(min=1, max=512, message='Password too long'),
     ])
     submit = SubmitField("Login")
+
+
+class SettingsUserName(FlaskForm):
+    csrf = CSRFProtect(app)
+    newloginname = StringField("Name", validators=[
+        InputRequired(message='Username must be provided'),
+        Length(min=1, max=512, message='Please use not more than 512 characters'),
+        Regexp('^\\w+$', message='Please use alphanumeric characters'),
+        UniqueName,
+    ], widget=HTML5TextWidget())
+    loginpswd = PasswordField("Password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=1, max=512, message='Password too long'),
+    ])
+    submit = SubmitField("Confirm Name Change")
+
+
+class SettingsChangePassword(FlaskForm):
+    csrf = CSRFProtect(app)
+    oldpswd = PasswordField("Password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=1, max=512, message='Password too long'),
+    ])
+    newpswd = PasswordField("New password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=14, max=512, message='Please make sure to confirm your password'),
+    ], widget=HTML5TextWidget())
+    newpswdConfirm = PasswordField("Confirm new password", validators=[
+        InputRequired(message='Password must be confirmed'),
+        Length(min=14, max=512, message='Please make sure to confirm your password'),
+        EqualTo('newpswd', message='Please make sure to confirm your password'),
+    ], widget=HTML5TextWidget())
+    submit = SubmitField("Confirm Password Change")
+
+
+class SettingsDeleteAccount(FlaskForm):
+    csrf = CSRFProtect(app)
+    loginpswddelform = PasswordField("Password", validators=[
+        InputRequired(message='Password must be provided'),
+        Length(min=1, max=512, message='Password too long'),
+    ])
+    submit = SubmitField("Delete")
