@@ -63,19 +63,14 @@ function setImages(images) {
     try {
         numImages = images.length;
         for (var i = 0; i < images.length; i++) {
-            const btn = document.createElement("BUTTON");
             const current = i.valueOf();
             const img = document.createElement('img');
             img.src = images[i];
             imagesInHtml.appendChild(img);
-            btn.innerHTML = i.toString();
-            btn.setAttribute("class", "mdl-button mdl-js-button mdl-button--raised mdl-button--colored captcha-button");
-            btn.setAttribute("id", "select-" + current);
-            btn.addEventListener("click", function () {
+            img.addEventListener("click", function () {
                     selectImage(current);
                 }
             );
-            imagesInHtml.appendChild(btn);
         }
     } catch (e) {
         console.log(e)
@@ -127,7 +122,7 @@ function updateTimer() {
 }
 
 
-function handleSkip(e){
+function handleSkip(e) {
     e.preventDefault();
     getCaptchaData();
 }
