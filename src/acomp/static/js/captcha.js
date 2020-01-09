@@ -65,6 +65,7 @@ function setImages(images) {
         for (var i = 0; i < images.length; i++) {
             const current = i.valueOf();
             const img = document.createElement('img');
+            img.className="captchaimage";
             img.src = images[i];
             imagesInHtml.appendChild(img);
             img.addEventListener("click", function () {
