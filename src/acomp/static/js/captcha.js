@@ -126,6 +126,7 @@ function updateTimer() {
             const currentimg = document.getElementById("select-" + i);
             currentimg.removeEventListener("click", listeners[i]);
             currentimg.className = "captchaimageDisabled";
+            currentimg.style.display = "none";
         }
         skipButton.value = "Start Over";
     }
