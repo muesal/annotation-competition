@@ -124,17 +124,26 @@ function updateTimer() {
         clearInterval(timer);
         for (var i = 0; i < numImages; i++) {
             const currentimg = document.getElementById("select-" + i);
-            currentimg.removeEventListener("click", listeners[i]);
             currentimg.className = "captchaimageDisabled";
             currentimg.style.display = "none";
+            currentimg.removeAttribute("id");
         }
         skipButton.value = "Start Over";
     }
 }
 
+function removeImages() {
+    for (var i = 0; i < numImages; i++) {
+        const currentimg = document.getElementById("select-" + i);
+        currentimg.removeEventListener("click", listeners[i]);
+        currentimg.removeAttribute("id");
+
+    }
+}
 
 function handleSkip(e) {
     e.preventDefault();
+    removeImages();
     getCaptchaData();
 }
 
