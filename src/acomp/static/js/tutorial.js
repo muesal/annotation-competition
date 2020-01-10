@@ -59,9 +59,6 @@ function explainPurpose() {
 
 }
 
-function highlightImage() {
-
-}
 
 function promptTag() {
     submitButton.disabled = false;
