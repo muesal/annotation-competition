@@ -1,13 +1,10 @@
 .captchaimage {
     cursor: pointer;
-<<<<<<< Updated upstream
-=======
     max-width: 60%;
     max-height: 60%;
     width: auto;
 
 
->>>>>>> Stashed changes
 }
 
 .captchaimageDisabled {
