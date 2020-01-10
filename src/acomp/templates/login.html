@@ -1,29 +1,32 @@
 {% extends "base.html" %}
 
 {% block loginlink %}
-<u>Login</u>
+    <u>Login</u>
 {% endblock %}
 
 {% block main %}
+    {% if not current_user.is_authenticated %}
     <form id="loginForm" method="post">
         <div class="mdl-textfield mdl-js-textfield">
             {{ form.loginname.label(class="mdl-textfield__label") }}
             {{ form.loginname(autofocus=true, class="mdl-textfield__input") }}
             {% if form.loginname.errors %}
-                <ul class="errors">{% for error in form.loginname.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                <ul class="errors">{% for error in form.loginname.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
             {% endif %}
         </div>
         <div class="mdl-textfield mdl-js-textfield">
             {{ form.loginpswd.label(class="mdl-textfield__label") }}
             {{ form.loginpswd(class="mdl-textfield__input") }}
             {% if form.loginpswd.errors %}
-                <ul class="errors">{% for error in form.loginpswd.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                <ul class="errors">{% for error in form.loginpswd.errors %}
+                    <li>{{ error }}</li>{% endfor %}</ul>
             {% endif %}
         </div>
         {{ form.csrf_token }}
         {{ form.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
     </form>
-
+    {% endif %}
     <p id="feedbackParagraph"></p>
 
     <div class="mdl-typography--text-center">
@@ -31,15 +34,15 @@
         <p>Feel free to <a href="signup">sign up</a>.</p>
     </div>
 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-        <div class="mdl-snackbar__text"></div>
-        <button class="mdl-snackbar__action" type="button"></button>
-    </div>
-    <div class="notification is-danger">
-        {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
-    </div>
-{% endif %}
-{% endwith %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+                <div class="mdl-snackbar__text"></div>
+                <button class="mdl-snackbar__action" type="button"></button>
+            </div>
+            <div class="notification is-danger">
+                {{ messages[0] }}. Go to <a href="{{ url_for('classic') }}"> the game already</a>.
+            </div>
+        {% endif %}
+    {% endwith %}
 {% endblock %}
