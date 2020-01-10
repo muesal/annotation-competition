@@ -41,6 +41,10 @@ class GLUser:
         """ :return score of the user """
         return self.user.score
 
+    def getName(self):
+        """ :return name of the user """
+        return self.user.username
+
     def startClassic(self) -> dict:
         """
         Start a game in classic mode. Select an image the user has not seen before
