@@ -36,19 +36,19 @@
             <div class="mdl-layout-spacer"></div>
             <nav class="mdl-navigation">
                 {% if current_user.is_authenticated %}
-                <a class="mdl-navigation__link" href="{{ url_for('classic') }}">{% block classiclink %}
-                Classic{% endblock %}</a>
-                <a class="mdl-navigation__link" href="{{ url_for('captcha') }}">{% block captchalink %}Rev.
-                    Captcha{% endblock %}</a>
-                <a class="mdl-navigation__link" href="{{ url_for('highscore') }}">{% block highscorelink %} High
-                    Score{% endblock %}</a>
-                <a class="mdl-navigation__link" href="{{ url_for('settings') }}">{% block settingsLink %}
-                    Settings{% endblock %}</a>
-                <a class="mdl-navigation__link" href="{{ url_for('logout') }}">{% block logoutlink %}
-                     {{ username }} &#x23FB{% endblock %}</a>
+                <a title="Classic Game Mode" class="mdl-navigation__link {% block classiclink %}{% endblock %}" href="{{ url_for('classic') }}">
+                    Classic</a>
+                <a title="Captcha Game Mode" class="mdl-navigation__link {% block captchalink %}{% endblock %}" href="{{ url_for('captcha') }}">Rev.
+                    Captcha</a>
+                <a title="High Score" class="mdl-navigation__link {% block highscorelink %}{% endblock %}" href="{{ url_for('highscore') }}">
+                    &#x1F3C6;</a>
+                <a title="Settings" class="mdl-navigation__link {% block settingsLink %}{% endblock %}" href="{{ url_for('settings') }}">
+                    &#x2699;</a>
+                <a title="Logout" class="mdl-navigation__link {% block logoutlink %}{% endblock %}" href="{{ url_for('logout') }}">
+                     {{ username }} &#x23FB;</a>
                 {% else %}
-                <a class="mdl-navigation__link" href="{{ url_for('login') }}">{% block loginlink %}
-                    Login{% endblock %}</a>
+                <a class="mdl-navigation__link {% block loginlink %}{% endblock %}" href="{{ url_for('login') }}">
+                    Login</a>
                 {% endif %}
             </nav>
         </div>
