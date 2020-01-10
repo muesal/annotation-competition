@@ -15,3 +15,4 @@ loginmanager = LoginManager(app)
 
 from acomp import routes
 from acomp import prefill
+from acomp import data
