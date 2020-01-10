@@ -25,9 +25,10 @@ class GLUser:
     """
 
     def __init__(self, id: int, language='en'):
-        self.user = User.query.filter_by(id=id).one_or_none()
-        if self.user is None:
-            raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
+        if id != -1:
+            self.user = User.query.filter_by(id=id).one_or_none()
+            if self.user is None:
+                raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
 
         if 'timestamp' not in session or time.time() - session['timestamp'] > app.config['ACOMP_LIFETIME_USER']:
             session['game_mode'] = -1

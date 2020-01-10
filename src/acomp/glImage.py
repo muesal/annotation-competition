@@ -306,18 +306,19 @@ class GLImage:
                 break
         '''
 
-    def verifyTags(self, tags: [str], correct: bool):
+    def verifyTags(self, tags: [str], correct: bool, influence=1):
         """
         Verify the captcha tags based on whether the user chose the correct image or not.
 
+        :param influence: the influence this answer should have on the db (1, take 0 for entry quiz)
         :param tags: the ids of the tags the user validated
         :param correct: boolean whether
         """
         for id in tags:
             image_tag = ImageTag.query.filter_by(image_id=self.id, tag_id=id).one_or_none()
-            image_tag.total_verified += 1
+            image_tag.total_verified += influence
             if correct:
-                image_tag.successful_verified += 1
+                image_tag.successful_verified += influence
             try:
                 db.session.commit()
             except Exception as e:
