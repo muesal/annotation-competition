@@ -25,8 +25,9 @@ def is_safe_url(target):
 def classic():
     form = Classic()
     usr = GLUser(current_user.get_id())
+    user_name = usr.getName()
     img = usr.startClassic()
-    return render_template('index.html', source=img['images'], form=form)
+    return render_template('index.html', source=img['images'], form=form, username=user_name)
 
 
 @app.route('/classic/data', methods=['GET'])
@@ -68,6 +69,8 @@ def classic_data_post():
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('settings'))
     form = Signin()
     if form.validate_on_submit():
         try:
@@ -90,8 +93,9 @@ def login():
 def captcha():
     form = Captcha()
     usr = GLUser(current_user.get_id())
+    user_name = usr.getName()
     images = usr.startCaptcha()
-    return render_template('captcha.html', source=images['images'], form=form)
+    return render_template('captcha.html', source=images['images'], form=form, username=user_name)
 
 
 @app.route('/captcha/data', methods=['GET'])
@@ -141,11 +145,14 @@ def logout():
 @login_required
 def highscore():
     usr = GLUser(current_user.get_id())
-    return render_template('highscore.html', highscore=usr.getHighscore())
+    user_name = usr.getName()
+    return render_template('highscore.html', highscore=usr.getHighscore(), username=user_name)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('settings'))
     form = Signup()
     if form.validate_on_submit():
         auth.register(form.loginname.data, form.loginpswd.data, form.loginpswdConfirm.data)
@@ -180,6 +187,8 @@ def settings():
     nameform = SettingsUserName()
     passwordform = SettingsChangePassword()
     deleteform = SettingsDeleteAccount()
+    usr = GLUser(current_user.get_id())
+    user_name = usr.getName()
 
     if nameform.validate_on_submit():
         try:
@@ -211,7 +220,7 @@ def settings():
         except Exception as e:
             flash(e)
 
-    return render_template('settings.html', nameform=nameform, deleteform=deleteform, passwordform=passwordform)
+    return render_template('settings.html', nameform=nameform, deleteform=deleteform, passwordform=passwordform, username=user_name)
 
 
 @app.errorhandler(400)

@@ -101,10 +101,6 @@ async function digest(str) {
     return hashHex;
 }
 
-function handleDelete(event) {
-    event.preventDefault();
-    console.log("Delete");
-}
 
 function showDelete() {
     document.getElementById("NameForm").style.display = "none";
@@ -113,7 +109,6 @@ function showDelete() {
 }
 
 function showChangeName() {
-    event.preventDefault();
     document.getElementById("NameForm").style.display = "block";
     document.getElementById("PasswordForm").style.display = "none";
     document.getElementById("DeleteForm").style.display = "none";

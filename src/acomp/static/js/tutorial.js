@@ -59,9 +59,6 @@ function explainPurpose() {
 
 }
 
-function highlightImage() {
-
-}
 
 function promptTag() {
     submitButton.disabled = false;
@@ -85,7 +82,7 @@ function updateTimer() {
     document.getElementById("timemeter").value = deadline;
     if (deadline <= 0) {
         document.getElementById('btnSubmit').disabled = true;
-        document.getElementById('btnSubmit').value = "Time is over!";
+        document.getElementById('btnSubmit').value = "Time is up!";
         document.getElementById('btnSkip').value = "Restart";
         document.getElementById('btnSkip').disabled = false;
     }
