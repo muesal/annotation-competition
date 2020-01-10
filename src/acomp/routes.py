@@ -127,7 +127,7 @@ def captcha_post():
         except Exception as e:
             return bad_request(e)
         else:
-            data = '{"OK":"200", "message":"' + captcha[1] + '"}'
+            data = '{"OK":"200", "message":"' + str(captcha[1]) + '"}'
             res = make_response(data)
             res.headers.set('Content-Type', 'application/json')
             return res
