@@ -262,8 +262,8 @@ class GLUser:
         :return: dictionary with list of the top users (username, score)
         """
         sorted_by_score = User.query.order_by(User.score.desc()).limit(app.config['ACOMP_NUM_HIGHSCORE'])
-        highscores = []
+        highscores: dict = []
         for user in sorted_by_score:
             highscores.append((user.username, user.score))
-        data: dict = {'highscores': dumps(highscores)}
-        return data
+        app.logger.debug(highscores)
+        return highscores
