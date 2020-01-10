@@ -84,12 +84,11 @@ class GLUser:
         gl_image = GLImage(image_id)
         session['image_id'] = image_id
         session['image_level'] = gl_image.getLevel()
-        session['tags'] = dumps(gl_image.getForbiddenTags())
 
         data: dict = {
             'images': url_for('static', filename='images/' + image.filename),
             'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
-            'accepted': loads(session['tags']),
+            'forbidden': gl_image.getForbiddenTags(),
             'score': self.getScore(),
             'user': self.user.id
         }
