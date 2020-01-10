@@ -54,10 +54,6 @@ function isInputPermissible(input) {
         console.log("Tag is empty");
         return false;
     }
-    if (hasAlreadyBeenMentioned(input)) {
-        console.log("Tag has already been mentioned");
-        return false;
-    }
     return true;
 }
 
@@ -67,11 +63,6 @@ function isTimeUp() {
 
 function isEmpty(input) {
     return input === "";
-}
-
-function hasAlreadyBeenMentioned(tag) {
-    console.log(mentionedTags.includes(tag));
-    return mentionedTags.includes(tag);
 }
 
 function resetTotal(event) {
