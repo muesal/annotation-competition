@@ -19,6 +19,7 @@ a `SESSION_TYPE` (e.g. `SESSION_TYPE = 'filesystem'`).
 Run the following commands in the `src` directory:
 
 1. `pip install -r requirements.txt`
+2. `flask nltk-data`
 2. `flask db init`
 3. `flask db migrate`
 4. `flask db uprade`
