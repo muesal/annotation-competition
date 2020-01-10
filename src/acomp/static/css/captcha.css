@@ -1,0 +1,30 @@
+.captchaimage {
+    cursor: pointer;
+    max-width: 60%;
+    max-height: 60%;
+    width: auto;
+
+
+}
+
+.captchaimageDisabled {
+
+}
+
+.captchaimageCorrect {
+    border-color: green;
+    border-style: solid;
+}
+
+.captchaimageIncorrect {
+    border-style: dashed;
+    border-color: red;
+}
+
+.captchaimageChosen {
+    opacity: 1.0;
+}
+
+.captchaimageNotChosen {
+    opacity: 0.5;
+}

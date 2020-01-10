@@ -19,7 +19,6 @@ def is_safe_url(target):
            ref_url.netloc == test_url.netloc
 
 
-@app.route('/home')
 @app.route('/classic')
 @login_required
 def classic():
@@ -27,7 +26,7 @@ def classic():
     usr = GLUser(current_user.get_id())
     user_name = usr.getName()
     img = usr.startClassic()
-    return render_template('index.html', source=img['images'], form=form, username=user_name)
+    return render_template('classic.html', source=img['images'], form=form, username=user_name)
 
 
 @app.route('/classic/data', methods=['GET'])

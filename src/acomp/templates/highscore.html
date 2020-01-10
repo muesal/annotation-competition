@@ -2,13 +2,13 @@
 
 
 {% block highscorelink %}
-    <u>High Score</u>
+mdl-navigation__link--current
 {% endblock %}
 
 
 {% block main %}
 
-    <h1> 🏆🏆&#x1F3C6; </h1>
+    <h1>&#x1F3C6;</h1>
 
     {% for item in highscore %}
         {% if loop.index is eq 1 %}<h2> &#x1F947; {{ item[0] }}: {{ item[1] }} </h2> {% endif %}

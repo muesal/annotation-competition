@@ -10,6 +10,8 @@ const csrf_token = document.getElementById("csrf_token");
 const skipButton = document.getElementById("btnSkip");
 getCaptchaData();
 
+var listeners = [];
+
 
 async function getCaptchaData() {
     console.log("Getting data");
@@ -62,14 +64,20 @@ function setImages(images) {
     imagesInHtml.innerText = "";
     try {
         numImages = images.length;
+        listeners = [];
         for (var i = 0; i < images.length; i++) {
             const current = i.valueOf();
             const img = document.createElement('img');
+            img.className = "captchaimage";
             img.src = images[i];
+            img.id = "select-" + current;
             imagesInHtml.appendChild(img);
-            img.addEventListener("click", function () {
-                    selectImage(current);
-                }
+            var selectFunction = function () {
+                selectImage(current);
+            };
+            listeners.push(selectFunction);
+
+            img.addEventListener("click", selectFunction
             );
         }
     } catch (e) {
@@ -115,16 +123,61 @@ function updateTimer() {
     if (deadline <= 0) {
         clearInterval(timer);
         for (var i = 0; i < numImages; i++) {
-            document.getElementById("select-" + i).disabled = true;
+            const currentimg = document.getElementById("select-" + i);
+            currentimg.className = "captchaimageDisabled";
         }
         skipButton.value = "Start Over";
     }
 }
 
+function removeImages() {
+    for (var i = 0; i < numImages; i++) {
+        const currentimg = document.getElementById("select-" + i);
+        currentimg.removeEventListener("click", listeners[i]);
+        currentimg.removeAttribute("id");
+    }
+}
 
 function handleSkip(e) {
     e.preventDefault();
+    removeImages();
     getCaptchaData();
+}
+
+function highlightImageCorrect(num) {
+    const element = document.getElementById("select-" + num);
+    element.classList.add("captchaimageCorrect");
+}
+
+function hightlightImageIncorrect(num) {
+    const element = document.getElementById("select-" + num);
+    element.classList.add("captchaimageIncorrect");
+}
+
+function highlightChosen(num) {
+    const element = document.getElementById("select-" + num);
+    element.classList.add("captchaimageChosen");
+}
+
+function highlightNotChosen(num) {
+    const element = document.getElementById("select-" + num);
+    element.classList.add("captchaimageNotChosen");
+}
+
+function hightlightImages(correctImageNum, chosenImgNum) {
+    var i;
+    for (var i = 0; i < numImages; i++) {
+        if (i == correctImageNum) {
+            highlightImageCorrect(i)
+        } else {
+            hightlightImageIncorrect(i)
+        }
+        if (i == chosenImgNum) {
+            highlightChosen(i)
+        } else {
+            highlightNotChosen(i)
+        }
+    }
 }
 
 skipButton.addEventListener("click", handleSkip);
