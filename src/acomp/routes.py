@@ -69,6 +69,8 @@ def classic_data_post():
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('settings'))
     form = Signin()
     if form.validate_on_submit():
         try:
@@ -149,6 +151,8 @@ def highscore():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('settings'))
     form = Signup()
     if form.validate_on_submit():
         auth.register(form.loginname.data, form.loginpswd.data, form.loginpswdConfirm.data)
