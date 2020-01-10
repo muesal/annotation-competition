@@ -40,7 +40,7 @@ function updateTimer() {
     if (deadline <= 0) {
         clearInterval(timer);
         document.getElementById('btnSubmit').disabled = true;
-        document.getElementById('btnSubmit').value = "Time is over!";
+        document.getElementById('btnSubmit').value = "Time is up!";
         document.getElementById('btnSkip').value = "Restart";
     }
 }
