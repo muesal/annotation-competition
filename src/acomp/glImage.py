@@ -1,5 +1,4 @@
 from spellchecker.spellchecker import SpellChecker
-from secrets import randbelow
 from acomp import app, db
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from nltk import pos_tag
@@ -35,20 +34,32 @@ class GLImage:
         query_image_user = User.query.join(user_image).join(Image).filter(
             user_image.c.image_id == self.id).all()
         tagged = len(query_image_user)
-        if tagged > 2:
+        if tagged > app.config['ACOMP_NUM_LEV1']:
             self.level = 1
-            if tagged > 4:
-                self.level = 2
-                tags = ImageTag.query.filter_by(image_id=self.id).first()
-                sorted_by_frequency = tags.query.order_by(ImageTag.frequency.desc()).all()
-                for i in range(app.config['ACOMP_CAPTCHA_NUM_TAGS']):
-                    tag = Tag.query.filter_by(id=sorted_by_frequency[i].tag_id).one_or_none()
-                    self.forbiddenTags.append(tag.name)
+        if tagged > app.config['ACOMP_NUM_LEV2']:
+            self.level = 2
+            self.forbiddenTags = []
+            tags = ImageTag.query.filter_by(image_id=self.id).order_by(ImageTag.frequency.desc()).limit(
+                app.config['ACOMP_CAPTCHA_NUM_TAGS']).all()
+            for i in range(app.config['ACOMP_CAPTCHA_NUM_TAGS']):
+                tag = Tag.query.filter_by(id=tags[i].tag_id).one_or_none()
+                self.forbiddenTags.append(tag.name)
 
     def getLevel(self) -> int:
         """ :return: the level of the image """
         self.levelUp()
         return self.level
+
+    def getForbiddenTags(self, language='en') -> [str]:
+        """
+        Get the tags which are forbidden for this image.
+
+        :param language: language the tags should be in
+
+        :return: list of the tags in the given language
+        """
+        self.levelUp()
+        return self.translateTags(self.forbiddenTags, 'en', language)
 
     def lemmatizeTag(self, tag: [str], origin_tag: str) -> (str, str):
         """
@@ -117,6 +128,7 @@ class GLImage:
                             "If you think we're wrong please contact us."
                             .format(tag[0], tag[1], tag[1], pos, tag[0], pos_one))
         correct_tag += ' ' + (wl.lemmatize(tag[1], pos=pos_two) if pos_two is not None else tag[1])
+        # don't look for synonyms if the tag consists of more than one word
         return correct_tag, correct_tag
 
     def translateTags(self, tags: [str], src_language: str, dest_language: str) -> [str]:
@@ -245,17 +257,6 @@ class GLImage:
             it = ImageTag.query.filter_by(tag_id=tag.id, image_id=self.id).one_or_none()
             it.frequency = it.frequency + 1
         return known
-
-    def getForbiddenTags(self, language='en') -> [str]:
-        """
-        Get the tags which are forbidden for this image.
-
-        :param language: language the tags should be in
-
-        :return: list of the tags in the given language
-        """
-        self.levelUp()
-        return self.translateTags(self.forbiddenTags, 'en', language)
 
     def getCaptchaTags(self, language='en') -> ([int], [str]):
         """

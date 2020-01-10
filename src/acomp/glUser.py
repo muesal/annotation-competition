@@ -86,15 +86,13 @@ class GLUser:
         # create a class for this image
         image = Image.query.get(image_id)
         gl_image = GLImage(image_id)
-        gl_image.levelUp()
         session['image_id'] = image_id
         session['image_level'] = gl_image.getLevel()
-        session['tags'] = dumps(gl_image.getForbiddenTags())
 
         data: dict = {
             'images': url_for('static', filename='images/' + image.filename),
             'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
-            'accepted': gl_image.getForbiddenTags(),
+            'forbidden': gl_image.getForbiddenTags(),
             'score': self.getScore(),
             'user': self.user.id
         }
@@ -141,7 +139,6 @@ class GLUser:
         if tag not in tags:
             tags.append(tag)
             session['tags'] = dumps(tags)
-
             self.user.score += points
             db.session.commit()
             return 1, tag
