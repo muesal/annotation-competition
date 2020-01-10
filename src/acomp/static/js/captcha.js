@@ -147,4 +147,13 @@ function handleSkip(e) {
     getCaptchaData();
 }
 
+function highlightImageCorrect(num) {
+    document.getElementById("select-" + num).className = "captchaimageCorrect";
+}
+
+function hightlightImageIncorrect(num) {
+    document.getElementById("select-" + num).className = "captchaimageIncorrect";
+
+}
+
 skipButton.addEventListener("click", handleSkip);

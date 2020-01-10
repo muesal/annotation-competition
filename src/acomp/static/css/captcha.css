@@ -1,10 +1,22 @@
-.captchaimage{
+.captchaimage {
     cursor: pointer;
-
 
 
 }
 
-.captchaimageDisabled{
+.captchaimageDisabled {
+
+}
+
+.captchaimageCorrect {
+    border-style: solid;
+    border-color: green;
+
+}
+
+.captchaimageIncorrect {
+    border-style: solid;
+    border-color: red;
+    opacity: 0.5;
 
 }
