@@ -227,7 +227,7 @@ class GLUser:
 
         :param cap: the image the user chose for this tag
 
-        :return: true, if it is the main image, false if not
+        :return: true, if it is the main image, false if not and the cap
         """
         # if user is playing classic or this is not the correct cap_captcha return False
         if abs(time.time() - session['timestamp']) > app.config['ACOMP_CAPTCHA_TIMELIMIT']:
@@ -247,6 +247,20 @@ class GLUser:
         self.end()
 
         return 1, session['cap_captcha'], self.getScore()
+
+    def capEntryQuiz(self, cap: int) -> (int, str):
+        """
+        Validate, whether the user chose the main image, and validate the tags for the entry quiz.
+
+        :param cap: the image the user chose for this tag
+
+        :return: true, if it is the main image, false if not and the cap
+        """
+        # if user is playing classic or this is not the correct cap_captcha return False
+        if session['game_mode'] != 1:
+            raise Exception('Wrong game mode')
+
+        return 0 if cap != session['cap_captcha'] else 1, session['cap_captcha']
 
     def end(self) -> int:
         """
