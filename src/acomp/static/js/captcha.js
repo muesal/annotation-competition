@@ -117,7 +117,7 @@ function updateTimer() {
         for (var i = 0; i < numImages; i++) {
             document.getElementById("select-" + i).disabled = true;
         }
-        skipButton.value = "Next";
+        skipButton.value = "Start Over";
     }
 }
 
