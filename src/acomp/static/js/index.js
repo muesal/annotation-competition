@@ -97,6 +97,13 @@ async function getClassicData() {
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
+            for (var i = 0; ; i++) {
+                var current = json.forbidden[i]
+                if (current === undefined) {
+                    break;
+                }
+                writeToMentionedTags(current);
+            }
             setTimer(json.timelimit);
             setImg(json.images);
             setScore(json.score);
