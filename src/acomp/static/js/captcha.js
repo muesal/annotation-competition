@@ -160,12 +160,12 @@ function hightlightImageIncorrect(num) {
 
 function highlightChosen(num) {
     const element = document.getElementById("select-" + num);
-    element.classList.add("captchaImageChosen");
+    element.classList.add("captchaimageChosen");
 }
 
 function highlightNotChosen(num) {
     const element = document.getElementById("select-" + num);
-    element.classList.add("captchaImageNotChosen");
+    element.classList.add("captchaimageNotChosen");
 
 }
 
