@@ -50,6 +50,23 @@ class GLImage:
         self.levelUp()
         return self.level
 
+    def translateTags(self, tags: [str], src_language: str, dest_language: str) -> [str]:
+        """
+        Translate a list of tags from the src_language to the dest_language.
+
+        :param tags: a list of strings to translate
+        :param src_language: the language of the tags (google code)
+        :param dest_language: language to translate to (google code)
+
+        :return: list of the translated tags
+        """
+        if src_language != dest_language:
+            tl = Translator()
+            translation = tl.translate(tags, src=src_language, dest=dest_language)
+            for i in range(len(tags)):
+                tags[i] = translation[i].text
+        return tags
+
     def getForbiddenTags(self, language='en') -> [str]:
         """
         Get the tags which are forbidden for this image.
@@ -131,23 +148,6 @@ class GLImage:
         # don't look for synonyms if the tag consists of more than one word
         return correct_tag, correct_tag
 
-    def translateTags(self, tags: [str], src_language: str, dest_language: str) -> [str]:
-        """
-        Translate a list of tags from the src_language to the dest_language.
-
-        :param tags: a list of strings to translate
-        :param src_language: the language of the tags (google code)
-        :param dest_language: language to translate to (google code)
-
-        :return: list of the translated tags
-        """
-        if src_language != dest_language:
-            tl = Translator()
-            translation = tl.translate(tags, src=src_language, dest=dest_language)
-            for i in range(len(tags)):
-                tags[i] = translation[i].text
-        return tags
-
     def validate(self, tag: str, level, language='en') -> (int, str):
         """
         Validates the Tag regarding his spelling (minor misspellings are corrected with frequency list algorithm of
@@ -225,6 +225,17 @@ class GLImage:
         # make sure it is connected with this image
         return 0 if ImageTag.query.filter_by(tag_id=tag.id, image_id=self.id).one_or_none() is None else 1
 
+    def tooGeneric(self, tag_id: int) -> bool:
+        """
+        Check whether this tag is too generic to be valid.
+
+        :param tag_id: id of the tag
+        :return: true if it is to generic
+        """
+        num_images = Image.query.count()
+        num_tag = ImageTag.query.filter_by(tag_id=tag_id).count()
+        return num_tag/num_images > app.config['ACOMP_CLASSIC_RATIO']
+
     def addTag(self, name: str) -> int:
         """
         Add this tag to the database if it never occurred before.
@@ -253,6 +264,9 @@ class GLImage:
         except Exception:
             # The tag and this image are already connected, the frequency has to be increased with mentioned()
             db.session.rollback()
+            if self.tooGeneric(tag.id):
+                raise Exception("'{}' is too generic, as it was mentioned for more than {}% of our images."
+                                .format(name, app.config['ACOMP_CLASSIC_RATIO']))
             known = 1
             it = ImageTag.query.filter_by(tag_id=tag.id, image_id=self.id).one_or_none()
             it.frequency = it.frequency + 1
