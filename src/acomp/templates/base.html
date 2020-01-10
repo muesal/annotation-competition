@@ -44,7 +44,7 @@
                 <a class="mdl-navigation__link" href="{{ url_for('settings') }}">{% block settingsLink %}
                     Settings{% endblock %}</a>
                 <a class="mdl-navigation__link" href="{{ url_for('logout') }}">{% block logoutlink %}
-                     &#x23FB{% endblock %}</a>
+                     {{ username }} &#x23FB{% endblock %}</a>
                 {% else %}
                 <a class="mdl-navigation__link" href="{{ url_for('login') }}">{% block loginlink %}
                     Login{% endblock %}</a>
