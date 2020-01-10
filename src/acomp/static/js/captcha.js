@@ -148,12 +148,41 @@ function handleSkip(e) {
 }
 
 function highlightImageCorrect(num) {
-    document.getElementById("select-" + num).className = "captchaimageCorrect";
+    const element = document.getElementById("select-" + num);
+    element.classList.add("captchaimageCorrect");
 }
 
 function hightlightImageIncorrect(num) {
-    document.getElementById("select-" + num).className = "captchaimageIncorrect";
+    const element = document.getElementById("select-" + num);
+    element.classList.add("captchaimageIncorrect");
 
+}
+
+function highlightChosen(num) {
+    const element = document.getElementById("select-" + num);
+    element.classList.add("captchaImageChosen");
+}
+
+function highlightNotChosen(num) {
+    const element = document.getElementById("select-" + num);
+    element.classList.add("captchaImageNotChosen");
+
+}
+
+function hightlightImages(correctImageNum, chosenImgNum) {
+    var i;
+    for (var i = 0; i < numImages; i++) {
+        if (i == correctImageNum) {
+            highlightImageCorrect(i)
+        } else {
+            hightlightImageIncorrect(i)
+        }
+        if (i == chosenImgNum) {
+            highlightChosen(i)
+        } else {
+            highlightNotChosen(i)
+        }
+    }
 }
 
 skipButton.addEventListener("click", handleSkip);

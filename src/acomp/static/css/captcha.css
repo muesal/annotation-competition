@@ -9,14 +9,27 @@
 }
 
 .captchaimageCorrect {
-    border-style: solid;
     border-color: green;
+    border-style: solid;
+
 
 }
 
+
 .captchaimageIncorrect {
-    border-style: solid;
+    border-style: dashed;
     border-color: red;
+
+}
+
+
+.captchaimageChosen {
+    opacity: 1.0;
+
+}
+
+
+.captchaimageNotChosen {
     opacity: 0.5;
 
 }
