@@ -219,13 +219,13 @@ class GLUser:
         gl_image = GLImage(session['image_id'])
         if cap != session['cap_captcha']:
             gl_image.verifyTags(loads(session['tags']), False)
-            return 0, 'image {} is not the fitting image'.format(cap)
+            return 0, session['cap_captcha']
 
         gl_image.verifyTags(loads(session['tags']), True)
         self.user.score = self.user.score + 10
         db.session.commit()
 
-        return 1, '{}'.format(self.user.score)
+        return 1, session['cap_captcha']
 
     def end(self) -> int:
         """
