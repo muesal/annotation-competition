@@ -13,12 +13,13 @@
 
 {% block main %}
     <main class="mdl-layout__content">
-        <form id="skipForm">
-            <input id="btnSkip" type="reset" value="Skip"
-                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-        </form>
-
+        <p>Choose the image that best matches the tags<p>
         <p id="captchaTags"></p>
+
+        <div id="captchaImages">
+            {{ form.csrf_token }}
+        </div>
+
         <meter id="timemeter" class="mdl-progress" min="0" max="60" value="12" low="15" high="30"
                optimum="45"></meter>
         <output id="timer">0</output>
@@ -26,11 +27,9 @@
         <label for="score">Score: </label>
         <output id="score">0</output>
 
-        Choose the image that best matches the tags
-
-        <div id="captchaImages">
-            {{ form.csrf_token }}
-        </div>
-
+        <form id="skipForm">
+            <input id="btnSkip" type="reset" value="Skip"
+                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+        </form>
     </main>
 {% endblock %}
