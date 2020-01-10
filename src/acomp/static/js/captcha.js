@@ -125,8 +125,6 @@ function updateTimer() {
         for (var i = 0; i < numImages; i++) {
             const currentimg = document.getElementById("select-" + i);
             currentimg.className = "captchaimageDisabled";
-            currentimg.style.display = "none";
-            currentimg.removeAttribute("id");
         }
         skipButton.value = "Start Over";
     }
@@ -137,7 +135,6 @@ function removeImages() {
         const currentimg = document.getElementById("select-" + i);
         currentimg.removeEventListener("click", listeners[i]);
         currentimg.removeAttribute("id");
-
     }
 }
 
@@ -155,7 +152,6 @@ function highlightImageCorrect(num) {
 function hightlightImageIncorrect(num) {
     const element = document.getElementById("select-" + num);
     element.classList.add("captchaimageIncorrect");
-
 }
 
 function highlightChosen(num) {
@@ -166,7 +162,6 @@ function highlightChosen(num) {
 function highlightNotChosen(num) {
     const element = document.getElementById("select-" + num);
     element.classList.add("captchaimageNotChosen");
-
 }
 
 function hightlightImages(correctImageNum, chosenImgNum) {
