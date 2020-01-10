@@ -25,6 +25,7 @@ class GLUser:
     """
 
     def __init__(self, id: int, language='en'):
+        self.id = id
         if id != -1:
             self.user = User.query.filter_by(id=id).one_or_none()
             if self.user is None:
@@ -43,11 +44,11 @@ class GLUser:
 
     def getScore(self) -> int:
         """ :return score of the user """
-        return self.user.score
+        return 0 if self.id == -1 else self.user.score
 
     def getName(self):
         """ :return name of the user """
-        return self.user.username
+        return 'none' if self.id == -1 else self.user.name
 
     def startClassic(self) -> dict:
         """
