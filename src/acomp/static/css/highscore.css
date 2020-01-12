@@ -1,0 +1,24 @@
+h1 {
+    align-self: center;
+}
+
+.highscorelist {
+    list-style-type: upper-roman;
+    font-size: xx-large;
+    align-self: center;
+
+
+}
+
+.highscoreitem:first-child {
+    list-style-type: "\1F947";
+}
+
+.highscoreitem:nth-child(2) {
+    list-style-type: "\1F948";
+
+}
+
+.highscoreitem:nth-child(3) {
+    list-style-type: "\1F949";
+}
