@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
 
+{% block css %}
+    <link href="../static/css/highscore.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
 {% block highscorelink %}
-mdl-navigation__link--current
+    mdl-navigation__link--current
 {% endblock %}
 
 
@@ -10,12 +14,12 @@ mdl-navigation__link--current
 
     <h1>&#x1F3C6;</h1>
 
-    {% for item in highscore %}
-        {% if loop.index is eq 1 %}<h2> &#x1F947; {{ item[0] }}: {{ item[1] }} </h2> {% endif %}
-        {% if loop.index is eq 2 %}<h2> &#x1F948; {{ item[0] }}: {{ item[1] }}  </h2> {% endif %}
-        {% if loop.index is eq 3 %}<h2> &#x1F949; {{ item[0] }}: {{ item[1] }}  </h2> {% endif %}
-        {% if loop.index is gt 3 %}<h2> {{ loop.index }}th {{ item[0] }}: {{ item[1] }} </h2> {% endif %}
-    {% endfor %}
+    <ol class="highscorelist">
+        {% for item in highscore %}
+            <li class="highscoreitem"> {{ item[0] }}: {{ item[1] }} </li>
+        {% endfor %}
+    </ol>
+
 
 
 {% endblock %}
