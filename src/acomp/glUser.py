@@ -14,12 +14,14 @@ class GLUser:
     Attributes:
         user (User): User instance of the user
         game_mode (int): 0 if user is playing Classic, 1 if Reverse Captcha, -1 if he is not playing
-        timestamp (int): seconds for last start/end of a game
         image_id (int): ID of the image this user is currently playing with
+        timestamp (int): seconds for last start/end of a game
         image_level (int): level of this image when user started playing
-        num_levels (int): number of provided tags (for classic mode)
+        num_tags (int): number of provided tags (for classic mode)
         cap_captcha (int): if the user is in captcha mode, the position of the main image in the list of images
+        joker (int): boolean whether a joker was used or not
         tags ([str]): tags user has provided during this round for this image, or tags of captcha image if captcha mode
+        language (str): language the user is playing in
     """
 
     def __init__(self, id: int, language='en'):
@@ -34,6 +36,7 @@ class GLUser:
             session['image_level'] = 0
             session['num_tags'] = 0
             session['cap_captcha'] = 0
+            session['joker'] = 0
             session['tags'] = '[]'
             session['language'] = language
 
@@ -203,6 +206,18 @@ class GLUser:
         }
         return data
 
+    def jokerCaptcha(self) -> [int]:
+        """
+        Fifty-Fifty Joker, remove half of the images which are not the cap, user will only get half of th points.
+
+        :return: list of positions of images, which are not the cap
+        """
+        session['joker'] = 1
+        rest = (session['cap_captcha']+1) % 2
+        return [x for x in range(rest, app.config['ACOMP_CAPTCHA_NUM_IMAGES'], 2)]
+
+
+
     def capCaptcha(self, cap: int) -> (int, str):
         """
         Validate, whether the user chose the main image, and validate the tags. User gets 10 points, if correct cap.
@@ -220,13 +235,15 @@ class GLUser:
         if session['game_mode'] != 1:
             raise Exception('Wrong game mode')
 
+        self.jokerCaptcha()
+
         gl_image = GLImage(session['image_id'])
         if cap != session['cap_captcha']:
             gl_image.verifyTags(loads(session['tags']), False)
             return 0, session['cap_captcha']
 
         gl_image.verifyTags(loads(session['tags']), True)
-        self.user.score = self.user.score + 10
+        self.user.score = self.user.score + (10 if session['joker'] == 0 else 5)
         db.session.commit()
 
         return 1, session['cap_captcha']
@@ -242,6 +259,7 @@ class GLUser:
         session['image_level'] = 0
         session['num_tags'] = 0
         session['cap_captcha'] = 0
+        session['joker'] = 0
         session['tags'] = '[]'
         session['timestamp'] = time.time()
         return self.user.score
