@@ -51,6 +51,8 @@ class GLUser:
 
         :return: the image
         """
+        if session['game_mode'] != -1:
+            self.skip()
         session['game_mode'] = 0
         session['num_tags'] = 0
         session['timestamp'] = time.time()
@@ -151,6 +153,8 @@ class GLUser:
 
         :return: the images, and the tags to validate
         """
+        if session['game_mode'] != -1:
+            self.skip()
         session['game_mode'] = 1
         session['timestamp'] = time.time()
 
