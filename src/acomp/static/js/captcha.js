@@ -50,6 +50,7 @@ async function sendSelection(num) {
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
+            hightlightImages(json.message, num);
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
         }
