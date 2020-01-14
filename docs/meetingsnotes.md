@@ -1,4 +1,14 @@
 # Notes
+14 January
+Get mobile running
+Make GUI nicer
+Try to increase performance
+Shaban has a look at whether we get a server
+Shaban is looking for offline translation 
+Invite Shaban to GitLab repo
+Next meeting 27 January 15:00
+
+
 05 December
 
 automatic labels - pretrained models, we're going to receive the files
