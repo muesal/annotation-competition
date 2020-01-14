@@ -145,6 +145,40 @@ def captcha_post():
 
 
 
+@app.route('/quiz/data', methods=['GET'])
+def quiz_get():
+    usr = GLUser(-1)
+    try:
+        data = usr.startCaptcha()
+        app.logger.debug(data)
+        res = make_response(json.dumps(data))
+    except Exception as e:
+        return bad_request(e)
+    else:
+        res.headers.set('Content-Type', 'application/json')
+        return res
+
+
+@app.route('/quiz/data', methods=['POST'])
+def quiz_post():
+    data = request.get_json()
+    if data is None:
+        return bad_request('Invalid JSON.')
+    if 'captcha' not in data:
+        return bad_request('Missing key in JSON.')
+    else:
+        usr = GLUser(-1)
+        try:
+            captcha = usr.capCaptcha(data['captcha'])
+        except Exception as e:
+            return bad_request(e)
+        else:
+            data = '{"OK":"200", "message":"' + captcha[1] + '"}'
+            res = make_response(data)
+            res.headers.set('Content-Type', 'application/json')
+            return res
+
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -195,6 +229,16 @@ def help():
 def tutorial():
     form = Classic()
     return render_template('tutorial.html', source='../static/img/tutorial_1.jpg', form=form)
+
+
+@app.route('/quiz')
+def quiz():
+    if current_user.is_authenticated:
+        return redirect(url_for('tutorial'))
+    form = Captcha()
+    usr = GLUser(-1)
+    images = usr.startCaptcha()
+    return render_template('captcha.html', source=images['images'], form=form)
 
 
 @app.route('/settings', methods=['GET', 'POST'])
