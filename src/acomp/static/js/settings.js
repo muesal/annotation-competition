@@ -82,6 +82,7 @@ async function checkPasswords(e) {
                 return;
             } else {
                 console.log('Not yet been pwned.');
+                paragraph.textContent="";
             }
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
