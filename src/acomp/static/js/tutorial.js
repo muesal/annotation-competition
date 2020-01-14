@@ -40,7 +40,13 @@ function handleSkip(e) {
     e.preventDefault();
     console.log("Skip called");
     console.log("Advancing from Skip function");
+    clearTags();
     advanceState();
+}
+
+function clearTags() {
+    document.getElementById("mentionedTags").innerText="";
+
 }
 
 function setInitialSate() {
