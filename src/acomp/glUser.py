@@ -213,10 +213,8 @@ class GLUser:
         :return: list of positions of images, which are not the cap
         """
         session['joker'] = 1
-        rest = (session['cap_captcha']+1) % 2
+        rest = (session['cap_captcha'] + 1) % 2
         return [x for x in range(rest, app.config['ACOMP_CAPTCHA_NUM_IMAGES'], 2)]
-
-
 
     def capCaptcha(self, cap: int) -> (int, str):
         """
@@ -234,8 +232,6 @@ class GLUser:
             return -2, "{}".format(self.user.score)
         if session['game_mode'] != 1:
             raise Exception('Wrong game mode')
-
-        self.jokerCaptcha()
 
         gl_image = GLImage(session['image_id'])
         if cap != session['cap_captcha']:
