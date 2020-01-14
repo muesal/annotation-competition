@@ -8,6 +8,8 @@ const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
 const csrf_token = document.getElementById("csrf_token");
 const skipButton = document.getElementById("btnSkip");
+const jokerButton = document.getElementById("btnJoker");
+
 getCaptchaData();
 
 var listeners = [];
@@ -145,6 +147,41 @@ function handleSkip(e) {
     getCaptchaData();
 }
 
+async function handleJoker(e) {
+    e.preventDefault();
+    const values = {
+        'joker': num
+    };
+    const payload = JSON.stringify(values);
+
+    try {
+        const response = await fetch(requestUrl, {
+            method: 'POST',
+            body: payload,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token.value,
+            }
+        });
+        console.log('Sent:', payload);
+        if (response.ok) {
+            const json = await response.json();
+            console.log('Success:', JSON.stringify(json));
+            for (var i = 0; i < json.joker.length; i++) {
+                const current = i.valueOf();
+                const currentimg = document.getElementById("select-" + json.joker[i]);
+                highlightNotChosen(json.joker[i]);
+            }
+
+        } else {
+            console.error('Error:', response.statusText); // TODO: notify user
+        }
+    } catch (err) {
+        console.error('Error:', err);
+    }
+}
+
+
 function highlightImageCorrect(num) {
     const element = document.getElementById("select-" + num);
     element.classList.add("captchaimageCorrect");
@@ -182,3 +219,4 @@ function hightlightImages(correctImageNum, chosenImgNum) {
 }
 
 skipButton.addEventListener("click", handleSkip);
+jokerButton.addEventListener("click", handleJoker);
