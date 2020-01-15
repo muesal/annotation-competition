@@ -121,7 +121,7 @@ def captcha_post():
     if 'joker' in data:
         usr = GLUser(current_user.get_id())
         try:
-            wrng_images = usr.joker(data['captcha'])
+            wrng_images = usr.jokerCaptcha()
         except Exception as e:
             return bad_request(e)
         else:
