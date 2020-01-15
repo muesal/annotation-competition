@@ -150,7 +150,7 @@ function handleSkip(e) {
 async function handleJoker(e) {
     e.preventDefault();
     const values = {
-        'joker': num
+        'joker': 0
     };
     const payload = JSON.stringify(values);
 
