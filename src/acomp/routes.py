@@ -125,8 +125,8 @@ def captcha_post():
         except Exception as e:
             return bad_request(e)
         else:
-            data = '{"OK":"200", "message":"' + str(wrng_images) + '"}'
-            res = make_response(data)
+            stuff = {"message": wrng_images}
+            res = make_response(json.dumps(stuff))
             res.headers.set('Content-Type', 'application/json')
             return res
     if 'captcha' in data:

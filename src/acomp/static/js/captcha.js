@@ -167,10 +167,9 @@ async function handleJoker(e) {
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
-            for (var i = 0; i < json.joker.length; i++) {
-                const current = i.valueOf();
-                const currentimg = document.getElementById("select-" + json.joker[i]);
-                highlightNotChosen(json.joker[i]);
+            for (var i = 0; i < json.message.length; i++) {
+                console.log(json.message[i]);
+                highlightNotChosen(json.message[i]);
             }
 
         } else {
@@ -198,6 +197,7 @@ function highlightChosen(num) {
 }
 
 function highlightNotChosen(num) {
+    console.log("Highlight not chosen " + num);
     const element = document.getElementById("select-" + num);
     element.classList.add("captchaimageNotChosen");
 }
