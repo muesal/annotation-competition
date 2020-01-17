@@ -36,3 +36,16 @@ body {
 .mdl-menu__item {
     font-size: 30px;
 }
+
+@media (max-width: 300px) {
+    .my-progress {
+        max-width: 80vw !important;
+        width: 80vw !important;
+    }
+}
+
+.my-progress {
+    max-width: 80vw !important;
+    width: 80vw !important;
+
+}
