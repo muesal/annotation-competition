@@ -23,13 +23,13 @@ img {
 
 @media (max-width: 300px) {
     .my-progress {
-        max-width: 80% !important;
-        width: 200px !important;
+        max-width: 80vw !important;
+        width: 80vw !important;
     }
 }
 
 .my-progress {
-    max-width: 80% !important;
-    width: 300px !important;
+    max-width: 80vw !important;
+    width: 80vw !important;
 
 }
