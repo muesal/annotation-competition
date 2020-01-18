@@ -16,8 +16,8 @@ body {
 
 #captchaImages img, #tagImage {
     object-fit: contain;
-    max-height: 100vw;
-    max-width: 100vh;
+    max-height: 80vh;
+    max-width: 80vw;
     margin: 2em;
 }
 
