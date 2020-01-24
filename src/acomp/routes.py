@@ -215,6 +215,7 @@ def signup():
     elif form.validate_on_submit():
         auth.register(form.loginname.data, form.loginpswd.data, form.loginpswdConfirm.data)
         flash('Thanks for registering')
+    app.logger.debug('Current quiz score: {}'.format(session['quiz']))
     return render_template('signup.html', form=form)
 
 
@@ -253,6 +254,7 @@ def quiz():
     form = Captcha()
     usr = GLUser(-1)
     images = usr.startCaptcha()
+    app.logger.debug('Current quiz score: {}'.format(session['quiz']))
     return render_template('captcha.html', source=images['images'], form=form)
 
 
