@@ -50,6 +50,9 @@
                 <a class="mdl-navigation__link {% block loginlink %}{% endblock %}" href="{{ url_for('login') }}">
                     Login</a>
                 {% endif %}
+                <a class="mdl-navigation__link {% block helplink %}{% endblock %}" href="{{ url_for('help') }}">
+                    Help</a>
+
             </nav>
         </div>
     </header>
