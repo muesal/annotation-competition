@@ -1,5 +1,5 @@
-from flask import flash, make_response, render_template, redirect, request, url_for
-from acomp import app, db, loginmanager
+from flask import flash, make_response, render_template, redirect, request, session, url_for
+from acomp import app, db, loginmanager, sessions
 from flask_login import current_user, login_required, logout_user
 from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
@@ -144,9 +144,11 @@ def captcha_post():
         return bad_request('Missing key in JSON.')
 
 
-
 @app.route('/quiz/data', methods=['GET'])
 def quiz_get():
+    if 'quiz' not in session:
+        return forbidden('Not authorized.')
+
     usr = GLUser(-1)
     try:
         data = usr.startCaptcha()
@@ -161,6 +163,9 @@ def quiz_get():
 
 @app.route('/quiz/data', methods=['POST'])
 def quiz_post():
+    if 'quiz' not in session:
+        return forbidden('Not authorized.')
+
     data = request.get_json()
     if data is None:
         return bad_request('Invalid JSON.')
@@ -169,11 +174,15 @@ def quiz_post():
     else:
         usr = GLUser(-1)
         try:
-            captcha = usr.capEntryQuiz(data['captcha'])
+            challange, captcha = usr.capEntryQuiz(data['captcha'])
         except Exception as e:
             return bad_request(e)
         else:
-            data = '{"OK":"200", "message":"' + captcha[1] + '"}'
+            if challange == 1:
+                session['quiz'] += 1
+            else:
+                session['quiz'] -= 1
+            data = '{"OK":"200", "message":"' + captcha[0] + '"}'
             res = make_response(data)
             res.headers.set('Content-Type', 'application/json')
             return res
@@ -199,7 +208,11 @@ def signup():
     if current_user.is_authenticated:
         return redirect(url_for('settings'))
     form = Signup()
-    if form.validate_on_submit():
+    if 'quiz' not in session:
+        flash('Please solve the quiz first')
+    elif session['quiz'] <= 0:
+        flash('Please solve the quiz first')
+    elif form.validate_on_submit():
         auth.register(form.loginname.data, form.loginpswd.data, form.loginpswdConfirm.data)
         flash('Thanks for registering')
     return render_template('signup.html', form=form)
@@ -235,6 +248,8 @@ def tutorial():
 def quiz():
     if current_user.is_authenticated:
         return redirect(url_for('tutorial'))
+    if 'quiz' not in session:
+        session['quiz'] = 0
     form = Captcha()
     usr = GLUser(-1)
     images = usr.startCaptcha()
