@@ -91,6 +91,7 @@ function setImages(images) {
 function selectImage(num) {
     console.log("Selected " + num);
     sendSelection(num);
+    skipButton.value = "Next";
 }
 
 function setTags(newtags) {
@@ -143,6 +144,8 @@ function removeImages() {
 
 function handleSkip(e) {
     e.preventDefault();
+    skipButton.value = "Skip";
+
     removeImages();
     getCaptchaData();
 }
