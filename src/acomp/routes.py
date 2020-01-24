@@ -185,6 +185,11 @@ def signup_post():
         else:
             return '{"available":"1", "message":"Username available"}'
 
+@app.route('/help')
+def help():
+    return render_template('help.html')
+
+
 
 @app.route('/tutorial')
 def tutorial():

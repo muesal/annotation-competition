@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block helpLink %}
+mdl-navigation__link--current
+{% endblock %}
+
+
+
+
+
+{% block main %}
+    <h1>Help</h1>
+
+    <p>Welcome to our Annotation Competition.
+
+    <p>Our aim is to gamify the tagging of images. For this, we have two game modes. These are available after logging
+        in.
+
+
+    <h2>Signup and Login</h2>
+    Choose a user name and a password. Requirements and helpful are shown on the signup pages.
+    Both user name and password can later be changed. If you don't want to have an account anymore, this account can be
+    deleted.
+    The players with the highest scores are mentioned in the high score! Fun!
+
+    You can change your account name and password at any time. You can also delete your account later.
+
+    <h2>Game modes</h2>
+    There are two game modes available: Classic and Reverse Captcha
+
+    <h3>Classic</h3>
+    An image is shown. The user may then provide tags describing the image. The app checks the tags and if they are
+    accepted,
+    you receive points based on a scoring function.
+
+    A step-by-step guide can be found in the  <a href="{{ url_for('tutorial') }}">tutorial</a>
+
+
+    Scoring function: TODO
+
+    <h3>Reverse Captcha</h3>
+    To check the quality of the tags, you are shown a few images and the tags from one of the images.
+    You have to match the tags to one of the images. This helps us in determining, which tags are helpful! Of course,
+    you get points for this.
+
+    <h2>Settings</h2>
+
+    Here you can change your user name, change your password or delete your account. These actions require your old
+    password as confirmation.
+
+    Click the action you would like to do, fill out the form and confirm with the button.
+
+
+
+{% endblock %}
