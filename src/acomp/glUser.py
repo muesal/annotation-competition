@@ -169,6 +169,7 @@ class GLUser:
         # cap is a random one of these images
         session['cap_captcha'] = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
 
+        # Todo: verify that there are no duplicates (tagged AND not tagged images)
         # get the other images random
         images = [None] * app.config['ACOMP_CAPTCHA_NUM_IMAGES']
         filenames = [None] * app.config['ACOMP_CAPTCHA_NUM_IMAGES']
@@ -178,7 +179,7 @@ class GLUser:
                 images[i] = (Image.query.get(image_id))
                 filenames[i] = (url_for('static', filename='images/' + images[i].filename))
 
-        # get all a random image which has already been tagged
+        # get a random image that has already been tagged
         rand_image = ImageTag.query.group_by(ImageTag.image_id).\
             having(func.count(ImageTag.tag_id) > app.config['ACOMP_CAPTCHA_NUM_TAGS']).order_by(func.random()).first()
         image = Image.query.get(rand_image.image_id)
