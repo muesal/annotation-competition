@@ -8,6 +8,8 @@ const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
 const csrf_token = document.getElementById("csrf_token");
 const skipButton = document.getElementById("btnSkip");
+const jokerButton = document.getElementById("btnJoker");
+
 getCaptchaData();
 
 var listeners = [];
@@ -145,6 +147,40 @@ function handleSkip(e) {
     getCaptchaData();
 }
 
+async function handleJoker(e) {
+    e.preventDefault();
+    const values = {
+        'joker': 0
+    };
+    const payload = JSON.stringify(values);
+
+    try {
+        const response = await fetch(requestUrl, {
+            method: 'POST',
+            body: payload,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token.value,
+            }
+        });
+        console.log('Sent:', payload);
+        if (response.ok) {
+            const json = await response.json();
+            console.log('Success:', JSON.stringify(json));
+            for (var i = 0; i < json.message.length; i++) {
+                console.log(json.message[i]);
+                highlightNotChosen(json.message[i]);
+            }
+
+        } else {
+            console.error('Error:', response.statusText); // TODO: notify user
+        }
+    } catch (err) {
+        console.error('Error:', err);
+    }
+}
+
+
 function highlightImageCorrect(num) {
     const element = document.getElementById("select-" + num);
     element.classList.add("captchaimageCorrect");
@@ -161,6 +197,7 @@ function highlightChosen(num) {
 }
 
 function highlightNotChosen(num) {
+    console.log("Highlight not chosen " + num);
     const element = document.getElementById("select-" + num);
     element.classList.add("captchaimageNotChosen");
 }
@@ -182,3 +219,4 @@ function hightlightImages(correctImageNum, chosenImgNum) {
 }
 
 skipButton.addEventListener("click", handleSkip);
+jokerButton.addEventListener("click", handleJoker);

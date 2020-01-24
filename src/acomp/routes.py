@@ -118,9 +118,18 @@ def captcha_post():
     data = request.get_json()
     if data is None:
         return bad_request('Invalid JSON.')
-    if 'captcha' not in data:
-        return bad_request('Missing key in JSON.')
-    else:
+    if 'joker' in data:
+        usr = GLUser(current_user.get_id())
+        try:
+            wrng_images = usr.jokerCaptcha()
+        except Exception as e:
+            return bad_request(e)
+        else:
+            stuff = {"message": wrng_images}
+            res = make_response(json.dumps(stuff))
+            res.headers.set('Content-Type', 'application/json')
+            return res
+    if 'captcha' in data:
         usr = GLUser(current_user.get_id())
         try:
             captcha = usr.capCaptcha(data['captcha'])
@@ -131,6 +140,9 @@ def captcha_post():
             res = make_response(data)
             res.headers.set('Content-Type', 'application/json')
             return res
+    else:
+        return bad_request('Missing key in JSON.')
+
 
 
 @app.route('/logout')
