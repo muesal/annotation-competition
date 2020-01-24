@@ -26,9 +26,8 @@ class GLUser:
 
     def __init__(self, id: int, language='en'):
         self.id = id
-        if id != -1:
-            self.user = User.query.filter_by(id=id).one_or_none()
-            if self.user is None:
+        self.user = User.query.filter_by(id=id).one_or_none()
+        if self.user is None and self.id != -1:
                 raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
 
         if 'timestamp' not in session or time.time() - session['timestamp'] > app.config['ACOMP_LIFETIME_USER']:
@@ -48,7 +47,8 @@ class GLUser:
 
     def getName(self):
         """ :return name of the user """
-        return 'none' if self.id == -1 else self.user.name
+        print('id: {}'.format(self.id))
+        return 'none' if self.id == -1 else self.user.username
 
     def startClassic(self) -> dict:
         """
@@ -56,8 +56,10 @@ class GLUser:
 
         :return: the image
         """
-        if session['game_mode'] != -1:
-            self.skip()
+        if session['game_mode'] != -1 or self.id == -1:
+            self.end()
+            raise Exception('Finish Entry quiz before playing classic')
+
         session['game_mode'] = 0
         session['num_tags'] = 0
         session['timestamp'] = time.time()
@@ -119,12 +121,12 @@ class GLUser:
         if session['image_id'] == 0:
             raise Exception('No image in DB')
         # if user is playing captcha or has already provided this tag in this round do nothing
-        if session['game_mode'] != 0:
+        if session['game_mode'] != 0 or self.id == -1:
             raise Exception('Wrong game mode')
         # if the time is up end this game
         if time.time() - session['timestamp'] > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
-            return -2, "{}".format(self.user.score)
+            return -2, "{}".format(self.getScore())
         # check if the tagging rate is okay
         session['num_tags'] += 1
         if session['num_tags'] > app.config['ACOMP_CLASSIC_TIMELIMIT'] / 2:
@@ -159,7 +161,7 @@ class GLUser:
         :return: the images, and the tags to validate
         """
         if session['game_mode'] != -1:
-            self.skip()
+            self.end()
         session['game_mode'] = 1
         session['timestamp'] = time.time()
 
@@ -233,8 +235,8 @@ class GLUser:
         # if user is playing classic or this is not the correct cap_captcha return False
         if abs(time.time() - session['timestamp']) > app.config['ACOMP_CAPTCHA_TIMELIMIT']:
             self.end()
-            return -2, "{}".format(self.user.score)
-        if session['game_mode'] != 1:
+            return -2, "{}".format(self.getScore())
+        if session['game_mode'] != 1 or self.id == -1:
             raise Exception('Wrong game mode')
 
         gl_image = GLImage(session['image_id'])
@@ -243,7 +245,11 @@ class GLUser:
             return 0, session['cap_captcha']
 
         gl_image.verifyTags(loads(session['tags']), True)
+<<<<<<< HEAD
         self.user.score = self.user.score + (10 if session['joker'] == 0 else 5)
+=======
+        self.user.score += 10
+>>>>>>> removed bug user has no name
         db.session.commit()
         self.end()
 
@@ -258,7 +264,7 @@ class GLUser:
         :return: true, if it is the main image, false if not and the cap
         """
         # if user is playing classic or this is not the correct cap_captcha return False
-        if session['game_mode'] != 1:
+        if session['game_mode'] != 1 or self.id != -1:
             raise Exception('Wrong game mode')
 
         return 0 if cap != session['cap_captcha'] else 1, session['cap_captcha']
@@ -277,7 +283,7 @@ class GLUser:
         session['joker'] = 0
         session['tags'] = '[]'
         session['timestamp'] = time.time()
-        return self.user.score
+        return self.getScore()
 
     def skip(self) -> int:
         """
