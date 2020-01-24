@@ -245,11 +245,7 @@ class GLUser:
             return 0, session['cap_captcha']
 
         gl_image.verifyTags(loads(session['tags']), True)
-<<<<<<< HEAD
-        self.user.score = self.user.score + (10 if session['joker'] == 0 else 5)
-=======
-        self.user.score += 10
->>>>>>> removed bug user has no name
+        self.user.score += (10 if session['joker'] == 0 else 5)
         db.session.commit()
         self.end()
 
