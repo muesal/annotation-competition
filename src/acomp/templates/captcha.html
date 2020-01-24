@@ -30,8 +30,10 @@ mdl-navigation__link--current
         <form id="skipForm">
             <input id="btnSkip" type="reset" value="Skip"
                    class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-                        <input id="btnJoker" type="reset" value="Joker"
+            {% if current_user.is_authenticated %} {# quiz mode #}
+            <input id="btnJoker" type="reset" value="Joker"
                    class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+            {% endif %}
         </form>
     </main>
 {% endblock %}
