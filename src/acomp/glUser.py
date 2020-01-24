@@ -182,7 +182,7 @@ class GLUser:
                 filenames[i] = (url_for('static', filename='images/' + images[i].filename))
 
         # get a random image that has already been tagged
-        rand_image = ImageTag.query.group_by(ImageTag.image_id).\
+        rand_image = db.session.query(ImageTag.image_id).group_by(ImageTag.image_id).\
             having(func.count(ImageTag.tag_id) > app.config['ACOMP_CAPTCHA_NUM_TAGS']).order_by(func.random()).first()
         image = Image.query.get(rand_image.image_id)
         session['image_id'] = image.id
