@@ -11,16 +11,16 @@ mdl-navigation__link--current
 
 {% block main %}
 
-    <input id="btnShowChangeName" type="button" value="Change Name"
-           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-    <input id="btnShowChangePassword" type="button" value="Change Password"
-           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-    <input id="btnShowDeleteAccount" type="button" value="Delete Account"
-           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
 
+    <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+  <div class="mdl-tabs__tab-bar">
+      <a href="#starks-panel" class="mdl-tabs__tab is-active">Change Name</a>
+      <a href="#lannisters-panel" class="mdl-tabs__tab">Change Password</a>
+      <a href="#targaryens-panel" class="mdl-tabs__tab">Delete Account</a>
+  </div>
+
+  <div class="mdl-tabs__panel is-active" id="starks-panel">
     <form id="NameForm" method="post">
-        <h2>Change Name</h2>
-
         <div class="mdl-textfield mdl-js-textfield" id="namefield">
             {{ nameform.newloginname.label(class="mdl-textfield__label") }}
             {{ nameform.newloginname(autofocus=true, class="mdl-textfield__input") }}
@@ -43,9 +43,9 @@ mdl-navigation__link--current
         {{ nameform.csrf_token }}
         {{ nameform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
     </form>
-
+  </div>
+  <div class="mdl-tabs__panel" id="lannisters-panel">
     <form id="PasswordForm" method="post">
-        <h2>Change Password</h2>
 
         <div class="mdl-textfield mdl-js-textfield" id="pswdpswd">
             {{ passwordform.oldpswd.label(class="mdl-textfield__label") }}
@@ -79,8 +79,9 @@ mdl-navigation__link--current
         {{ passwordform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
     </form>
 
+  </div>
+  <div class="mdl-tabs__panel" id="targaryens-panel">
     <form id="DeleteForm" method="post">
-        <h2>Delete Account</h2>
 
         <div class="mdl-textfield mdl-js-textfield" id="deletepswd">
             {{ deleteform.loginpswddelform.label(class="mdl-textfield__label") }}
@@ -95,6 +96,14 @@ mdl-navigation__link--current
         {{ deleteform.csrf_token }}
         {{ deleteform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent") }}
     </form>
+
+  </div>
+</div>
+
+
+
+
+
 
 
     <p id="feedbackParagraph"></p>
