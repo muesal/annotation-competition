@@ -162,20 +162,22 @@ class GLUser:
         session['game_mode'] = 1
         session['timestamp'] = time()
 
-        num_images = db.session.query(Image).count()
-        if num_images <= 0:
-            raise Exception('No images in DB')
+        num_images = app.config['ACOMP_CAPTCHA_NUM_IMAGES']
+        total_images = db.session.query(Image).count()
+        if total_images < num_images:
+            raise Exception('Not enough images in DB ({} configured for \
+                    captcha mode, but only found {})', format(num_images, total_images))
 
         # cap is a random one of these images
-        session['cap_captcha'] = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
+        session['cap_captcha'] = randbelow(num_images)
 
         # Todo: verify that there are no duplicates (tagged AND not tagged images)
         # get the other images random
-        images = [None] * app.config['ACOMP_CAPTCHA_NUM_IMAGES']
-        filenames = [None] * app.config['ACOMP_CAPTCHA_NUM_IMAGES']
-        for i in range(app.config['ACOMP_CAPTCHA_NUM_IMAGES']):
+        images = [None] * num_images
+        filenames = [None] * num_images
+        for i in range(num_images):
             if i != session['cap_captcha']:
-                image_id = randbelow(num_images) + 1
+                image_id = randbelow(total_images) + 1
                 images[i] = (Image.query.get(image_id))
                 filenames[i] = (url_for('static', filename='images/' + images[i].filename))
 
