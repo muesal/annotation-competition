@@ -59,8 +59,8 @@ def classic_data_post():
         except Exception as e:
             return bad_request(e)
         else:
-            data = '{"OK":"200", "message":"' + tag[1] + '"}'
-            res = make_response(data)
+            stuff = {'accepted': tag[0], 'message': tag[1]}
+            res = make_response(stuff)
             res.headers.set('Content-Type', 'application/json')
             return res
 
