@@ -20,11 +20,13 @@ async function getCaptchaData() {
     try {
         const response = await fetch(requestUrl);
         if (response.ok) {
+            jokerButton.disabled = false;
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
             setImages(json.images);
             setTags(json.tags);
             setTimer(json.timelimit);
+
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
         }
@@ -152,6 +154,7 @@ function handleSkip(e) {
 
 async function handleJoker(e) {
     e.preventDefault();
+    jokerButton.disabled = true;
     const values = {
         'joker': 0
     };
