@@ -169,7 +169,7 @@ def quiz_post():
     else:
         usr = GLUser(-1)
         try:
-            captcha = usr.capCaptcha(data['captcha'])
+            captcha = usr.capEntryQuiz(data['captcha'])
         except Exception as e:
             return bad_request(e)
         else:
