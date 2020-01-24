@@ -14,12 +14,12 @@ mdl-navigation__link--current
 
     <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
   <div class="mdl-tabs__tab-bar">
-      <a href="#starks-panel" class="mdl-tabs__tab is-active">Change Name</a>
-      <a href="#lannisters-panel" class="mdl-tabs__tab">Change Password</a>
-      <a href="#targaryens-panel" class="mdl-tabs__tab">Delete Account</a>
+      <a href="#name-panel" class="mdl-tabs__tab is-active">Change Name</a>
+      <a href="#password-panel" class="mdl-tabs__tab">Change Password</a>
+      <a href="#delete-panel" class="mdl-tabs__tab">Delete Account</a>
   </div>
 
-  <div class="mdl-tabs__panel is-active" id="starks-panel">
+  <div class="mdl-tabs__panel is-active" id="name-panel">
     <form id="NameForm" method="post">
         <div class="mdl-textfield mdl-js-textfield" id="namefield">
             {{ nameform.newloginname.label(class="mdl-textfield__label") }}
@@ -44,7 +44,7 @@ mdl-navigation__link--current
         {{ nameform.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
     </form>
   </div>
-  <div class="mdl-tabs__panel" id="lannisters-panel">
+  <div class="mdl-tabs__panel" id="password-panel">
     <form id="PasswordForm" method="post">
 
         <div class="mdl-textfield mdl-js-textfield" id="pswdpswd">
@@ -80,7 +80,7 @@ mdl-navigation__link--current
     </form>
 
   </div>
-  <div class="mdl-tabs__panel" id="targaryens-panel">
+  <div class="mdl-tabs__panel" id="delete-panel">
     <form id="DeleteForm" method="post">
 
         <div class="mdl-textfield mdl-js-textfield" id="deletepswd">
