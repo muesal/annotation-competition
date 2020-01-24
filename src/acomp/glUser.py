@@ -267,7 +267,7 @@ class GLUser:
         if session['game_mode'] != 1 or self.id != -1:
             raise Exception('Wrong game mode')
 
-        return 0 if cap != session['cap_captcha'] else 1, session['cap_captcha']
+        return (0 if cap != session['cap_captcha'] else 1), str(session['cap_captcha'])
 
     def end(self) -> int:
         """
