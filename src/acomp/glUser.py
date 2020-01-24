@@ -183,7 +183,6 @@ class GLUser:
         rand_image = ImageTag.query.group_by(ImageTag.image_id).\
             having(func.count(ImageTag.tag_id) > app.config['ACOMP_CAPTCHA_NUM_TAGS']).order_by(func.random()).first()
         image = Image.query.get(rand_image.image_id)
-
         session['image_id'] = image.id
         images[session['cap_captcha']] = image
         filenames[session['cap_captcha']] = url_for('static', filename='images/' + image.filename)
