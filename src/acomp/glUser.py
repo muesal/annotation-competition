@@ -165,20 +165,24 @@ class GLUser:
         if num_images <= 0:
             raise Exception('No images in DB')
 
-        # get n random images
-        images = []
-        filenames = []
-        for i in range(app.config['ACOMP_CAPTCHA_NUM_IMAGES']):
-            image_id = randbelow(num_images) + 1
-            images.append(Image.query.get(image_id))
-            filenames.append(url_for('static', filename='images/' + images[i].filename))
-
         # cap is a random one of these images
         session['cap_captcha'] = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
 
+        # get the other images random
+        images = [None] * app.config['ACOMP_CAPTCHA_NUM_IMAGES']
+        filenames = [None] * app.config['ACOMP_CAPTCHA_NUM_IMAGES']
+        for i in range(app.config['ACOMP_CAPTCHA_NUM_IMAGES']):
+            if i != session['cap_captcha']:
+                image_id = randbelow(num_images) + 1
+                images[i] = (Image.query.get(image_id))
+                filenames[i] = (url_for('static', filename='images/' + images[i].filename))
+
         iter = 0
-        # count how many tags this image is connected with
-        image = images[session['cap_captcha']]
+        # get all the images which were tagged already
+
+        # TODO: filter for all tagged images; then take one with enough tags:
+        image_id = randbelow(num_images) + 1
+        image = (Image.query.get(image_id))
         num_tags = len(ImageTag.query.filter_by(image_id=image.id).all())
 
         # get an image for cap, which has more than three tags, if possible
