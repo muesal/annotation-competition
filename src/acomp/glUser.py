@@ -107,7 +107,7 @@ class GLUser:
         """
         Tag the image with the given Tag, add the reached points to the score
         Return -1 and error message, if an error occurred, else 1 and the tag which was added.
-        Return -2 if the game is over (time's uptagImage)
+        Return -2 if the game is over (time's up)
 
         :param tag: the word to tag
         :param image: GLImage to tag, or none to tag the image this user is playing with
