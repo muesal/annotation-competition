@@ -1,10 +1,8 @@
 from spellchecker.spellchecker import SpellChecker
-from acomp import app, db
+from acomp import app, db, tl, wl
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from nltk import pos_tag
 from nltk.corpus import wordnet
-from nltk.stem import WordNetLemmatizer
-from googletrans import Translator
 from sqlalchemy import func
 
 
@@ -61,7 +59,6 @@ class GLImage:
         :return: list of the translated tags
         """
         if src_language != dest_language:
-            tl = Translator()
             translation = tl.translate(tags, src=src_language, dest=dest_language)
             for i in range(len(tags)):
                 tags[i] = translation[i].text
@@ -89,7 +86,6 @@ class GLImage:
         :return: the correct tag and it's root synonym
         """
         sc = SpellChecker(distance=1)
-        wl = WordNetLemmatizer()
 
         # if unknown to dictionary: correct if minor error, else Tag is invalid
         for i in range(len(tag)):
