@@ -166,25 +166,36 @@ class GLUser:
         total_images = db.session.query(Image).count()
         if total_images < num_images:
             raise Exception('Not enough images in DB ({} configured for \
-                    captcha mode, but only found {})', format(num_images, total_images))
+                    captcha mode, but only found {})'.format(num_images, total_images))
 
-        # cap is a random one of these images
         session['cap_captcha'] = randbelow(num_images)
 
-        # Todo: verify that there are no duplicates (tagged AND not tagged images)
         # get the other images random
-        images = [None] * num_images
-        filenames = [None] * num_images
-        for i in range(num_images):
-            if i != session['cap_captcha']:
-                image_id = randbelow(total_images) + 1
-                images[i] = (Image.query.get(image_id))
-                filenames[i] = (url_for('static', filename='images/' + images[i].filename))
+        rad_images = Image.query.order_by(func.random()).limit(num_images - 1).all()
+        images = []
+        filenames = []
+        ids = []
+        i = 0
+        for image in rad_images:
+            images.append(image)
+            filenames.append(url_for('static', filename='images/' + image.filename))
+            ids.append(image.id)
+            i += 1
+            if i == session['cap_captcha']:
+                images.append('')
+                filenames.append('')
 
-        # get a random image that has already been tagged
-        rand_image = db.session.query(ImageTag.image_id).group_by(ImageTag.image_id).\
-            having(func.count(ImageTag.tag_id) > app.config['ACOMP_CAPTCHA_NUM_TAGS']).order_by(func.random()).first()
-        image = Image.query.get(rand_image.image_id)
+        # cap is a random image which has enough tags
+        rand_images = db.session.query(ImageTag.image_id).group_by(ImageTag.image_id). \
+            having(func.count(ImageTag.tag_id) > app.config['ACOMP_CAPTCHA_NUM_TAGS']). \
+            order_by(func.random()).limit(num_images)
+        git
+        # maqke sure it is different from the other images
+        i = 0
+        while rand_images[i].image_id in ids and i < rand_images.count() - 1:
+            i += 1
+
+        image = Image.query.get(rand_images[i].image_id)
         session['image_id'] = image.id
         images[session['cap_captcha']] = image
         filenames[session['cap_captcha']] = url_for('static', filename='images/' + image.filename)
