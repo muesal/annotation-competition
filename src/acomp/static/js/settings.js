@@ -41,6 +41,8 @@ async function checkLoginname(e) {
             if (json.available != '1') {
                 loginname.setCustomValidity('This username is already taken, please choose another name.');
                 return;
+            } else {
+                loginname.setCustomValidity("");
             }
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
@@ -55,6 +57,8 @@ async function checkPasswords(e) {
     if (password.value !== passwordConfirm.value) {
         passwordConfirm.setCustomValidity('Please make sure to confirm your password');
         return;
+    } else {
+        passwordConfirm.setCustomValidity('');
     }
 
     // https://haveibeenpwned.com/API/v3#SearchingPwnedPasswordsByRange
@@ -75,7 +79,7 @@ async function checkPasswords(e) {
                 return;
             } else {
                 console.log('Not yet been pwned.');
-                paragraph.textContent="";
+                paragraph.textContent = "";
             }
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
