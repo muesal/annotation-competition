@@ -11,6 +11,18 @@ mdl-navigation__link--current
     <script src="../static/js/captcha.js" defer></script>
 {% endblock %}
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+    <div class="notification is-danger">
+        {{ messages[0] }}. Go to <a href="{{ url_for('signup') }}">sign up page</a>.
+    </div>
+{% endif %}
+{% endwith %}
+
 {% block main %}
     <main class="mdl-layout__content">
         <p>Choose the image that best matches the tags<p>
@@ -36,4 +48,5 @@ mdl-navigation__link--current
             {% endif %}
         </form>
     </main>
+
 {% endblock %}

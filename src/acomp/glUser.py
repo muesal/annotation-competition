@@ -28,7 +28,7 @@ class GLUser:
         self.id = id
         self.user = User.query.filter_by(id=id).one_or_none()
         if self.user is None and self.id != -1:
-                raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
+            raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
 
         if 'timestamp' not in session or time.time() - session['timestamp'] > app.config['ACOMP_LIFETIME_USER']:
             session['game_mode'] = -1
@@ -58,7 +58,6 @@ class GLUser:
         """
         if session['game_mode'] != -1 or self.id == -1:
             self.end()
-            raise Exception('Finish Entry quiz before playing classic')
 
         session['game_mode'] = 0
         session['num_tags'] = 0

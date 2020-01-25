@@ -165,6 +165,8 @@ def quiz_get():
 def quiz_post():
     if 'quiz' not in session:
         return forbidden('Not authorized.')
+    if session['quiz'] >= app.config['ACOMP_QUIZ_POINTS']:
+        flash('Congrats, you have reached enough points to sign up!')
 
     data = request.get_json()
     if data is None:
@@ -210,8 +212,10 @@ def signup():
     form = Signup()
     if 'quiz' not in session:
         flash('Please solve the quiz first')
-    elif session['quiz'] <= 0:
+        return redirect('quiz')
+    elif session['quiz'] <= app.config['ACOMP_QUIZ_POINTS']:
         flash('Please solve the quiz first')
+        return redirect('quiz')
     elif form.validate_on_submit():
         auth.register(form.loginname.data, form.loginpswd.data, form.loginpswdConfirm.data)
         flash('Thanks for registering')
