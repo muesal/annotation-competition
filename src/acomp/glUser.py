@@ -186,16 +186,16 @@ class GLUser:
                 filenames.append('')
 
         # cap is a random image which has enough tags
-        rand_images = db.session.query(ImageTag.image_id).group_by(ImageTag.image_id). \
+        rand_tagged_images = db.session.query(ImageTag.image_id).group_by(ImageTag.image_id). \
             having(func.count(ImageTag.tag_id) > app.config['ACOMP_CAPTCHA_NUM_TAGS']). \
             order_by(func.random()).limit(num_images)
 
         # make sure it is different from the other images
         i = 0
-        while rand_images[i].image_id in ids and i < rand_images.count() - 1:
+        while rand_tagged_images[i].image_id in ids and i < rand_tagged_images.count() - 1:
             i += 1
 
-        image = Image.query.get(rand_images[i].image_id)
+        image = Image.query.get(rand_tagged_images[i].image_id)
         session['image_id'] = image.id
         images[session['cap_captcha']] = image
         filenames[session['cap_captcha']] = url_for('static', filename='images/' + image.filename)
