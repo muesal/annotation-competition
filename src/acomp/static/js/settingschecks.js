@@ -10,6 +10,10 @@ function writeToJson(username) {
 async function checkLoginname(e) {
     const payload = writeToJson(loginname.value);
     loginname.setCustomValidity('');
+    if (!loginname.checkValidity()) {
+        loginname.setCustomValidity('Please use alphanumeric characters and not more than 512');
+        return;
+    }
 
     try {
         const response = await fetch(form.dataset.datauri, {
@@ -57,11 +61,11 @@ async function checkPasswords(e) {
             const data = await response.text();
             console.log('Success:', data);
             if (regex.test(data)) {
-                paragraph.textContent += "Your password might be insecure";
+                paragraph.textContent += 'Your password might be insecure';
                 return;
             } else {
                 console.log('Not yet been pwned.');
-                paragraph.textContent = "";
+                paragraph.textContent = '';
             }
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
