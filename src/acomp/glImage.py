@@ -1,5 +1,4 @@
-from spellchecker.spellchecker import SpellChecker
-from acomp import app, db, tl, wl
+from acomp import app, db, tl, wl, sc
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from nltk import pos_tag
 from nltk.corpus import wordnet
@@ -84,8 +83,6 @@ class GLImage:
 
         :return: the correct tag and it's root synonym
         """
-        sc = SpellChecker(distance=1)
-
         # if unknown to dictionary: correct if minor error, else Tag is invalid
         for i in range(len(tag)):
             wrong = list(sc.unknown([tag[i]]))
