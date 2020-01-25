@@ -190,7 +190,7 @@ class GLUser:
             having(func.count(ImageTag.tag_id) > app.config['ACOMP_CAPTCHA_NUM_TAGS']). \
             order_by(func.random()).limit(num_images)
 
-        # maqke sure it is different from the other images
+        # make sure it is different from the other images
         i = 0
         while rand_images[i].image_id in ids and i < rand_images.count() - 1:
             i += 1
