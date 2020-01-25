@@ -125,7 +125,7 @@ class GLUser:
         # if the time is up end this game
         if time.time() - session['timestamp'] > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
-            return -1, "Your time is over",  self.getScore()
+            return -1, "Your time is over", self.getScore()
         # check if the tagging rate is okay
         session['num_tags'] += 1
         if session['num_tags'] > app.config['ACOMP_CLASSIC_TIMELIMIT'] / 2:
@@ -234,7 +234,7 @@ class GLUser:
         # if user is playing classic or this is not the correct cap_captcha return False
         if abs(time.time() - session['timestamp']) > app.config['ACOMP_CAPTCHA_TIMELIMIT']:
             self.end()
-            return -1, "Your time is over",  self.getScore()
+            return -1, "Your time is over", self.getScore()
         if session['game_mode'] != 1 or self.id == -1:
             raise Exception('Wrong game mode')
 
