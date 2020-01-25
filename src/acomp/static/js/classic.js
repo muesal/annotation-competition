@@ -95,9 +95,10 @@ async function getClassicData() {
                 }
                 writeToMentionedTags(current);
             }
-            setTimer(json.timelimit);
-            setImg(json.images);
             setScore(json.score);
+            setImg(json.images);
+            setTimer(json.timelimit);
+
         } else {
             console.error('Error:', response.statusText);
             notifyUser(response.statusText);
@@ -124,7 +125,15 @@ async function sendTag(submittedTag) {
         if (response.ok) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
-            writeToMentionedTags(json.message);
+            if (json.accepted === 1) {
+                writeToMentionedTags(json.message);
+                if (json.message !== submittedTag){
+                    notifyUser("Tag corrected to " + json.message);
+                }
+                setScore(json.score);
+            } else {
+                notifyUser(json.message)
+            }
         } else {
             console.error('Error:', response.statusText);
             notifyUser(response.statusText);
@@ -156,10 +165,10 @@ function setTimer(newTime) {
     var timerMeter = document.getElementById("timemeter");
 
     document.getElementById("timemeter").value = newTime;
-    timerMeter.max=newTime;
-    timerMeter.low=newTime/4;
-    timerMeter.high=timerMeter/2;
-    timerMeter.optimum=(3 * timerMeter) / 4;
+    timerMeter.max = newTime;
+    timerMeter.low = newTime / 4;
+    timerMeter.high = newTime / 2;
+    timerMeter.optimum = (3 * newTime) / 4;
 
     document.getElementById("timer").innerHTML = deadline + " s";
 }

@@ -14,13 +14,6 @@ const showPasswordButton = document.getElementById("btnShowChangePassword");
 loginname.addEventListener("input", checkLoginname);
 password.addEventListener("input", checkPasswords);
 passwordConfirm.addEventListener("input", checkPasswords);
-showChangeNameButton.addEventListener("click", showChangeName);
-showDeleteButton.addEventListener("click", showDelete);
-showPasswordButton.addEventListener("click", showPasswordChange);
-
-document.getElementById("NameForm").style.display = "none";
-document.getElementById("PasswordForm").style.display = "none";
-document.getElementById("DeleteForm").style.display = "none";
 
 function writeToJson(username) {
     const obj = {
@@ -102,21 +95,3 @@ async function digest(str) {
     return hashHex;
 }
 
-
-function showDelete() {
-    document.getElementById("NameForm").style.display = "none";
-    document.getElementById("PasswordForm").style.display = "none";
-    document.getElementById("DeleteForm").style.display = "block";
-}
-
-function showChangeName() {
-    document.getElementById("NameForm").style.display = "block";
-    document.getElementById("PasswordForm").style.display = "none";
-    document.getElementById("DeleteForm").style.display = "none";
-}
-
-function showPasswordChange() {
-    document.getElementById("NameForm").style.display = "none";
-    document.getElementById("PasswordForm").style.display = "block";
-    document.getElementById("DeleteForm").style.display = "none";
-}

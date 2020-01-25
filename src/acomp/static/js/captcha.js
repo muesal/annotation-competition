@@ -3,6 +3,7 @@
 var deadline = 60;
 var timer = setInterval(updateTimer, 1000);
 var numImages = 0;
+var score = 0;
 
 const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
@@ -20,11 +21,15 @@ async function getCaptchaData() {
     try {
         const response = await fetch(requestUrl);
         if (response.ok) {
+            jokerButton.disabled = false;
+            console.log("data stuff");
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
             setImages(json.images);
             setTags(json.tags);
+            setScore(json.score);
             setTimer(json.timelimit);
+
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
         }
@@ -53,6 +58,8 @@ async function sendSelection(num) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
             hightlightImages(json.message, num);
+            setScore(json.score);
+
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
         }
@@ -114,8 +121,8 @@ function setTimer(newTime) {
     document.getElementById("timemeter").value = newTime;
     timerMeter.max = newTime;
     timerMeter.low = newTime / 4;
-    timerMeter.high = timerMeter / 2;
-    timerMeter.optimum = (3 * timerMeter) / 4;
+    timerMeter.high = newTime / 2;
+    timerMeter.optimum = (3 * newTime) / 4;
 
     document.getElementById("timer").innerHTML = deadline + " s";
 }
@@ -152,6 +159,7 @@ function handleSkip(e) {
 
 async function handleJoker(e) {
     e.preventDefault();
+    jokerButton.disabled = true;
     const values = {
         'joker': 0
     };
@@ -220,6 +228,11 @@ function hightlightImages(correctImageNum, chosenImgNum) {
         }
     }
 }
+
+function setScore(score) {
+    document.getElementById("score").innerText = score.toString();
+}
+
 
 skipButton.addEventListener("click", handleSkip);
 jokerButton.addEventListener("click", handleJoker);

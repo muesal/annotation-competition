@@ -59,8 +59,8 @@ def classic_data_post():
         except Exception as e:
             return bad_request(e)
         else:
-            data = '{"OK":"200", "message":"' + tag[1] + '"}'
-            res = make_response(data)
+            res_data = {'accepted': tag[0], 'message': tag[1], 'score': tag[2]}
+            res = make_response(res_data)
             res.headers.set('Content-Type', 'application/json')
             return res
 
@@ -125,8 +125,8 @@ def captcha_post():
         except Exception as e:
             return bad_request(e)
         else:
-            stuff = {"message": wrng_images}
-            res = make_response(json.dumps(stuff))
+            res_data = {"message": wrng_images}
+            res = make_response(json.dumps(res_data))
             res.headers.set('Content-Type', 'application/json')
             return res
     if 'captcha' in data:
@@ -136,8 +136,8 @@ def captcha_post():
         except Exception as e:
             return bad_request(e)
         else:
-            data = '{"OK":"200", "message":"' + str(captcha[1]) + '"}'
-            res = make_response(data)
+            res_data = {'accepted': captcha[0], 'message': captcha[1], 'score': captcha[2]}
+            res = make_response(res_data)
             res.headers.set('Content-Type', 'application/json')
             return res
     else:
