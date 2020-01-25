@@ -3,6 +3,7 @@
 var deadline = 60;
 var timer = setInterval(updateTimer, 1000);
 var numImages = 0;
+var score = 0;
 
 const currentUrl = window.location.href;
 const requestUrl = currentUrl + "/data";
@@ -21,10 +22,12 @@ async function getCaptchaData() {
         const response = await fetch(requestUrl);
         if (response.ok) {
             jokerButton.disabled = false;
+            console.log("data stuff");
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
             setImages(json.images);
             setTags(json.tags);
+            setScore(json.score);
             setTimer(json.timelimit);
 
         } else {
@@ -55,6 +58,8 @@ async function sendSelection(num) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
             hightlightImages(json.message, num);
+            setScore(json.score);
+
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
         }
@@ -223,6 +228,11 @@ function hightlightImages(correctImageNum, chosenImgNum) {
         }
     }
 }
+
+function setScore(score) {
+    document.getElementById("score").innerText = score.toString();
+}
+
 
 skipButton.addEventListener("click", handleSkip);
 jokerButton.addEventListener("click", handleJoker);

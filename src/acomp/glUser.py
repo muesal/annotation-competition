@@ -103,11 +103,10 @@ class GLUser:
         }
         return data
 
-    def tagImage(self, tag: str, image=None) -> (int, str):
+    def tagImage(self, tag: str, image=None) -> (int, str, int):
         """
         Tag the image with the given Tag, add the reached points to the score
         Return -1 and error message, if an error occurred, else 1 and the tag which was added.
-        Return -2 if the game is over (time's up)
 
         :param tag: the word to tag
         :param image: GLImage to tag, or none to tag the image this user is playing with
@@ -122,15 +121,15 @@ class GLUser:
         # if the time is up end this game
         if time.time() - session['timestamp'] > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
-            return -2, "{}".format(self.user.score)
+            return -1, "Your time is over",  self.getScore()
         # check if the tagging rate is okay
         session['num_tags'] += 1
         if session['num_tags'] > app.config['ACOMP_CLASSIC_TIMELIMIT'] / 2:
             self.end()
             # TODO: Do something, like deleting previous tags?
-            return -1, "your tagging rate was too high, we must suspect you are spam!"
+            return -1, "your tagging rate was too high, we must suspect you are spam!", self.getScore()
         if tag in loads(session['tags']):
-            return -1, "You may not mention this tag again for this image"
+            return -1, "You may not mention this tag again for this image", self.getScore()
 
         if image is None:
             image = GLImage(session['image_id'])
@@ -138,7 +137,7 @@ class GLUser:
         try:
             points, tag = image.tag(tag, session['image_level'], language=session['language'])
         except Exception as e:
-            return -1, e.args[0]
+            return -1, e.args[0], self.getScore()
 
         tags = loads(session['tags'])
         if tag not in tags:
@@ -146,8 +145,8 @@ class GLUser:
             session['tags'] = dumps(tags)
             self.user.score += points
             db.session.commit()
-            return 1, tag
-        return -1, "You may not mention this tag again for this image"
+            return 1, tag, self.getScore()
+        return -1, "You may not mention this tag again for this image", self.getScore()
 
     def startCaptcha(self) -> dict:
         """
@@ -219,11 +218,10 @@ class GLUser:
         rest = (session['cap_captcha'] + 1) % 2
         return [x for x in range(rest, app.config['ACOMP_CAPTCHA_NUM_IMAGES'], 2)]
 
-    def capCaptcha(self, cap: int) -> (int, str):
+    def capCaptcha(self, cap: int) -> (int, str, int):
         """
         Validate, whether the user chose the main image, and validate the tags. User gets 10 points, if correct cap.
         Return -1 and error message, if an error occurred, 0 for wrong and 1 for correct captcha.
-        Return -2 if the game is over (time's up)
 
         :param cap: the image the user chose for this tag
 
@@ -232,21 +230,21 @@ class GLUser:
         # if user is playing classic or this is not the correct cap_captcha return False
         if abs(time.time() - session['timestamp']) > app.config['ACOMP_CAPTCHA_TIMELIMIT']:
             self.end()
-            return -2, "{}".format(self.user.score)
+            return -1, "Your time is over",  self.getScore()
         if session['game_mode'] != 1:
             raise Exception('Wrong game mode')
 
         gl_image = GLImage(session['image_id'])
         if cap != session['cap_captcha']:
             gl_image.verifyTags(loads(session['tags']), False)
-            return 0, session['cap_captcha']
+            return 0, session['cap_captcha'], self.getScore()
 
         gl_image.verifyTags(loads(session['tags']), True)
         self.user.score = self.user.score + (10 if session['joker'] == 0 else 5)
         db.session.commit()
         self.end()
 
-        return 1, session['cap_captcha']
+        return 1, session['cap_captcha'], self.getScore()
 
     def end(self) -> int:
         """

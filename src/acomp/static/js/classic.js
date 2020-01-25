@@ -95,9 +95,10 @@ async function getClassicData() {
                 }
                 writeToMentionedTags(current);
             }
-            setTimer(json.timelimit);
-            setImg(json.images);
             setScore(json.score);
+            setImg(json.images);
+            setTimer(json.timelimit);
+
         } else {
             console.error('Error:', response.statusText);
             notifyUser(response.statusText);
@@ -129,6 +130,7 @@ async function sendTag(submittedTag) {
                 if (json.message !== submittedTag){
                     notifyUser("Tag corrected to " + json.message);
                 }
+                setScore(json.score);
             } else {
                 notifyUser(json.message)
             }
