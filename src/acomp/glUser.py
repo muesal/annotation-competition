@@ -171,12 +171,12 @@ class GLUser:
         session['cap_captcha'] = randbelow(num_images)
 
         # get the other images random
-        rad_images = Image.query.order_by(func.random()).limit(num_images - 1).all()
+        rand_images = Image.query.order_by(func.random()).limit(num_images - 1).all()
         images = []
         filenames = []
         ids = []
         i = 0
-        for image in rad_images:
+        for image in rand_images:
             images.append(image)
             filenames.append(url_for('static', filename='images/' + image.filename))
             ids.append(image.id)
@@ -189,7 +189,7 @@ class GLUser:
         rand_images = db.session.query(ImageTag.image_id).group_by(ImageTag.image_id). \
             having(func.count(ImageTag.tag_id) > app.config['ACOMP_CAPTCHA_NUM_TAGS']). \
             order_by(func.random()).limit(num_images)
-        git
+
         # maqke sure it is different from the other images
         i = 0
         while rand_images[i].image_id in ids and i < rand_images.count() - 1:

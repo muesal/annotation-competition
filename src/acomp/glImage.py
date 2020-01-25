@@ -38,10 +38,9 @@ class GLImage:
             self.level = 2
             self.forbiddenTags = []
             tags = ImageTag.query.filter_by(image_id=self.id).order_by(ImageTag.frequency.desc()).limit(
-                app.config['ACOMP_CAPTCHA_NUM_TAGS']).all()
-            for i in range(app.config['ACOMP_CAPTCHA_NUM_TAGS']):
-                tag = Tag.query.filter_by(id=tags[i].tag_id).one_or_none()
-                self.forbiddenTags.append(tag.name)
+                app.config['ACOMP_CLASSIC_FORBIDDEN_TAGS'])
+            for tag in tags:
+                self.forbiddenTags.append(Tag.query.get(tag.tag_id).name)
 
     def getLevel(self) -> int:
         """ :return: the level of the image """
@@ -262,7 +261,7 @@ class GLImage:
             db.session.rollback()
             if self.tooGeneric(tag.id):
                 raise Exception("'{}' is too generic, as it was mentioned for more than {}% of our images."
-                                .format(name, app.config['ACOMP_CLASSIC_RATIO']))
+                                .format(name, app.config['ACOMP_CLASSIC_RATIO']*100))
             known = 1
             it = ImageTag.query.filter_by(tag_id=tag.id, image_id=self.id).one_or_none()
             it.frequency = it.frequency + 1
