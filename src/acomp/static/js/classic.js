@@ -165,8 +165,8 @@ function setTimer(newTime) {
     document.getElementById("timemeter").value = newTime;
     timerMeter.max = newTime;
     timerMeter.low = newTime / 4;
-    timerMeter.high = timerMeter / 2;
-    timerMeter.optimum = (3 * timerMeter) / 4;
+    timerMeter.high = newTime / 2;
+    timerMeter.optimum = (3 * newTime) / 4;
 
     document.getElementById("timer").innerHTML = deadline + " s";
 }
