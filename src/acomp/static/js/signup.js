@@ -7,6 +7,6 @@ const password = document.getElementById("loginpswd");
 const passwordConfirm = document.getElementById("loginpswdConfirm");
 const form = document.getElementById("signupForm");
 
-loginname.addEventListener('input', checkLoginname);
-password.addEventListener('input', checkPasswords);
-passwordConfirm.addEventListener('input', checkPasswords);
+loginname.addEventListener("input", checkLoginname);
+password.addEventListener("input", checkPasswords);
+passwordConfirm.addEventListener("input", checkPasswords);
