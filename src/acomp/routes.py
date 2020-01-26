@@ -5,7 +5,8 @@ from urllib.parse import urlparse, urljoin
 from acomp.glUser import GLUser
 from acomp.auth import auth
 
-from acomp.forms import Captcha, Classic, Signup, Signin, SettingsUserName, SettingsChangePassword, SettingsDeleteAccount
+from acomp.forms import Captcha, Classic, Signup, Signin, SettingsUserName, SettingsChangePassword, \
+    SettingsDeleteAccount
 import json
 
 loginmanager.login_view = 'login'
@@ -65,30 +66,6 @@ def classic_data_post():
             return res
 
 
-@app.route('/', methods=['GET', 'POST'])
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('settings'))
-    form = Signin()
-    if form.validate_on_submit():
-        try:
-            app.logger.debug('Login user name {}'.format(form.loginname.data))
-            usr_id = auth.login(form.loginname.data, form.loginpswd.data)
-            if usr_id > 0:
-                flash('Login successful')
-                app.logger.debug('Login user id {}'.format(usr_id))
-                app.logger.debug('Current user id {}'.format(current_user.get_id()))
-                target = request.args.get('next')
-            if not is_safe_url(target):
-                return bad_request('Could not redirect to ' + target)
-            else:
-                return redirect(url_for('classic'))
-        except Exception as e:
-            flash(e)
-    return render_template('login.html', form=form)
-
-
 @app.route('/captcha')
 @login_required
 def captcha():
@@ -146,6 +123,21 @@ def captcha_post():
         return bad_request('Missing key in JSON.')
 
 
+@app.route('/quiz')
+def quiz():
+    if current_user.is_authenticated:
+        return redirect(url_for('tutorial'))
+    if 'quiz' not in session:
+        session['quiz'] = 0
+    if session['quiz'] >= app.config['ACOMP_QUIZ_POINTS']:
+        flash('Congrats, you have reached enough points!')
+    form = Captcha()
+    usr = GLUser(-1)
+    images = usr.startCaptcha()
+    app.logger.debug('Current quiz score: {}'.format(session['quiz']))
+    return render_template('captcha.html', source=images['images'], form=form)
+
+
 @app.route('/quiz/data', methods=['GET'])
 def quiz_get():
     if 'quiz' not in session:
@@ -192,19 +184,10 @@ def quiz_post():
             return res
 
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-
-@app.route('/highscore')
-@login_required
-def highscore():
-    usr = GLUser(current_user.get_id())
-    user_name = usr.getName()
-    return render_template('highscore.html', highscore=usr.getHighscore(), username=user_name)
+@app.route('/tutorial')
+def tutorial():
+    form = Classic()
+    return render_template('tutorial.html', source='../static/img/tutorial_1.jpg', form=form)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -241,31 +224,36 @@ def signup_post():
         else:
             return '{"available":"1", "message":"Username available"}'
 
-@app.route('/help')
-def help():
-    return render_template('help.html')
 
-
-
-@app.route('/tutorial')
-def tutorial():
-    form = Classic()
-    return render_template('tutorial.html', source='../static/img/tutorial_1.jpg', form=form)
-
-
-@app.route('/quiz')
-def quiz():
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if current_user.is_authenticated:
-        return redirect(url_for('tutorial'))
-    if 'quiz' not in session:
-        session['quiz'] = 0
-    if session['quiz'] >= app.config['ACOMP_QUIZ_POINTS']:
-        flash('Congrats, you have reached enough points!')
-    form = Captcha()
-    usr = GLUser(-1)
-    images = usr.startCaptcha()
-    app.logger.debug('Current quiz score: {}'.format(session['quiz']))
-    return render_template('captcha.html', source=images['images'], form=form)
+        return redirect(url_for('settings'))
+    form = Signin()
+    if form.validate_on_submit():
+        try:
+            app.logger.debug('Login user name {}'.format(form.loginname.data))
+            usr_id = auth.login(form.loginname.data, form.loginpswd.data)
+            if usr_id > 0:
+                flash('Login successful')
+                app.logger.debug('Login user id {}'.format(usr_id))
+                app.logger.debug('Current user id {}'.format(current_user.get_id()))
+                target = request.args.get('next')
+            if not is_safe_url(target):
+                return bad_request('Could not redirect to ' + target)
+            else:
+                return redirect(url_for('classic'))
+        except Exception as e:
+            flash(e)
+    return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 
 @app.route('/settings', methods=['GET', 'POST'])
@@ -289,7 +277,8 @@ def settings():
 
     if passwordform.validate_on_submit():
         try:
-            usr_id = auth.changetoken(current_user.get_id(), passwordform.oldpswd.data, passwordform.newpswd.data, passwordform.newpswdConfirm.data)
+            usr_id = auth.changetoken(current_user.get_id(), passwordform.oldpswd.data, passwordform.newpswd.data,
+                                      passwordform.newpswdConfirm.data)
             if usr_id > 0:
                 flash('Password change successful')
                 app.logger.debug('Current user id {}'.format(current_user.get_id()))
@@ -307,7 +296,21 @@ def settings():
         except Exception as e:
             flash(e)
 
-    return render_template('settings.html', nameform=nameform, deleteform=deleteform, passwordform=passwordform, username=user_name)
+    return render_template('settings.html', nameform=nameform, deleteform=deleteform, passwordform=passwordform,
+                           username=user_name)
+
+
+@app.route('/help')
+def help():
+    return render_template('help.html')
+
+
+@app.route('/highscore')
+@login_required
+def highscore():
+    usr = GLUser(current_user.get_id())
+    user_name = usr.getName()
+    return render_template('highscore.html', highscore=usr.getHighscore(), username=user_name)
 
 
 @app.errorhandler(400)
