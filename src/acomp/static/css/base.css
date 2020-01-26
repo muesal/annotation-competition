@@ -24,3 +24,15 @@ body {
 .mdl-navigation__link--current {
     text-decoration: underline;
 }
+
+.mdl-menu__outline {
+    background-color: #3F51B5;
+}
+
+.mobile-menu {
+    align-self: center;
+}
+
+.mdl-menu__item {
+    font-size: 30px;
+}

@@ -14,6 +14,9 @@ a `SECRET_KEY`, a `SQLALCHEMY_DATABASE_URI`
 (e.g. `SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/acomp.sqlite3'`) and 
 a `SESSION_TYPE` (e.g. `SESSION_TYPE = 'filesystem'`).
 
+You may want to set `NLTK_DATA` to use a custom location for the natural 
+language toolkit files.
+
 ### Getting started
 
 Run the following commands in the `src` directory:

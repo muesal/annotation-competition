@@ -3,6 +3,9 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 from flask_login import LoginManager
+from googletrans import Translator
+from nltk.stem import WordNetLemmatizer
+from spellchecker.spellchecker import SpellChecker
 
 app = Flask(__name__, template_folder='templates')
 app.config.from_object('config')
@@ -12,6 +15,9 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 sessions = Session(app)
 loginmanager = LoginManager(app)
+wl = WordNetLemmatizer()
+tl = Translator()
+sc = SpellChecker(distance=1)
 
 from acomp import routes
 from acomp import prefill

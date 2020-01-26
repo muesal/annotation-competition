@@ -3,8 +3,9 @@ from flask import url_for, session
 from acomp import app, db, sessions
 from acomp.models import Image, Tag, User, ImageTag, user_image
 from acomp.glImage import GLImage
-import time
 from json import dumps, loads
+from sqlalchemy import func
+from time import time
 
 
 class GLUser:
@@ -30,10 +31,10 @@ class GLUser:
         if self.user is None and self.id != -1:
             raise Exception('A user with this ID could not be found. The ID was: {}'.format(id))
 
-        if 'timestamp' not in session or time.time() - session['timestamp'] > app.config['ACOMP_LIFETIME_USER']:
+        if 'timestamp' not in session or time() - session['timestamp'] > app.config['ACOMP_LIFETIME_USER']:
             session['game_mode'] = -1
             session['image_id'] = 0
-            session['timestamp'] = time.time()
+            session['timestamp'] = time()
             session['image_level'] = 0
             session['num_tags'] = 0
             session['cap_captcha'] = 0
@@ -61,7 +62,7 @@ class GLUser:
 
         session['game_mode'] = 0
         session['num_tags'] = 0
-        session['timestamp'] = time.time()
+        session['timestamp'] = time()
 
         # get the new image
         iterations = 0
@@ -122,7 +123,7 @@ class GLUser:
         if session['game_mode'] != 0 or self.id == -1:
             raise Exception('Wrong game mode')
         # if the time is up end this game
-        if time.time() - session['timestamp'] > app.config['ACOMP_CLASSIC_TIMELIMIT']:
+        if time() - session['timestamp'] > app.config['ACOMP_CLASSIC_TIMELIMIT']:
             self.end()
             return -1, "Your time is over", self.getScore()
         # check if the tagging rate is okay
@@ -161,37 +162,42 @@ class GLUser:
         if session['game_mode'] != -1:
             self.end()
         session['game_mode'] = 1
-        session['timestamp'] = time.time()
+        session['timestamp'] = time()
 
-        num_images = db.session.query(Image).count()
-        if num_images <= 0:
-            raise Exception('No images in DB')
+        num_images = app.config['ACOMP_CAPTCHA_NUM_IMAGES']
+        total_images = db.session.query(Image).count()
+        if total_images < num_images:
+            raise Exception('Not enough images in DB ({} configured for \
+                    captcha mode, but only found {})'.format(num_images, total_images))
 
-        # get n random images
+        session['cap_captcha'] = randbelow(num_images)
+
+        # get the other images random
+        rand_images = Image.query.order_by(func.random()).limit(num_images - 1).all()
         images = []
         filenames = []
-        for i in range(app.config['ACOMP_CAPTCHA_NUM_IMAGES']):
-            image_id = randbelow(num_images) + 1
-            images.append(Image.query.get(image_id))
-            filenames.append(url_for('static', filename='images/' + images[i].filename))
+        ids = []
+        i = 0
+        for image in rand_images:
+            images.append(image)
+            filenames.append(url_for('static', filename='images/' + image.filename))
+            ids.append(image.id)
+            i += 1
+            if i == session['cap_captcha']:
+                images.append('')
+                filenames.append('')
 
-        # cap is a random one of these images
-        session['cap_captcha'] = randbelow(app.config['ACOMP_CAPTCHA_NUM_IMAGES'])
+        # cap is a random image which has enough tags
+        rand_tagged_images = db.session.query(ImageTag.image_id).group_by(ImageTag.image_id). \
+            having(func.count(ImageTag.tag_id) > app.config['ACOMP_CAPTCHA_NUM_TAGS']). \
+            order_by(func.random()).limit(num_images)
 
-        iter = 0
-        # count how many tags this image is connected with
-        image = images[session['cap_captcha']]
-        num_tags = len(ImageTag.query.filter_by(image_id=image.id).all())
+        # make sure it is different from the other images
+        i = 0
+        while rand_tagged_images[i].image_id in ids and i < rand_tagged_images.count() - 1:
+            i += 1
 
-        # get an image for cap, which has more than three tags, if possible
-        while num_tags < app.config['ACOMP_CAPTCHA_NUM_TAGS'] and iter < num_images:
-            # get a random image_id
-            image_id = randbelow(num_images) + 1
-            image = Image.query.get(image_id)
-            # count how many tags the image is connected with
-            num_tags = len(ImageTag.query.filter_by(image_id=image.id).all())
-            iter += 1
-
+        image = Image.query.get(rand_tagged_images[i].image_id)
         session['image_id'] = image.id
         images[session['cap_captcha']] = image
         filenames[session['cap_captcha']] = url_for('static', filename='images/' + image.filename)
@@ -231,7 +237,7 @@ class GLUser:
         :return: true, if it is the main image, false if not and the cap
         """
         # if user is playing classic or this is not the correct cap_captcha return False
-        if abs(time.time() - session['timestamp']) > app.config['ACOMP_CAPTCHA_TIMELIMIT']:
+        if abs(time() - session['timestamp']) > app.config['ACOMP_CAPTCHA_TIMELIMIT']:
             self.end()
             return -1, "Your time is over", self.getScore()
         if session['game_mode'] != 1 or self.id == -1:
@@ -247,7 +253,7 @@ class GLUser:
         db.session.commit()
         self.end()
 
-        return 1, session['cap_captcha'], self.getScore()
+        return 1, cap, self.getScore()
 
     def capEntryQuiz(self, cap: int) -> (int, str):
         """
@@ -276,8 +282,9 @@ class GLUser:
         session['cap_captcha'] = 0
         session['joker'] = 0
         session['tags'] = '[]'
-        session['timestamp'] = time.time()
+        session['timestamp'] = time()
         return self.getScore()
+        
 
     def skip(self) -> int:
         """
