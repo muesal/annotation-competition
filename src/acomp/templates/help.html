@@ -5,51 +5,51 @@ mdl-navigation__link--current
 {% endblock %}
 
 
-
-
-
 {% block main %}
     <h1>Help</h1>
 
-    <p>Welcome to our Annotation Competition.
+    <p>Welcome to Annotation Competition.
 
-    <p>Our aim is to gamify the tagging of images. For this, we have two game modes. These are available after logging
-        in.
+    <p>Our aim is to gamify the tagging of images. We have two game modes, both are available after signing up.
 
 
     <h2>Signup and Login</h2>
-    Choose a user name and a password. Requirements and helpful are shown on the signup pages.
+    Choose a user name and a password. Requirements you can find on the <a href="{{ url_for('signup') }}">sign up</a> page.
     Both user name and password can later be changed. If you don't want to have an account anymore, this account can be
     deleted.
-    The players with the highest scores are mentioned in the high score! Fun!
-
-    You can change your account name and password at any time. You can also delete your account later.
+    The players with the highest scores are mentioned in the high score!
 
     <h2>Game modes</h2>
     There are two game modes available: Classic and Reverse Captcha
 
     <h3>Classic</h3>
-    An image is shown. The user may then provide tags describing the image. The app checks the tags and if they are
-    accepted,
-    you receive points based on a scoring function.
+    In this game mode you see an image which you may tag.
+    The app checks the tags and if they are accepted you will see under 'mentioned tags'.
+    A step-by-step guide can be found in the  <a href="{{ url_for('tutorial') }}">tutorial</a>.
 
-    A step-by-step guide can be found in the  <a href="{{ url_for('tutorial') }}">tutorial</a>
+    For valid tags you receive points based on our scoring function:
+    Each tag is scored with either one or two points, depending on how often this tag has been provided by other users.
+    So try to think out of the box!
+    Some Images have been tagged very often.
+    For those some tags are not allowed, as they have been mentioned very frequently.
+    They are listed under 'mentioned tag', and since you have this restriction you get two points for each tag that you provide.
 
-
-    Scoring function: TODO
+    To avoid spam and cheating, if a tag has been mentioned for a lot of different images, it is not allowed any more.
+    Therefore you should lay your focus on what differs the images from one another.
 
     <h3>Reverse Captcha</h3>
-    To check the quality of the tags, you are shown a few images and the tags from one of the images.
-    You have to match the tags to one of the images. This helps us in determining, which tags are helpful! Of course,
-    you get points for this.
+    This game mode is for us to check the quality of the tags.
+    You are shown a few images and the tags from one of these images.
+    Try to find the image, which suits the tags on top.
+    If you have choose the correct image, you get 10 points.
+    Sometimes, the images may be very similar to one another, or the tags may be not very specific.
+    In this case the joker may help you; it fades out half of the images, which are not the correct answer.
+    However, you will only receive 5 points for the correct answer, if you used the joker.
 
     <h2>Settings</h2>
-
     Here you can change your user name, change your password or delete your account. These actions require your old
     password as confirmation.
 
     Click the action you would like to do, fill out the form and confirm with the button.
-
-
 
 {% endblock %}
