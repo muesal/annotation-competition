@@ -302,6 +302,7 @@ class GLImage:
         """
         Verify the captcha tags based on whether the user chose the correct image or not.
 
+        :param influence: the influence this answer should have on the db (1, take 0 for entry quiz)
         :param tags: the ids of the tags the user validated
         :param correct: boolean whether
         """
