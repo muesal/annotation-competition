@@ -8,48 +8,48 @@ mdl-navigation__link--current
 {% block main %}
     <h1>Help</h1>
 
-    <p>Welcome to Annotation Competition.
+    <p>Welcome to Annotation Competition.</p>
 
-    <p>Our aim is to gamify the tagging of images. We have two game modes, both are available after signing up.
+    <p>Our aim is to gamify the tagging of images. We have two game modes, both are available after <a href="#signup">signing up</a>.</p>
 
 
-    <h2>Signup and Login</h2>
-    Choose a user name and a password. Requirements you can find on the <a href="{{ url_for('signup') }}">sign up</a> page.
+    <h2 id="signup">Signup and Login</h2>
+    <p>Choose a user name and a password. Requirements you can find on the <a href="{{ url_for('signup') }}">sign up</a> page.
     Both user name and password can later be changed. If you don't want to have an account anymore, this account can be
-    deleted.
-    The players with the highest scores are mentioned in the high score!
+    deleted.<br>
+    The players with the highest scores are mentioned in the high score!</p>
 
-    <h2>Game modes</h2>
-    There are two game modes available: Classic and Reverse Captcha
+    <h2 id="gamemodes">Game modes</h2>
+    <p>There are two game modes available: <a href="#classic">Classic</a> and <a href="#captcha">Reverse Captcha</a></p>
 
-    <h3>Classic</h3>
-    In this game mode you see an image which you may tag.
-    The app checks the tags and if they are accepted you will see under 'mentioned tags'.
-    A step-by-step guide can be found in the  <a href="{{ url_for('tutorial') }}">tutorial</a>.
+    <h3 id="classic">Classic</h3>
+    <p>In this game mode you see an image which you may tag.
+    The app checks the tags and if they are accepted you will see under <em>mentioned tags</em>.
+    A step-by-step guide can be found in the <a href="{{ url_for('tutorial') }}">tutorial</a>.</p>
 
-    For valid tags you receive points based on our scoring function:
+    <p>For valid tags you receive points based on our scoring function:<br>
     Each tag is scored with either one or two points, depending on how often this tag has been provided by other users.
     So try to think out of the box!
     Some Images have been tagged very often.
-    For those some tags are not allowed, as they have been mentioned very frequently.
-    They are listed under 'mentioned tag', and since you have this restriction you get two points for each tag that you provide.
+    For those some tags are not allowed, as they have been mentioned very frequently.<br>
+    They are listed under 'mentioned tag', and since you have this restriction you get two points for each tag that you provide.</p>
 
-    To avoid spam and cheating, if a tag has been mentioned for a lot of different images, it is not allowed any more.
-    Therefore you should lay your focus on what differs the images from one another.
+    <p>To avoid spam and cheating, if a tag has been mentioned for a lot of different images, it is not allowed any more.
+    Therefore you should lay your focus on what differs the images from one another.</p>
 
-    <h3>Reverse Captcha</h3>
-    This game mode is for us to check the quality of the tags.
+    <h3 id="cpatcha">Reverse Captcha</h3>
+    <p>This game mode is for us to check the quality of the tags.
     You are shown a few images and the tags from one of these images.
     Try to find the image, which suits the tags on top.
     If you have choose the correct image, you get 10 points.
     Sometimes, the images may be very similar to one another, or the tags may be not very specific.
     In this case the joker may help you; it fades out half of the images, which are not the correct answer.
-    However, you will only receive 5 points for the correct answer, if you used the joker.
+    However, you will only receive 5 points for the correct answer, if you used the joker.</p>
 
-    <h2>Settings</h2>
-    Here you can change your user name, change your password or delete your account. These actions require your old
-    password as confirmation.
+    <h2 id="settings">Settings</h2>
+    <p>Here you can change your user name, change your password or delete your account. These actions require your old
+    password as confirmation.</p>
 
-    Click the action you would like to do, fill out the form and confirm with the button.
+    <p>Click the action you would like to do, fill out the form and confirm with the button.</p>
 
 {% endblock %}
