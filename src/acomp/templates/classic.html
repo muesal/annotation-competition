@@ -32,21 +32,21 @@ mdl-navigation__link--current
                 <ul id="mentionedTags">
                     <li>&nbsp;</li>
                 </ul>
+
+                <form id="tagForm" data-datauri="{{ url_for('classic_data_post') }}">
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <label class="mdl-textfield__label" for="searchTxt" id="tagTxt">Tag...</label>
+                        <input class="mdl-textfield__input" type="text" id="searchTxt" maxlength="512" autofocus required
+                               spellcheck="true">
+                    </div>
+                    {{ form.csrf_token }}
+                    <input id="btnSubmit" type="submit" value="Submit"
+                           class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                    <input id="btnSkip" type="reset" value="Skip"
+                           class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+                </form>
             </div>
         </div>
-
-        <form id="tagForm" data-datauri="{{ url_for('classic_data_post') }}">
-            <div class="mdl-textfield mdl-js-textfield">
-                <label class="mdl-textfield__label" for="searchTxt" id="tagTxt">Tag...</label>
-                <input class="mdl-textfield__input" type="text" id="searchTxt" maxlength="512" autofocus required
-                       spellcheck="true">
-            </div>
-            {{ form.csrf_token }}
-            <input id="btnSubmit" type="submit" value="Submit"
-                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-            <input id="btnSkip" type="reset" value="Skip"
-                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-        </form>
 
         <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
             <div class="mdl-snackbar__text"></div>
