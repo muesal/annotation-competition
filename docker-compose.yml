@@ -38,6 +38,12 @@ services:
     networks:
       - annotation-backend
 
+  redis:
+    image: redis:alpine
+    restart: always
+    networks:
+      - annotation-backend
+
 networks:
   annotation-backend:
   annotation-frontend:

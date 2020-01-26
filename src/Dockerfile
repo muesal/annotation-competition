@@ -9,6 +9,7 @@ RUN set -eux; \
 		libffi-dev \
 		linux-headers \
 		musl-dev \
+		mariadb-connector-c-dev \
 		postgresql-dev \
 	; \
 	pip install --no-cache-dir -r requirements.txt; \
