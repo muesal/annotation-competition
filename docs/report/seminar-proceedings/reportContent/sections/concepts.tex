@@ -6,3 +6,64 @@
 The project idea draws inspiration from \textit{KissKissBan} \cite{10.1145/1600150.1600153}. 
 Because of the possibility of having few simultaneous players, we made changes for asynchronous play. As a result, there are two distinct game modes, one for finding tags for an image and one for assessing the quality of the tags.
 
+
+
+\subsection{Data Set}
+The application can be used for any image data set. We work with \textit{Nôtre Histoire}
+\todo{Description}
+
+\subsection{Game Modes}
+
+\subsubsection{Classic}
+
+A user is shown an image. They may provide tags. If the tags are recognized by our dictionary and is not considered spam, the user gets points based on the scoring function.
+This game mode is on a time limit.
+
+\subsubsection{Reverse Captcha}
+
+The user is shown a number of images and the tags for one of the images. The user has to match the tags to an image.  
+This game mode is on a time limit. Additionally, there is a Joker feature which eliminates certain wrong images but leads to lower point gain for the round it is used in.
+
+This allows us to gauge the quality of the tags. If users have trouble selecting the right image, the tags are considered not descriptive and of low quality.
+
+
+\subsection{Spam Prevention}
+
+Crowdsourcing can have problems with people seeking to cause mischief. We have taken steps to hinder disruptive behavior that could lead to low-quality results. In particular, we try to limit the participation of bots and  of low-quality tags to increase user scores.
+
+
+\subsubsection{Entry Quiz}
+
+As part of the sign up process, users have to play the Reverse Captcha mode until \todo{condition}. This serves the same purpose as \textit{Captcha}, i.e. to keep out bots.
+
+
+\subsubsection{Rate Limit}
+Users may only tag images at a certain rate. We chose this approach as there is no real time mechanism to assess the quality of tags.
+
+\subsubsection{Global Frequency Limit}
+If a tag occurs for a certain fraction of images \todo{number}, it is not accepted. This is done to keep the number of tags that are either obvious or nonsense down.
+
+
+
+
+\subsection{Linguistics}
+
+
+
+
+\subsubsection{Stemming}
+Words are reduced to their stems to count flexions of the same verbs as one word.
+
+
+\subsubsection{Synonyms}
+Synonyms are counted together
+
+
+\subsubsection{Translation}
+
+
+
+\subsubsection{Phrasal Verbs}
+The game accepts word combinations of up to two words to allow the use of phrasal verbs should the user provide them.
+
+
