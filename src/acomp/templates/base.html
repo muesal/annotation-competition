@@ -9,7 +9,6 @@
         <title>Annotation Competition</title>
     {% endif %}
     <link rel="stylesheet" href="../static/css/fonts.css">
-    <link rel="stylesheet" href="../static/css/materialicons.css">
     <link rel="stylesheet" href="../static/css/material.css">
     <link rel="stylesheet" href="../static/css/base.css">
 
@@ -33,22 +32,55 @@
             <!-- Title -->
             <span class="mdl-layout-title">Annotation Competition</span>
             <!-- Add spacer, to align navigation to the right -->
-            <div class="mdl-layout-spacer"></div>
-            <nav class="mdl-navigation">
+            <div class="mdl-layout-spacer mdl-layout--large-screen-only"></div>
+            <button id="main-menu" class="mdl-button mdl-js-button mdl-button--icon mdl-layout--small-screen-only">
+                &#9776;
+            </button>
+
+            <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect mobile-menu mdl-layout--small-screen-only"
+                for="main-menu">
                 {% if current_user.is_authenticated %}
-                <a title="Classic Game Mode" class="mdl-navigation__link {% block classiclink %}{% endblock %}" href="{{ url_for('classic') }}">
-                    Classic</a>
-                <a title="Captcha Game Mode" class="mdl-navigation__link {% block captchalink %}{% endblock %}" href="{{ url_for('captcha') }}">Rev.
-                    Captcha</a>
-                <a title="High Score" class="mdl-navigation__link {% block highscorelink %}{% endblock %}" href="{{ url_for('highscore') }}">
-                    &#x1F3C6;</a>
-                <a title="Settings" class="mdl-navigation__link {% block settingsLink %}{% endblock %}" href="{{ url_for('settings') }}">
-                    &#x2699;</a>
-                <a title="Logout" class="mdl-navigation__link {% block logoutlink %}{% endblock %}" href="{{ url_for('logout') }}">
-                     {{ username }} &#x23FB;</a>
+
+                <li><a title="Classic Game Mode" class="mdl-navigation__link mobile-nav-link mdl-menu__item {% block classiclinkM %}{% endblock %}"
+                       href="{{ url_for('classic') }}">
+                    Classic</a></li>
+                <li><a title="Captcha Game Mode" class="mdl-navigation__link mobile-nav-link mdl-menu__item {% block captchalinkM %}{% endblock %}"
+                       href="{{ url_for('captcha') }}">Rev.
+                    Captcha</a></li>
+                <li><a title="High Score" class="mdl-navigation__link mobile-nav-link mdl-menu__item {% block highscorelinkM %}{% endblock %}"
+                       href="{{ url_for('highscore') }}">
+                    &#x1F3C6;</a></li>
+                <li><a title="Settings" class="mdl-navigation__link mobile-nav-link mdl-menu__item {% block settingsLinkM %}{% endblock %}"
+                       href="{{ url_for('settings') }}">
+                    &#x2699;</a></li>
+                <li><a title="Logout" class="mdl-navigation__link mobile-nav-link mdl-menu__item {% block logoutlinkM %}{% endblock %}"
+                       href="{{ url_for('logout') }}">
+                    {{ username }} &#x23FB;</a></li>
+            {% else %}
+                <li><a class="mdl-navigation__link mobile-nav-link mdl-menu__item {% block loginlinkM %}{% endblock %}" href="{{ url_for('login') }}">
+                Login</a></li>
+            {% endif %}
+            </ul>
+            <nav class="mdl-navigation mdl-layout--large-screen-only">
+                {% if current_user.is_authenticated %}
+                    <a title="Classic Game Mode" class="mdl-navigation__link {% block classiclink %}{% endblock %}"
+                       href="{{ url_for('classic') }}">
+                        Classic</a>
+                    <a title="Captcha Game Mode" class="mdl-navigation__link {% block captchalink %}{% endblock %}"
+                       href="{{ url_for('captcha') }}">Rev.
+                        Captcha</a>
+                    <a title="High Score" class="mdl-navigation__link {% block highscorelink %}{% endblock %}"
+                       href="{{ url_for('highscore') }}">
+                        &#x1F3C6;</a>
+                    <a title="Settings" class="mdl-navigation__link {% block settingsLink %}{% endblock %}"
+                       href="{{ url_for('settings') }}">
+                        &#x2699;</a>
+                    <a title="Logout" class="mdl-navigation__link {% block logoutlink %}{% endblock %}"
+                       href="{{ url_for('logout') }}">
+                        {{ username }} &#x23FB;</a>
                 {% else %}
-                <a class="mdl-navigation__link {% block loginlink %}{% endblock %}" href="{{ url_for('login') }}">
-                    Login</a>
+                    <a class="mdl-navigation__link {% block loginlink %}{% endblock %}" href="{{ url_for('login') }}">
+                        Login</a>
                 {% endif %}
                 <a class="mdl-navigation__link {% block helplink %}{% endblock %}" href="{{ url_for('help') }}">
                     Help</a>
