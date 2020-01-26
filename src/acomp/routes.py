@@ -82,6 +82,8 @@ def login():
                 target = request.args.get('next')
             if not is_safe_url(target):
                 return bad_request('Could not redirect to ' + target)
+            else:
+                return redirect(url_for('classic'))
         except Exception as e:
             flash(e)
     return render_template('login.html', form=form)
@@ -148,6 +150,8 @@ def captcha_post():
 def quiz_get():
     if 'quiz' not in session:
         return forbidden('Not authorized.')
+    if session['quiz'] >= app.config['ACOMP_QUIZ_POINTS']:
+        flash('Congrats, you have reached enough points!')
 
     usr = GLUser(-1)
     try:
@@ -165,8 +169,6 @@ def quiz_get():
 def quiz_post():
     if 'quiz' not in session:
         return forbidden('Not authorized.')
-    if session['quiz'] >= app.config['ACOMP_QUIZ_POINTS']:
-        flash('Congrats, you have reached enough points to sign up!')
 
     data = request.get_json()
     if data is None:
@@ -213,12 +215,14 @@ def signup():
     if 'quiz' not in session:
         flash('Please solve the quiz first')
         return redirect('quiz')
-    elif session['quiz'] <= app.config['ACOMP_QUIZ_POINTS']:
+    elif session['quiz'] < app.config['ACOMP_QUIZ_POINTS']:
         flash('Please solve the quiz first')
         return redirect('quiz')
     elif form.validate_on_submit():
         auth.register(form.loginname.data, form.loginpswd.data, form.loginpswdConfirm.data)
+        auth.login(form.loginname.data, form.loginpswd.data)
         flash('Thanks for registering')
+        return redirect(url_for('tutorial'))
     app.logger.debug('Current quiz score: {}'.format(session['quiz']))
     return render_template('signup.html', form=form)
 
@@ -255,6 +259,8 @@ def quiz():
         return redirect(url_for('tutorial'))
     if 'quiz' not in session:
         session['quiz'] = 0
+    if session['quiz'] >= app.config['ACOMP_QUIZ_POINTS']:
+        flash('Congrats, you have reached enough points!')
     form = Captcha()
     usr = GLUser(-1)
     images = usr.startCaptcha()

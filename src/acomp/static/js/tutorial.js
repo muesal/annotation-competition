@@ -23,16 +23,14 @@ var tutorialState = 0;
 setInitialSate();
 
 
-function handleTyping(e) {
-
-}
+function handleTyping(e) {}
 
 function handleSubmit(e) {
     e.preventDefault();
     const tag = tagField.value;
-    if (tag === 'Castle') {
+    if (tag === 'Castle' || tag === 'castle') {
         advanceState();
-        writeToMentionedTags('Castle')
+        writeToMentionedTags('castle')
     }
 }
 
@@ -46,7 +44,6 @@ function handleSkip(e) {
 
 function clearTags() {
     document.getElementById("mentionedTags").innerText="";
-
 }
 
 function setInitialSate() {
@@ -56,21 +53,17 @@ function setInitialSate() {
     submitButton.disabled = true;
     skipButton.disabled = true;
     tagField.disabled = true;
-
 }
 
 function explainPurpose() {
     tutorialText.innerText = "The goal of this game is to crowdsource the tagging of images\n" +
         "To make it more exciting, we give you points!\n Press Enter to continue"
-
 }
-
 
 function promptTag() {
     submitButton.disabled = false;
     tagField.disabled = false;
-    tutorialText.innerText = "Now you're ready to provide a tag.\n Please enter 'Castle'"
-
+    tutorialText.innerText = "Now you're ready to provide a tag.\n Please enter 'castle'"
 }
 
 function reactToTag() {
@@ -100,13 +93,11 @@ function explainTimer() {
     tutorialText.innerText = "The game is on a timer\n" +
         "Wait until the time is up\n" +
         "Then press the \"Restart\" to get a new image"
-
 }
 
 function promptnewImage() {
     skipButton.disabled = false;
     tutorialText.innerText = "You can request a new image by pressing Start Over"
-
 }
 
 function promptSkip() {
@@ -114,12 +105,10 @@ function promptSkip() {
     document.getElementById('btnSkip').value = "Skip";
 
     tutorialText.innerText = "You can also skip an image by pressing Skip";
-
 }
 
 function displayDone() {
     tutorialText.innerText = "Congratulations, you've completed the tutorial!"
-
 }
 
 function setImgToSkip() {
@@ -128,10 +117,7 @@ function setImgToSkip() {
 
 function setLastImage() {
     img.src = "../static/img/tutorial_3.jpg";
-
-
 }
-
 
 function advanceState() {
     tutorialState++;
@@ -158,10 +144,7 @@ function advanceState() {
             break;
         default:
             return;
-
     }
-
-
 }
 
 function writeToMentionedTags(tag) {
@@ -173,7 +156,6 @@ function writeToMentionedTags(tag) {
     mentionedTags.push(tag);
     console.log(mentionedTags);
 }
-
 
 document.onkeydown = function (evt) {
     evt = evt || window.event;
