@@ -250,7 +250,7 @@ class GLUser:
         db.session.commit()
         self.end()
 
-        return 1, session['cap_captcha'], self.getScore()
+        return 1, cap, self.getScore()
 
     def end(self) -> int:
         """
