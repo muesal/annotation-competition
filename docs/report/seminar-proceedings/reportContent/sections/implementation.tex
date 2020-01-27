@@ -26,13 +26,13 @@ Together with \textit{Flask-Migrate} we defined a relational schema that contain
 \label{gXLII:sec:implementation:login}  % TODO Adopt group prefix
 \textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filessystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. \todo{cite xsrf}
 
-
 \subsection{User Interface}
 \label{gXLII:sec:implementation:UI}  % TODO Adopt group prefix
 
 The user interface uses web technologies. Specifically, its design is built on Google's Material Design in the form of Material Design Lite \todo{cite mdl}.
 
-The interface has adaptive/responsive features to look okay on a variety of screen sizes, e.g. desktop formats or smart phones. 
+The interface has adaptive/responsive features to look okay on a variety of screen sizes, e.g. desktop formats or smart phones.
+The markup is rendered with \textit{Jinja2} templates.
 
 \subsection{Web API}
 \label{gXLII:sec:implementation:API}  % TODO Adopt group prefix
