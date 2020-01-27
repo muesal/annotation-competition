@@ -63,6 +63,7 @@ tmtagsHistory
 *.xdv
 *-converted-to.*
 # these rules might exclude image files for figures etc.
+docs/report/seminar-proceedings/proceedings.pdf
 # *.ps
 # *.eps
 # *.pdf
