@@ -11,6 +11,7 @@ We built the game as a web app based on the \textit{Flask} framework for \textit
 
 
 \subsubsection{Linguistics}
+\label{gXLII:sec:implementation:linguistics}  % TODO Adopt group prefix
 The suggestion is first translated to English, if necessary. This is handled by \textit{Googletrans}, this already provides spell checking for foreign languages.
 Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted.
 
@@ -20,6 +21,10 @@ Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \
 \label{gXLII:sec:implementation:database}  % TODO Adopt group prefix
 \textit{Flask-SQLAlchemy} provides an interface for commen database systems. PostgreSQL, MariaDB and SQLite are all compatible.
 Together with \textit{Flask-Migrate} we defined a relational schema that contains enities for users, images and tags. We store the relation between users and images to ensure, that they are not shown an image twice in classic mode. The relation between tags and images is stored together with thier frequency and quality.
+
+\subsection{Login}
+\label{gXLII:sec:implementation:login}  % TODO Adopt group prefix
+\textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filessystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. \todo{cite xsrf}
 
 
 \subsection{User Interface}
