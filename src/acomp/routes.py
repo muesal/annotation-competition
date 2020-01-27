@@ -205,15 +205,12 @@ def signup():
         return redirect(url_for('settings'))
     form = Signup()
     if 'quiz' not in session:
-        flash('Please solve the quiz first')
         return redirect('quiz')
     elif session['quiz'] < app.config['ACOMP_QUIZ_POINTS']:
-        flash('Please solve the quiz first')
         return redirect('quiz')
     elif form.validate_on_submit():
         auth.register(form.loginname.data, form.loginpswd.data, form.loginpswdConfirm.data)
         auth.login(form.loginname.data, form.loginpswd.data)
-        flash('Thanks for registering')
         return redirect(url_for('tutorial'))
     app.logger.debug('Current quiz score: {}'.format(session['quiz']))
     return render_template('signup.html', form=form)
@@ -247,7 +244,6 @@ def login():
             app.logger.debug('Login user name {}'.format(form.loginname.data))
             usr_id = auth.login(form.loginname.data, form.loginpswd.data)
             if usr_id > 0:
-                flash('Login successful')
                 app.logger.debug('Login user id {}'.format(usr_id))
                 app.logger.debug('Current user id {}'.format(current_user.get_id()))
                 target = request.args.get('next')
