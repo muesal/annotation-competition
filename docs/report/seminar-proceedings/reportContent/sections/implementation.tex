@@ -8,6 +8,14 @@ We built the game as a web app based on the \textit{Flask} framework for \textit
 \label{gXLII:sec:implementation:game}  % TODO Adopt group prefix
 \todo{Write}
 
+
+
+\subsubsection{Linguistics}
+The suggestion is first translated to English, if necessary. This is handled by \textit{Googletrans}, this already provides spell checking for foreign languages.
+Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted. 
+
+\subsection{Scoring Function}
+
 \subsection{Database}
 \label{gXLII:sec:implementation:database}  % TODO Adopt group prefix
 \todo{Write}

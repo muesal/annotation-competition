@@ -4,7 +4,7 @@
 \todo{General crowdsourcing stuff}
 
 The project idea draws inspiration from \textit{KissKissBan} \cite{10.1145/1600150.1600153}. 
-Because of the possibility of having few simultaneous players, we made changes for asynchronous play. As a result, there are two distinct game modes, one for finding tags for an image and one for assessing the quality of the tags.
+Because of the possibility of having few simultaneous players, we made changes for asynchronous play. As a result, there are two distinct game modes, \emph{Classic} for finding tags for an image and \emph{Reverse Captcha} for assessing the quality of the tags.
 
 
 
@@ -18,6 +18,8 @@ The application can be used for any image data set. We work with \textit{Nôtre 
 
 A user is shown an image. They may provide tags. If the tags are recognized by our dictionary and is not considered spam, the user gets points based on the scoring function.
 This game mode is on a time limit.
+
+There is a scoring function. The number of points per accepted tag depends on how often the tag has been mentioned before and how well annotated the image is. 
 
 \subsubsection{Reverse Captcha}
 
