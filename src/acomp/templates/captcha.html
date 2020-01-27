@@ -20,33 +20,41 @@ mdl-navigation__link--current
      <p id="signupparagraph">Well done! You may <a href="{{ url_for('signup') }}">register</a> to play our Classic game-mode.</p>
     {% endif %}
 
-        <p>Choose the image that best matches the tags<p>
-        <p id="captchaTags"></p>
-
-        <div class="page-content" id="imageWrapper">
-            <div id="captchaImages">
-                {{ form.csrf_token }}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}</a>.
             </div>
+        {% endif %}
+    {% endwith %}
 
-            <div id="column">
-                <meter id="timemeter" class="mdl-progress my-progress" min="0" max="60" value="12" low="15" high="30"
-                       optimum="45"></meter>
-                <output id="timer">0</output>
-                {% if current_user.is_authenticated %} {# quiz mode #}
-                <br>
-                <label for="score">Score: </label>
-                <output id="score">0</output>
-                {% endif %}
+    <p>Choose the image that best matches the tags<p>
+    <p id="captchaTags"></p>
 
-                <form id="skipForm">
-                    <input id="btnSkip" type="reset" value="Skip"
-                           class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-                    <input id="btnJoker" type="reset" value="Joker"
-                           {% if not current_user.is_authenticated %} {# quiz mode #}
-                           hidden
-                           {% endif %}
-                           class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-                </form>
-            </div>
+    <div class="page-content" id="imageWrapper">
+        <div id="captchaImages">
+            {{ form.csrf_token }}
         </div>
+
+        <div id="column">
+            <meter id="timemeter" class="mdl-progress my-progress" min="0" max="60" value="12" low="15" high="30"
+                   optimum="45"></meter>
+            <output id="timer">0</output>
+            {% if current_user.is_authenticated %} {# quiz mode #}
+            <br>
+            <label for="score">Score: </label>
+            <output id="score">0</output>
+            {% endif %}
+
+            <form id="skipForm">
+                <input id="btnSkip" type="reset" value="Skip"
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+                <input id="btnJoker" type="reset" value="Joker"
+                       {% if not current_user.is_authenticated %} {# quiz mode #}
+                       hidden
+                       {% endif %}
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+            </form>
+        </div>
+    </div>
 {% endblock %}
