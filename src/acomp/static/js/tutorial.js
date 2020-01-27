@@ -175,6 +175,9 @@ document.onkeydown = function (evt) {
 
 function notifyUser(msg) {
     const snackbar = document.getElementById('snackbar');
-    const data = {message: msg};
+    const data = {
+        message: msg,
+        timeout: 7500
+    };
     snackbar.MaterialSnackbar.showSnackbar(data);
 }
