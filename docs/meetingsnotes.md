@@ -1,4 +1,26 @@
 # Notes
+27 January
+
+Standardized UX questionnaires are available, maybe for future
+work. 'Usability and user experience' Davis 1989?
+Talking during video: maybe
+Video style: have a look at DBIS youtube channel. Maybe have voice if there's time.
+Video title screen with seminar, group and individual names
+We are group 14, probably
+mention pretraining in slides and explain why it's useful (also useful against spam)
+Give Shaban full access to repo
+Shaban can give us access to a cloud server, show IPs in presentation not domain name
+Jonas could provide a server but would need a domain because of certificates
+Entry quiz could also use a fixed number of rounds and e.g. a 70% threshold
+Many references are possible for linguistics. 
+We can cite CRSF paper
+We could have a visual representation of schema
+Try not to have redundancy between video and screenshots in slides
+Have at least a slide on NLP
+VGG as explanation for why it's modern human machine interaction
+Plenty of potential data sets are poorly annotated, this is motivation for the annotation competition
+Mention gamification part
+
 14 January
 Get mobile running
 Make GUI nicer
