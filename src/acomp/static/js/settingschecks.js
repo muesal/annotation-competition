@@ -61,11 +61,10 @@ async function checkPasswords(e) {
             const data = await response.text();
             console.log('Success:', data);
             if (regex.test(data)) {
-                paragraph.textContent += 'Your password might be insecure';
+                notifyUser('You password might be insecure');
                 return;
             } else {
                 console.log('Not yet been pwned.');
-                paragraph.textContent = '';
             }
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
@@ -85,3 +84,8 @@ async function digest(str) {
     return hashHex;
 }
 
+function notifyUser(msg) {
+    const snackbar = document.getElementById('snackbar');
+    const data = {message: msg};
+    snackbar.MaterialSnackbar.showSnackbar(data);
+}

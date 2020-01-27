@@ -174,12 +174,11 @@ function setTimer(newTime) {
     document.getElementById("timer").innerHTML = deadline + " s";
 }
 
-
 function notifyUser(msg) {
-    const snackbarContainer = document.querySelector('#demo-toast-example');
+    const snackbar = document.getElementById('snackbar');
     const data = {
         message: msg,
         timeout: 7500
     };
-    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    snackbar.MaterialSnackbar.showSnackbar(data);
 }
