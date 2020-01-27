@@ -184,11 +184,10 @@ def quiz_post():
         except Exception as e:
             return bad_request(e)
         else:
-            if challange == 1:
-                session['quiz'] += 1
-            else:
-                session['quiz'] -= 1
-            data = '{"OK":"200", "message":"' + captcha[0] + '"}'
+            session['quiz'] += 1 if challange == 1 else -1
+            signup_permission = int(session['quiz'] >= app.config['ACOMP_QUIZ_POINTS'])
+
+            data = {'OK': signup_permission, 'message': captcha[0]}
             res = make_response(data)
             res.headers.set('Content-Type', 'application/json')
             return res

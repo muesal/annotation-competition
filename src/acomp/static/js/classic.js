@@ -177,6 +177,9 @@ function setTimer(newTime) {
 
 function notifyUser(msg) {
     const snackbarContainer = document.querySelector('#demo-toast-example');
-    const data = {message: msg};
+    const data = {
+        message: msg,
+        timeout: 7500
+    };
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
 }
