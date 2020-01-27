@@ -99,6 +99,8 @@ function selectImage(num) {
     console.log("Selected " + num);
     sendSelection(num);
     skipButton.value = "Next";
+    clearInterval(timer);
+
 }
 
 function setTags(newtags) {

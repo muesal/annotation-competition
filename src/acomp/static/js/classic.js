@@ -70,7 +70,7 @@ function resetTotal(event) {
     getClassicData();
     document.getElementById('btnSubmit').disabled = false;
     document.getElementById('btnSubmit').value = "Submit";
-    document.getElementById('btnSkip').value = "Skip";
+    document.getElementById('btnSkip').value = "Next";
 }
 
 function resetTags() {

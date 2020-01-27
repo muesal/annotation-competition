@@ -102,9 +102,9 @@ function promptnewImage() {
 
 function promptSkip() {
     deadline = 100000;
-    document.getElementById('btnSkip').value = "Skip";
+    document.getElementById('btnSkip').value = "Next";
 
-    tutorialText.innerText = "You can also skip an image by pressing Skip";
+    tutorialText.innerText = "You can also skip an image by pressing Next";
 }
 
 function displayDone() {
