@@ -19,7 +19,6 @@ function writeToMentionedTags(tag) {
     document.getElementById("mentionedTags").appendChild(node); // Append <li> to <ul> with id="myList"
     mentionedTags.push(tag);
     console.log(mentionedTags);
-    skipButton.value = "Next";
 }
 
 function handleInput(event) {
@@ -71,7 +70,7 @@ function resetTotal(event) {
     getClassicData();
     document.getElementById('btnSubmit').disabled = false;
     document.getElementById('btnSubmit').value = "Submit";
-    document.getElementById('btnSkip').value = "Next";
+    document.getElementById('btnSkip').value = "Skip";
 }
 
 function resetTags() {
@@ -128,6 +127,7 @@ async function sendTag(submittedTag) {
             console.log('Success:', JSON.stringify(json));
             if (json.accepted === 1) {
                 writeToMentionedTags(json.message);
+                document.getElementById('btnSkip').value = "Next";
                 if (json.message !== submittedTag){
                     notifyUser("Tag corrected to " + json.message);
                 }
