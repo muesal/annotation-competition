@@ -9,7 +9,7 @@ const timer = document.getElementById('timer');
 const score = document.getElementById('score');
 const img = document.getElementById('tagImage');
 const initialTime = 34;
-var deadline = 3;
+var deadline = 30;
 
 
 skipButton.addEventListener("click", handleSkip);
@@ -102,7 +102,9 @@ function promptnewImage() {
 }
 
 function promptSkip() {
-    deadline = 100000;
+    deadline = 60;
+    updateTimer();
+    clearInterval(timer);
     document.getElementById('btnSkip').value = "Next";
 
     tutorialText.innerText = "You can also skip an image by pressing Next";
