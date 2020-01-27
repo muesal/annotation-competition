@@ -31,22 +31,22 @@ mdl-navigation__link--current
             <ul id="mentionedTags">
                 <li>&nbsp;</li>
             </ul>
-        </div>
 
-        <form id="tagForm" data-datauri="{{ url_for('classic_data_post') }}" data-classicurl="{{ url_for('classic') }}">
-            <div class="mdl-textfield mdl-js-textfield">
-                <label class="mdl-textfield__label" for="searchTxt" id="tagTxt">Tag...</label>
-                <input class="mdl-textfield__input" type="text" id="searchTxt" maxlength="512" autofocus required
-                       spellcheck="true">
-            </div>
-            <input id="btnSubmit" type="submit" value="Submit"
-                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-            <input id="btnSkip" type="reset" value="Skip"
-                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-            <input id="btnNext" type="button" value="Next Step" hidden
-                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-            <input id="btnStart" type="button" value="Start Tutorial"
-                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-        </form>
+            <form id="tagForm" data-datauri="{{ url_for('classic_data_post') }}" data-classicurl="{{ url_for('classic') }}">
+                <div class="mdl-textfield mdl-js-textfield">
+                    <label class="mdl-textfield__label" for="searchTxt" id="tagTxt">Tag...</label>
+                    <input class="mdl-textfield__input" type="text" id="searchTxt" maxlength="512" autofocus required
+                           spellcheck="true">
+                </div>
+                <input id="btnSubmit" type="submit" value="Submit"
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                <input id="btnSkip" type="reset" value="Skip"
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+                <input id="btnNext" type="button" value="Next Step" hidden
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                <input id="btnStart" type="button" value="Start Tutorial"
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+            </form>
+        </div>
     </div>
 {% endblock %}
