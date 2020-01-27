@@ -2,6 +2,7 @@
 
 {% block css %}
     <link href="../static/css/classic.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/css/tutorial.css" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 {% block classiclink %}
@@ -53,5 +54,7 @@ mdl-navigation__link--current
             <div class="mdl-snackbar__text"></div>
             <button class="mdl-snackbar__action" type="button"></button>
         </div>
+        <p id="classicurl">{{ url_for('classic') }}</p>
+
     </main>
 {% endblock %}
