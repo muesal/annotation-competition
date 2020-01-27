@@ -139,6 +139,7 @@ def quiz():
         return render_template('captcha.html', source=images['images'], form=form)
     except:
         session['quiz'] = app.config['ACOMP_QUIZ_POINTS']
+        flash('There are currently not enough tagged images in the database for the entry quiz. You may signup directly.')
         return redirect(url_for('signup'))
 
 
