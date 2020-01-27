@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 from flask_login import LoginManager
 from googletrans import Translator
+from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer
 from spellchecker.spellchecker import SpellChecker
 
@@ -15,6 +16,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 sessions = Session(app)
 loginmanager = LoginManager(app)
+wn.ensure_loaded()
 wl = WordNetLemmatizer()
 tl = Translator()
 sc = SpellChecker(distance=1)
