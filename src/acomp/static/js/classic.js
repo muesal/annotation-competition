@@ -19,6 +19,7 @@ function writeToMentionedTags(tag) {
     document.getElementById("mentionedTags").appendChild(node); // Append <li> to <ul> with id="myList"
     mentionedTags.push(tag);
     console.log(mentionedTags);
+    skipButton.value = "Next";
 }
 
 function handleInput(event) {
