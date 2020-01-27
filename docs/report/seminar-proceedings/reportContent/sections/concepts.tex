@@ -1,11 +1,12 @@
 \section{Concepts}
 \label{gXLII:sec:concepts} % TODO Adopt group prefix
 
-\todo{General crowdsourcing stuff}
-
-The project idea draws inspiration from \textit{KissKissBan} \cite{10.1145/1600150.1600153}. 
+The project idea draws inspiration from \textit{KissKissBan} \cite{10.1145/1600150.1600153}.
 Because of the possibility of having few simultaneous players, we made changes for asynchronous play. As a result, there are two distinct game modes, \emph{Classic} for finding tags for an image and \emph{Reverse Captcha} for assessing the quality of the tags.
 
+We use a centralistic architecture and allow any modern web client to take part of the game. Image annotating is a very basic task that does not require any further knowledge. However, an internet connection to the server is required to play the game. The images are randomly allocated to users, with some constraint to avoid repetitions.
+\todo{Reference mobile crowdsourcing architecture paper}
+Users are getting points as reward for their work. The most successful users are shown in a global high score. The gamification of image annotaion should motivate users to signup and participate in the data set.
 
 
 \subsection{Data Set}
@@ -19,11 +20,11 @@ The application can be used for any image data set. We work with \textit{Nôtre 
 A user is shown an image. They may provide tags. If the tags are recognized by our dictionary and is not considered spam, the user gets points based on the scoring function.
 This game mode is on a time limit.
 
-There is a scoring function. The number of points per accepted tag depends on how often the tag has been mentioned before and how well annotated the image is. 
+There is a scoring function. The number of points per accepted tag depends on how often the tag has been mentioned before and how well annotated the image is.
 
 \subsubsection{Reverse Captcha}
 
-The user is shown a number of images and the tags for one of the images. The user has to match the tags to an image.  
+The user is shown a number of images and the tags for one of the images. The user has to match the tags to an image.
 This game mode is on a time limit. Additionally, there is a Joker feature which eliminates certain wrong images but leads to lower point gain for the round it is used in.
 
 This allows us to gauge the quality of the tags. If users have trouble selecting the right image, the tags are considered not descriptive and of low quality.
