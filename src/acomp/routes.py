@@ -72,8 +72,13 @@ def captcha():
     form = Captcha()
     usr = GLUser(current_user.get_id())
     user_name = usr.getName()
-    images = usr.startCaptcha()
-    return render_template('captcha.html', source=images['images'], form=form, username=user_name)
+    try:
+        images = usr.startCaptcha()
+        return render_template('captcha.html', source=images['images'], form=form, username=user_name)
+    except Exception as e:
+        flash('Currently there are not enough tagged images in our DB to play Captcha.'
+              'Please play the classic mode and try again later.')
+        return render_template('captcha.html', source=images['images'], form=form, username=user_name)
 
 
 @app.route('/captcha/data', methods=['GET'])
