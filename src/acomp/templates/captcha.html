@@ -38,9 +38,11 @@ mdl-navigation__link--current
                 <meter id="timemeter" class="mdl-progress my-progress" min="0" max="60" value="12" low="15" high="30"
                        optimum="45"></meter>
                 <output id="timer">0</output>
+                {% if current_user.is_authenticated %} {# quiz mode #}
                 <br>
                 <label for="score">Score: </label>
                 <output id="score">0</output>
+                {% endif %}
 
                 <form id="skipForm">
                     <input id="btnSkip" type="reset" value="Skip"
