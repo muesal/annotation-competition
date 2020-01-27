@@ -133,9 +133,13 @@ def quiz():
         flash('Congrats, you have reached enough points!')
     form = Captcha()
     usr = GLUser(-1)
-    images = usr.startCaptcha()
-    app.logger.debug('Current quiz score: {}'.format(session['quiz']))
-    return render_template('captcha.html', source=images['images'], form=form)
+    try:
+        images = usr.startCaptcha()
+        app.logger.debug('Current quiz score: {}'.format(session['quiz']))
+        return render_template('captcha.html', source=images['images'], form=form)
+    except:
+        session['quiz'] = app.config['ACOMP_QUIZ_POINTS']
+        return redirect(url_for('signup'))
 
 
 @app.route('/quiz/data', methods=['GET'])
