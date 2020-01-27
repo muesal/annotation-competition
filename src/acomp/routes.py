@@ -161,6 +161,7 @@ def quiz_get():
 def quiz_post():
     if 'quiz' not in session:
         return forbidden('Not authorized.')
+    quiz_okayness = 0
 
     data = request.get_json()
     if data is None:
@@ -178,7 +179,11 @@ def quiz_post():
                 session['quiz'] += 1
             else:
                 session['quiz'] -= 1
-            data = '{"OK":"200", "message":"' + captcha[0] + '"}'
+
+            if session[quiz] >= app.config['ACOMP_QUIZ_POINTS']:
+                quiz_okayness = 1
+
+            data = {'OK': quiz_okayness, 'message': captcha[0]}
             res = make_response(data)
             res.headers.set('Content-Type', 'application/json')
             return res
