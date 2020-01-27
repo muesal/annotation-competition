@@ -31,8 +31,12 @@ Run the following commands in the `src` directory:
 If you have any existing images to import you can run 
 `flask prefill /my/image/folder`.
 
-If you'd like to provide tags in another language than english, you may change `ACOMP_LANGUAGE_DEFAULT`  in `config.py`
-to the [ISO-639-1-code](http://www.loc.gov/standards/iso639-2/php/code_list.php) of your preferred language.
+If you'd like to provide tags in another language than english, you may change 
+`ACOMP_LANGUAGE_DEFAULT`  in `config.py` to the 
+[ISO-639-1-code](http://www.loc.gov/standards/iso639-2/php/code_list.php) of 
+your preferred language. However, all messages are not yet provided in other 
+languages than english, and the response to your provided tags may be confusing.
+We recommend playing in english.
 
 ### Quick start using Docker
 
