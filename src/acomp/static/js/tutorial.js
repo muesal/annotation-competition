@@ -106,6 +106,7 @@ function promptSkip() {
     updateTimer();
     clearInterval(timer);
     document.getElementById('btnSkip').value = "Skip";
+    document.getElementById('btnSkip').disabled = false;
 
     tutorialText.innerText = "You can also skip an image by pressing Skip";
 }
@@ -128,6 +129,10 @@ function redirectToClassic() {
     window.location = url;
 }
 
+function resetFocus() {
+    tutorialText.focus();
+
+}
 
 function advanceState() {
     tutorialState++;
@@ -139,6 +144,7 @@ function advanceState() {
             promptTag();
             break;
         case tutorialState = 3:
+            resetFocus();
             reactToTag();
             break;
         case tutorialState = 4:
