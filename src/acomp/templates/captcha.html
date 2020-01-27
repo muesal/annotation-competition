@@ -13,26 +13,13 @@ mdl-navigation__link--current
 {% endblock %}
 
 {% block main %}
- {% if not current_user.is_authenticated %}
-     <p id="quizparagraph"> Before signing up, please take the quiz. Once you have enough points, we will show you to the
+     {% if not current_user.is_authenticated %}
+     <p id="quizparagraph">Before signing up, please take the quiz. Once you have enough points, we will show you to the
      sign up process.
      We don't mean to waste your time. We intend our game for humans and not bots.</p>
      <p id="signupparagraph">Well done! You may <a href="{{ url_for('signup') }}">register</a> to play our Classic game-mode.</p>
     {% endif %}
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-                <div class="mdl-snackbar__text"></div>
-                <button class="mdl-snackbar__action" type="button"></button>
-            </div>
-            <div class="notification is-danger">
-                {{ messages[0] }}
-            </div>
-        {% endif %}
-    {% endwith %}
-
-    <main class="mdl-layout__content">
         <p>Choose the image that best matches the tags<p>
         <p id="captchaTags"></p>
 
@@ -62,6 +49,4 @@ mdl-navigation__link--current
                 </form>
             </div>
         </div>
-    </main>
-
 {% endblock %}

@@ -10,6 +10,8 @@ const requestUrl = currentUrl + "/data";
 const csrf_token = document.getElementById("csrf_token");
 const skipButton = document.getElementById("btnSkip");
 const jokerButton = document.getElementById("btnJoker");
+const quizParagraph = document.getElementById("quizparagraph");
+const signupParagraph = document.getElementById("signupparagraph");
 
 getCaptchaData();
 
@@ -27,7 +29,9 @@ async function getCaptchaData() {
             console.log('Success:', JSON.stringify(json));
             setImages(json.images);
             setTags(json.tags);
-            setScore(json.score);
+            if (!isQuiz()) {
+                setScore(json.score);
+            }
             setTimer(json.timelimit);
 
         } else {
@@ -60,14 +64,9 @@ async function sendSelection(num) {
             hightlightImages(json.message, num);
             if (isQuiz()) {
                 if (parseInt(json.OK) === 1) {
-                    const quizparagraph = document.getElementById("quizparagraph");
-                    const signupParagraph = document.getElementById("signupparagraph");
                     signupParagraph.style.display = "block";
-                    quizparagraph.style.display = "none";
-
-
+                    quizParagraph.style.display = "none";
                 }
-
             } else {
                 setScore(json.score);
             }
@@ -82,12 +81,7 @@ async function sendSelection(num) {
 }
 
 function isQuiz() {
-    const quizParagraph = document.getElementById("quizparagraph");
     return quizParagraph != null;
-}
-
-function f() {
-
 }
 
 function setImages(images) {
