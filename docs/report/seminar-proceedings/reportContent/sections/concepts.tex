@@ -41,13 +41,14 @@ As part of the sign up process, users have to play the Reverse Captcha mode unti
 Users may only tag images at a certain rate. We chose this approach as there is no real time mechanism to assess the quality of tags.
 
 \subsubsection{Global Frequency Limit}
-If a tag occurs for a certain fraction of images \todo{number}, it is not accepted. This is done to keep the number of tags that are either obvious or nonsense down.
+If a tag occurs for a certain fraction of images, currently 20\%, it is not accepted. This is done to keep the number of tags that are either obvious or nonsense down.
 
 
 
 
 \subsection{Linguistics}
 
+To allow ease of use and more meaningful tags, we have a few linguistic approaches to prevent redundant tags. We currently allow verbs, nouns and adjectives.
 
 
 
@@ -60,7 +61,7 @@ Synonyms are counted together
 
 
 \subsubsection{Translation}
-
+The application has a set language and tags provided in other languages are translated to the set language.
 
 
 \subsubsection{Phrasal Verbs}
