@@ -284,19 +284,6 @@ class GLImage:
             elem.total_verified = elem.total_verified + 1
         return captcha_ids, self.translateTags(captcha_tags, 'en', language)
 
-        '''
-        # else choose tags with very complex and thoughtful algorithm
-        # half of the tags have been shown to a user before, but not been verified correctly at max.
-        not_successful_verified = all_tags.query.filter(ImageTag.successful_verified == 0,
-                                                        ImageTag.total_verified > 0).all()
-        i = 0
-        for elem in not_successful_verified:
-            captcha_tags.append(Tag.query.filter_by(id=elem.tag_id).one_and_only().name)
-            elem.total_verified = elem.total_verified + 1
-            i += 1
-            if i >= num_tags / 2:
-                break
-        '''
 
     def verifyTags(self, tags: [str], correct: bool):
         """
