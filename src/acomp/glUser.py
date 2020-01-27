@@ -25,7 +25,7 @@ class GLUser:
         language (str): language the user is playing in
     """
 
-    def __init__(self, id: int, language='en'):
+    def __init__(self, id: int, language=app.config['ACOMP_LANGUAGE_DEFAULT']):
         self.id = id
         self.user = User.query.filter_by(id=id).one_or_none()
         if self.user is None and self.id != -1:
