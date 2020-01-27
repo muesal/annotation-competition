@@ -58,7 +58,20 @@ async function sendSelection(num) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
             hightlightImages(json.message, num);
-            setScore(json.score);
+            if (isQuiz()) {
+                if (parseInt(json.OK) === 1) {
+                    const quizparagraph = document.getElementById("quizparagraph");
+                    const signupParagraph = document.getElementById("signupparagraph");
+                    signupParagraph.style.display = "block";
+                    quizparagraph.style.display = "none";
+
+
+                }
+
+            } else {
+                setScore(json.score);
+            }
+
 
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
@@ -66,6 +79,15 @@ async function sendSelection(num) {
     } catch (err) {
         console.error('Error:', err);
     }
+}
+
+function isQuiz() {
+    const quizParagraph = document.getElementById("quizparagraph");
+    return quizParagraph != null;
+}
+
+function f() {
+
 }
 
 function setImages(images) {
