@@ -134,6 +134,7 @@ function advanceState() {
             explainPurpose();
             break;
         case tutorialState = 2:
+            nextButton.hidden = false;
             promptTag();
             break;
         case tutorialState = 3:
@@ -144,6 +145,7 @@ function advanceState() {
             explainTimer();
             break;
         case tutorialState = 5:
+            nextButton.hidden = false;
             setImgToSkip();
             promptSkip();
             break;
@@ -152,6 +154,7 @@ function advanceState() {
             displayDone();
             break;
         case tutorialState = 7:
+            nextButton.hidden = false;
             redirectToClassic();
         default:
             return;
