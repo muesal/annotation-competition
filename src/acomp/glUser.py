@@ -303,8 +303,20 @@ class GLUser:
         :return: dictionary with list of the top users (username, score)
         """
         sorted_by_score = User.query.order_by(User.score.desc()).limit(app.config['ACOMP_NUM_HIGHSCORE'])
-        highscores: dict = []
+        highscores = []
         for user in sorted_by_score:
             highscores.append((user.username, user.score))
         app.logger.debug(highscores)
-        return highscores
+
+        images = Image.query.count()
+        users = User.query.count()
+        tags = Tag.query.count()
+
+        data: dict = {
+            'highscores': highscores,
+            'user': (self.getName(), self.getScore()),
+            'users': users,
+            'images': images,
+            'tags': tags,
+        }
+        return data

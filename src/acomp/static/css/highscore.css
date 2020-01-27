@@ -6,8 +6,6 @@ h1 {
     list-style-type: upper-roman;
     font-size: xx-large;
     align-self: center;
-
-
 }
 
 .highscoreitem:first-child {
@@ -16,9 +14,20 @@ h1 {
 
 .highscoreitem:nth-child(2) {
     list-style-type: "\1F948";
-
 }
 
 .highscoreitem:nth-child(3) {
     list-style-type: "\1F949";
+}
+
+#user {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 15px;
+}
+
+#information {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 15px;
 }

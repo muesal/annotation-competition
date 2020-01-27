@@ -319,7 +319,7 @@ def help():
 def highscore():
     usr = GLUser(current_user.get_id())
     user_name = usr.getName()
-    return render_template('highscore.html', highscore=usr.getHighscore(), username=user_name)
+    return render_template('highscore.html', data=usr.getHighscore(), username=user_name)
 
 
 @app.errorhandler(400)
