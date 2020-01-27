@@ -14,47 +14,41 @@ mdl-navigation__link--current
 {% endblock %}
 
 {% block main %}
-
-    <p id="instruction"></p>
-    <main class="mdl-layout__content">
-        <div class="page-content" id="imageWrapper">
-            <div id="taggingImage">
-                <img class="myImg" id="tagImage" src={{ source }}>
-            </div>
-
-            <div id="column">
-                <label for="timer">Timer: </label>
-                <meter id="timemeter" class="mdl-progress" min="0" max="60" value="12" low="15" high="30"
-                       optimum="45"></meter>
-                <output id="timer">0</output>
-                <br>
-                <label for="score">Score: </label>
-                <output id="score">0</output>
-
-                <h3>Mentioned tags</h3>
-                <ul id="mentionedTags">
-                    <li>&nbsp;</li>
-                </ul>
-            </div>
-
-            <form id="tagForm" data-datauri="{{ url_for('classic_data_post') }}">
-                <div class="mdl-textfield mdl-js-textfield">
-                    <label class="mdl-textfield__label" for="searchTxt" id="tagTxt">Tag...</label>
-                    <input class="mdl-textfield__input" type="text" id="searchTxt" maxlength="512" autofocus required
-                           spellcheck="true">
-                </div>
-                <input id="btnSubmit" type="submit" value="Submit"
-                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                <input id="btnSkip" type="reset" value="Skip"
-                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-            </form>
+    <div class="page-content" id="imageWrapper">
+        <div id="taggingImage">
+            <img class="myImg" id="tagImage" src={{ source }}>
         </div>
 
-        <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-            <div class="mdl-snackbar__text"></div>
-            <button class="mdl-snackbar__action" type="button"></button>
-        </div>
-        <p id="classicurl">{{ url_for('classic') }}</p>
+        <div id="column">
+            <label for="timer">Timer: </label>
+            <meter id="timemeter" class="mdl-progress" min="0" max="60" value="12" low="15" high="30"
+                   optimum="45"></meter>
+            <output id="timer">0</output>
+            <br>
+            <label for="score">Score: </label>
+            <output id="score">0</output>
 
-    </main>
+            <h3>Mentioned tags</h3>
+            <ul id="mentionedTags">
+                <li>&nbsp;</li>
+            </ul>
+        </div>
+
+        <form id="tagForm" data-datauri="{{ url_for('classic_data_post') }}" data-classicurl="{{ url_for('classic') }}">
+            <div class="mdl-textfield mdl-js-textfield">
+                <label class="mdl-textfield__label" for="searchTxt" id="tagTxt">Tag...</label>
+                <input class="mdl-textfield__input" type="text" id="searchTxt" maxlength="512" autofocus required
+                       spellcheck="true">
+            </div>
+            <input id="btnSubmit" type="submit" value="Submit"
+                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+            <input id="btnSkip" type="reset" value="Skip"
+                   class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+        </form>
+    </div>
+
+    <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
 {% endblock %}
