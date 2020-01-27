@@ -2,10 +2,12 @@
 
 const img = document.getElementById('tagImage');
 const initialTime = 34;
+const nextButton = document.getElementById("btnNext");
 const score = document.getElementById('score');
 const skipButton = document.getElementById("btnSkip");
 const snackbar = document.getElementById('snackbar');
 const submitButton = document.getElementById("btnSubmit");
+const startButton = document.getElementById("btnStart");
 const tagField = document.getElementById("searchTxt");
 const tagForm = document.getElementById("tagForm");
 const timemeter = document.getElementById('timemeter');
@@ -14,6 +16,8 @@ var deadline = 30;
 
 skipButton.addEventListener("click", handleSkip);
 submitButton.addEventListener("click", handleSubmit);
+startButton.addEventListener("click", setInitialSate);
+nextButton.addEventListener("click", advanceState);
 
 var tutorialState = 0;
 
@@ -45,6 +49,8 @@ function setInitialSate() {
     submitButton.disabled = true;
     skipButton.disabled = true;
     tagField.disabled = true;
+    startButton.value = "Restart Tutorial"
+    nextButton.hidden = false;
 }
 
 function explainPurpose() {
