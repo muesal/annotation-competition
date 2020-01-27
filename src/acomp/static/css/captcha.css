@@ -26,3 +26,7 @@
 .captchaimageNotChosen {
     opacity: 0.5;
 }
+
+#signupparagraph{
+    display: none;
+}

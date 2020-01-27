@@ -8,10 +8,17 @@ mdl-navigation__link--current
 {% endblock %}
 
 {% block js %}
+    {% block morejs %}{% endblock %}
     <script src="../static/js/captcha.js" defer></script>
 {% endblock %}
 
 {% block main %}
+ {% if not current_user.is_authenticated %}
+     <p id="quizparagraph"> Before signing up, please take the quiz. Once you have enough points, we will show you to the
+     sign up process.
+     We don't mean to waste your time. We intend our game for humans and not bots.</p>
+     <p id="signupparagraph">Well done! You may <a href="{{ url_for('signup') }}">register</a> to play our Classic game-mode.</p>
+    {% endif %}
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -20,7 +27,7 @@ mdl-navigation__link--current
                 <button class="mdl-snackbar__action" type="button"></button>
             </div>
             <div class="notification is-danger">
-                {{ messages[0] }} You may <a href="{{ url_for('signup') }}">register</a> to play our Classic game-mode.
+                {{ messages[0] }}
             </div>
         {% endif %}
     {% endwith %}
