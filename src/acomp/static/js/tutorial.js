@@ -9,7 +9,7 @@ const timer = document.getElementById('timer');
 const score = document.getElementById('score');
 const img = document.getElementById('tagImage');
 const initialTime = 34;
-var deadline = 3;
+var deadline = 30;
 
 
 skipButton.addEventListener("click", handleSkip);
@@ -23,7 +23,8 @@ var tutorialState = 0;
 setInitialSate();
 
 
-function handleTyping(e) {}
+function handleTyping(e) {
+}
 
 function handleSubmit(e) {
     e.preventDefault();
@@ -43,7 +44,7 @@ function handleSkip(e) {
 }
 
 function clearTags() {
-    document.getElementById("mentionedTags").innerText="";
+    document.getElementById("mentionedTags").innerText = "";
 }
 
 function setInitialSate() {
@@ -101,14 +102,17 @@ function promptnewImage() {
 }
 
 function promptSkip() {
-    deadline = 100000;
+    deadline = 60;
+    updateTimer();
+    clearInterval(timer);
     document.getElementById('btnSkip').value = "Skip";
 
     tutorialText.innerText = "You can also skip an image by pressing Skip";
 }
 
 function displayDone() {
-    tutorialText.innerText = "Congratulations, you've completed the tutorial!"
+    tutorialText.innerText = "Congratulations, you've completed the tutorial!\n" +
+        "Press enter to start the game!"
 }
 
 function setImgToSkip() {
@@ -118,6 +122,12 @@ function setImgToSkip() {
 function setLastImage() {
     img.src = "../static/img/tutorial_3.jpg";
 }
+
+function redirectToClassic() {
+    const url = document.getElementById("classicurl").innerText;
+    window.location = url;
+}
+
 
 function advanceState() {
     tutorialState++;
@@ -142,10 +152,13 @@ function advanceState() {
             setLastImage();
             displayDone();
             break;
+        case tutorialState = 7:
+            redirectToClassic();
         default:
             return;
     }
 }
+
 
 function writeToMentionedTags(tag) {
     const node = document.createElement("LI");                  // Create a <li> node
@@ -159,7 +172,7 @@ function writeToMentionedTags(tag) {
 
 document.onkeydown = function (evt) {
     evt = evt || window.event;
-    if (tutorialState == 2 || tutorialState == 5 || tutorialState == 6 || tutorialState == 7) {
+    if (tutorialState == 2 || tutorialState == 5 || tutorialState == 7) {
         return;
     }
 

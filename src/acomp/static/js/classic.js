@@ -127,6 +127,7 @@ async function sendTag(submittedTag) {
             console.log('Success:', JSON.stringify(json));
             if (json.accepted === 1) {
                 writeToMentionedTags(json.message);
+                document.getElementById('btnSkip').value = "Next";
                 if (json.message !== submittedTag){
                     notifyUser("Tag corrected to " + json.message);
                 }
