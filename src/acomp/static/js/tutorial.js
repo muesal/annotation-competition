@@ -105,7 +105,7 @@ function promptSkip() {
     deadline = 60;
     updateTimer();
     clearInterval(timer);
-    document.getElementById('btnSkip').value = "Next";
+    document.getElementById('btnSkip').value = "Skip";
 
     tutorialText.innerText = "You can also skip an image by pressing Skip";
 }
