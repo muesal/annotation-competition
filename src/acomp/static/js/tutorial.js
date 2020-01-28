@@ -1,30 +1,22 @@
 'use strict';
 
-const submitButton = document.getElementById("btnSubmit");
-const skipButton = document.getElementById("btnSkip");
-const tagField = document.getElementById("searchTxt");
-const tutorialText = document.getElementById("instruction");
-const timemeter = document.getElementById('timemeter');
-const timer = document.getElementById('timer');
-const score = document.getElementById('score');
 const img = document.getElementById('tagImage');
 const initialTime = 34;
+const score = document.getElementById('score');
+const skipButton = document.getElementById("btnSkip");
+const snackbar = document.getElementById('snackbar');
+const starttext = document.getElementById("starttext");
+const submitButton = document.getElementById("btnSubmit");
+const tagField = document.getElementById("searchTxt");
+const tagForm = document.getElementById("tagForm");
+const timemeter = document.getElementById('timemeter');
+const timer = document.getElementById('timer');
 var deadline = 30;
-
 
 skipButton.addEventListener("click", handleSkip);
 submitButton.addEventListener("click", handleSubmit);
-tagField.addEventListener("keypress", handleTyping);
-
 
 var tutorialState = 0;
-
-
-setInitialSate();
-
-
-function handleTyping(e) {
-}
 
 function handleSubmit(e) {
     e.preventDefault();
@@ -50,70 +42,69 @@ function clearTags() {
 function setInitialSate() {
     timemeter.value = initialTime;
     timer.innerText = initialTime.toString() + " s";
-    tutorialText.innerText = "Welcome to the tutorial for our Annotation Competition!\n Press Enter to continue.";
+    //notifyUser("Welcome to the tutorial for our Annotation Competition!\n Press enter to continue.");
     submitButton.disabled = true;
     skipButton.disabled = true;
     tagField.disabled = true;
 }
 
 function explainPurpose() {
-    tutorialText.innerText = "The goal of this game is to crowdsource the tagging of images\n" +
-        "To make it more exciting, we give you points!\n Press Enter to continue"
+    starttext.hidden = true;
+    notifyUser("The goal of this game is to crowdsource the tagging of images\n" +
+        "To make it more exciting, we give you points!\n Press enter to continue");
 }
 
 function promptTag() {
     submitButton.disabled = false;
     tagField.disabled = false;
-    tutorialText.innerText = "Now you're ready to provide a tag.\n Please enter 'castle'"
+    notifyUser("Now you're ready to provide a tag.\n Please enter 'castle'");
 }
 
 function reactToTag() {
-
     submitButton.disabled = true;
     tagField.disabled = true;
     score.innerText = '3';
-    tutorialText.innerText = "Well done!\n You have now received points. \n The tag has been added to the list" +
-        "\n Press enter to continue";
+    notifyUser("Well done!\n You have now received points. \n The tag has been added to the list" +
+        "\n Press enter to continue");
 }
 
 function updateTimer() {
     deadline--;
-    document.getElementById("timer").innerHTML = deadline + " s";
-    document.getElementById("timemeter").value = deadline;
+    timer.innerHTML = deadline + " s";
+    timemeter.value = deadline;
     if (deadline <= 0) {
-        document.getElementById('btnSubmit').disabled = true;
-        document.getElementById('btnSubmit').value = "Time is up!";
-        document.getElementById('btnSkip').value = "Restart";
-        document.getElementById('btnSkip').disabled = false;
+        submitButton.disabled = true;
+        submitButton.value = "Time is up!";
+        skipButton.value = "Restart";
+        skipButton.disabled = false;
     }
 }
 
 function explainTimer() {
     setInterval(updateTimer, 1000);
-
-    tutorialText.innerText = "The game is on a timer\n" +
+    notifyUser("The game is on a timer\n" +
         "Wait until the time is up\n" +
-        "Then press the \"Restart\" to get a new image"
+        "Then press the \"Restart\" to get a new image");
 }
 
 function promptnewImage() {
     skipButton.disabled = false;
-    tutorialText.innerText = "You can request a new image by pressing Start Over"
+    notifyUser("You can request a new image by pressing Start Over");
 }
 
 function promptSkip() {
     deadline = 60;
     updateTimer();
     clearInterval(timer);
-    document.getElementById('btnSkip').value = "Skip";
-    document.getElementById('btnSkip').disabled = false;
+    skipButton.value = "Skip";
+    skipButton.disabled = false;
 
-    tutorialText.innerText = "You can also skip an image by pressing Skip";
+    notifyUser("You can also skip an image by pressing Skip");
 }
 
 function displayDone() {
-    tutorialText.innerText = "Congratulations, you've completed the tutorial!\n" +
-        "Press enter to start the game!"
+    notifyUser("Congratulations, you've completed the tutorial!\n" +
+        "Press enter to start the game!");
 }
 
 function setImgToSkip() {
@@ -125,13 +116,11 @@ function setLastImage() {
 }
 
 function redirectToClassic() {
-    const url = document.getElementById("classicurl").innerText;
-    window.location = url;
+    window.location = tagForm.dataset.classicurl
 }
 
 function resetFocus() {
-    tutorialText.focus();
-
+    snackbar.focus();
 }
 
 function advanceState() {
@@ -165,7 +154,6 @@ function advanceState() {
     }
 }
 
-
 function writeToMentionedTags(tag) {
     const node = document.createElement("LI");                  // Create a <li> node
     const textnode = document.createTextNode(tag.toString());   // Create a text node
@@ -177,7 +165,7 @@ function writeToMentionedTags(tag) {
 }
 
 document.onkeydown = function (evt) {
-    evt = evt || window.event;
+    var evt = evt || window.event;
     if (tutorialState == 2 || tutorialState == 5 || tutorialState == 7) {
         return;
     }
@@ -186,3 +174,12 @@ document.onkeydown = function (evt) {
         advanceState();
     }
 };
+
+function notifyUser(msg) {
+    const snackbar = document.getElementById('snackbar');
+    const data = {
+        message: msg,
+        timeout: 7500
+    };
+    snackbar.MaterialSnackbar.showSnackbar(data);
+}

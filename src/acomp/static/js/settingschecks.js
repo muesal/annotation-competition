@@ -11,7 +11,8 @@ async function checkLoginname(e) {
     const payload = writeToJson(loginname.value);
     loginname.setCustomValidity('');
     if (!loginname.checkValidity()) {
-        loginname.setCustomValidity('Please use alphanumeric characters and not more than 512');
+        const msg = 'Please use alphanumeric characters and not more than 512';
+        loginname.setCustomValidity(msg);
         return;
     }
 
@@ -29,7 +30,8 @@ async function checkLoginname(e) {
             const json = await response.json();
             console.log('Success:', JSON.stringify(json));
             if (json.available != '1') {
-                loginname.setCustomValidity('This username is already taken, please choose another name.');
+                const msg = 'This username is already taken, please choose another name.';
+                loginname.setCustomValidity(msg);
                 return;
             }
         } else {
@@ -43,7 +45,8 @@ async function checkLoginname(e) {
 async function checkPasswords(e) {
     passwordConfirm.setCustomValidity('');
     if (password.value !== passwordConfirm.value) {
-        passwordConfirm.setCustomValidity('Please make sure to confirm your password');
+        const msg = 'Please make sure to confirm your password';
+        passwordConfirm.setCustomValidity(msg);
         return;
     }
 
@@ -61,11 +64,10 @@ async function checkPasswords(e) {
             const data = await response.text();
             console.log('Success:', data);
             if (regex.test(data)) {
-                paragraph.textContent += 'Your password might be insecure';
+                notifyUser('You password might be insecure');
                 return;
             } else {
                 console.log('Not yet been pwned.');
-                paragraph.textContent = '';
             }
         } else {
             console.error('Error:', response.statusText); // TODO: notify user
@@ -85,3 +87,11 @@ async function digest(str) {
     return hashHex;
 }
 
+function notifyUser(msg) {
+    const snackbar = document.getElementById('snackbar');
+    const data = {
+        message: msg,
+        timeout: 7500
+    };
+    snackbar.MaterialSnackbar.showSnackbar(data);
+}

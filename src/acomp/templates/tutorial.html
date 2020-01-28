@@ -2,7 +2,6 @@
 
 {% block css %}
     <link href="../static/css/classic.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/css/tutorial.css" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 {% block classiclink %}
@@ -14,30 +13,33 @@ mdl-navigation__link--current
 {% endblock %}
 
 {% block main %}
+   <div id="starttext" class="notification is-danger mdl-chip">
+       <span class="mdl-chip__text">Welcome to the tutorial for our Annotation Competition!</span>
+   </div>
+   <br>
+   <div id="starttext" class="notification is-danger mdl-chip">
+       <span class="mdl-chip__text">Press enter to continue.</span>
+   </div>
+    <div class="page-content" id="imageWrapper">
+        <div id="taggingImage">
+            <img class="myImg" id="tagImage" src={{ source }}>
+        </div>
 
-    <p id="instruction"></p>
-    <main class="mdl-layout__content">
-        <div class="page-content" id="imageWrapper">
-            <div id="taggingImage">
-                <img class="myImg" id="tagImage" src={{ source }}>
-            </div>
+        <div id="column">
+            <label for="timer">Timer: </label>
+            <meter id="timemeter" class="mdl-progress" min="0" max="60" value="12" low="15" high="30"
+                   optimum="45"></meter>
+            <output id="timer">0</output>
+            <br>
+            <label for="score">Score: </label>
+            <output id="score">0</output>
 
-            <div id="column">
-                <label for="timer">Timer: </label>
-                <meter id="timemeter" class="mdl-progress" min="0" max="60" value="12" low="15" high="30"
-                       optimum="45"></meter>
-                <output id="timer">0</output>
-                <br>
-                <label for="score">Score: </label>
-                <output id="score">0</output>
+            <h3>Mentioned tags</h3>
+            <ul id="mentionedTags">
+                <li>&nbsp;</li>
+            </ul>
 
-                <h3>Mentioned tags</h3>
-                <ul id="mentionedTags">
-                    <li>&nbsp;</li>
-                </ul>
-            </div>
-
-            <form id="tagForm" data-datauri="{{ url_for('classic_data_post') }}">
+            <form id="tagForm" data-datauri="{{ url_for('classic_data_post') }}" data-classicurl="{{ url_for('classic') }}">
                 <div class="mdl-textfield mdl-js-textfield">
                     <label class="mdl-textfield__label" for="searchTxt" id="tagTxt">Tag...</label>
                     <input class="mdl-textfield__input" type="text" id="searchTxt" maxlength="512" autofocus required
@@ -49,12 +51,5 @@ mdl-navigation__link--current
                        class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
             </form>
         </div>
-
-        <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-            <div class="mdl-snackbar__text"></div>
-            <button class="mdl-snackbar__action" type="button"></button>
-        </div>
-        <p id="classicurl">{{ url_for('classic') }}</p>
-
-    </main>
+    </div>
 {% endblock %}

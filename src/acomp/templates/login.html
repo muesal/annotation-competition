@@ -26,11 +26,18 @@ mdl-navigation__link--current
         {{ form.csrf_token }}
         {{ form.submit(class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored") }}
     </form>
-    {% endif %}
-    <p id="feedbackParagraph"></p>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger mdl-chip">
+                <span class="mdl-chip__text">{{ messages[0] }}</span>
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <div class="mdl-typography--text-center">
         <h2>New here?</h2>
         <p>Play our <a href="{{ url_for('quiz')}}">entry quiz</a> and sign up afterwards.</p>
     </div>
+    {% endif %}
 {% endblock %}

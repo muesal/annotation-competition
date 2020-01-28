@@ -2,10 +2,10 @@
 
 const csrf_token = document.getElementById("csrf_token");
 const loginname = document.getElementById("newloginname");
-const paragraph = document.getElementById("feedbackParagraph");
 const password = document.getElementById("newpswd");
 const passwordConfirm = document.getElementById("newpswdConfirm");
 const form = document.getElementById("NameForm");
+const snackbar = document.getElementById('snackbar');
 
 loginname.addEventListener("input", checkLoginname);
 password.addEventListener("input", checkPasswords);

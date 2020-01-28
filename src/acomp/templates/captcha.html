@@ -13,55 +13,53 @@ mdl-navigation__link--current
 {% endblock %}
 
 {% block main %}
- {% if not current_user.is_authenticated %}
-     <p id="quizparagraph"> Before signing up, please take the quiz. Once you have enough points, we will show you to the
+     {% if not current_user.is_authenticated %}
+     <p id="quizparagraph">Before signing up, please take the quiz. Once you have enough points, we will show you to the
      sign up process.
      We don't mean to waste your time. We intend our game for humans and not bots.</p>
-     <p id="signupparagraph">Well done! You may <a href="{{ url_for('signup') }}">register</a> to play our Classic game-mode.</p>
+     <p id="signupparagraph" hidden>Well done! You may <a href="{{ url_for('signup') }}">register</a> to play our Classic game-mode.</p>
     {% endif %}
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-                <div class="mdl-snackbar__text"></div>
-                <button class="mdl-snackbar__action" type="button"></button>
-            </div>
-            <div class="notification is-danger">
-                {{ messages[0] }}
+            <div class="notification is-danger mdl-chip">
+                <span class="mdl-chip__text">{{ messages[0] }}</span>
             </div>
         {% endif %}
     {% endwith %}
 
-    <main class="mdl-layout__content">
-        <p>Choose the image that best matches the tags<p>
-        <p id="captchaTags"></p>
+   <div id="starttext" class="notification is-danger mdl-chip">
+       <span class="mdl-chip__text">Choose the image that best matches the tags</span>
+   </div>
+   <br>
+   <div id="starttext" class="notification is-danger mdl-chip">
+       <span id="captchaTags" class="mdl-chip__text">Press enter to continue.</span>
+   </div>
 
-        <div class="page-content" id="imageWrapper">
-            <div id="captchaImages">
-                {{ form.csrf_token }}
-            </div>
-
-            <div id="column">
-                <meter id="timemeter" class="mdl-progress my-progress" min="0" max="60" value="12" low="15" high="30"
-                       optimum="45"></meter>
-                <output id="timer">0</output>
-                {% if current_user.is_authenticated %} {# quiz mode #}
-                <br>
-                <label for="score">Score: </label>
-                <output id="score">0</output>
-                {% endif %}
-
-                <form id="skipForm">
-                    <input id="btnSkip" type="reset" value="Skip"
-                           class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-                    <input id="btnJoker" type="reset" value="Joker"
-                           {% if not current_user.is_authenticated %} {# quiz mode #}
-                           hidden
-                           {% endif %}
-                           class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-                </form>
-            </div>
+    <div class="page-content" id="imageWrapper">
+        <div id="captchaImages">
+            {{ form.csrf_token }}
         </div>
-    </main>
 
+        <div id="column">
+            <meter id="timemeter" class="mdl-progress my-progress" min="0" max="60" value="12" low="15" high="30"
+                   optimum="45"></meter>
+            <output id="timer">0</output>
+            {% if current_user.is_authenticated %} {# quiz mode #}
+            <br>
+            <label for="score">Score: </label>
+            <output id="score">0</output>
+            {% endif %}
+
+            <form id="skipForm">
+                <input id="btnSkip" type="reset" value="Skip"
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+                <input id="btnJoker" type="reset" value="Joker"
+                       {% if not current_user.is_authenticated %} {# quiz mode #}
+                       hidden
+                       {% endif %}
+                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+            </form>
+        </div>
+    </div>
 {% endblock %}
