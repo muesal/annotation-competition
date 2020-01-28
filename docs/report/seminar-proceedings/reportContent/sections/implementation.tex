@@ -12,7 +12,14 @@ The most interesting parts of the game are the linguistics features. The rest is
 \subsubsection{Linguistics}
 \label{g14:sec:implementation:linguistics}
 The suggestion is first translated to English, if necessary. This is handled by \textit{Googletrans}\footnote{\url{https://pypi.org/project/googletrans/}}, this already provides spell checking for foreign languages.
-Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted.
+Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted. THis process can be seen in \Cref{g14:fig:semanticpipeline}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth]{g14-semantics_pipeline.png}
+	\caption{GUI for desktop screens}
+	\label{g14:fig:semanticpipeline}
+\end{figure}
 
 \subsection{Database}
 \label{g14:sec:implementation:database}
@@ -40,7 +47,7 @@ The markup is rendered with \textit{Jinja2} templates.
 \centering
 \includegraphics[width=\textwidth]{g14-classic.png}
 \caption{GUI for desktop screens}
-\label{fig:guiclassicdesktop}
+\label{g14:fig:guiclassicdesktop}
 \end{figure}
 
 
@@ -48,7 +55,7 @@ The markup is rendered with \textit{Jinja2} templates.
 \centering
 \includegraphics[width=0.45\textwidth]{g14-classic_mobile.png}
 \caption{GUI for mobile devices screens, screenshot taken using Firefox and \textit{Samsung Galaxy S9} settings}
-\label{fig:guiclassicmobile}
+\label{g14:fig:guiclassicmobile}
 \end{figure}
 
 Fig. 
