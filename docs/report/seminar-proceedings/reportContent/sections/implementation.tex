@@ -1,8 +1,14 @@
 \section{Implementation}
 \label{g14:sec:implementation}
 
-g1
-We built the game as a web app based on the \textit{Flask} \footnote{\url{https://pypi.org/project/Flask/}} framework for \textit{Python} \footnote{\url{https://www.python.org/}}. The architecture consists of a backend handling the game logic, the communication with the front end as well as the interfacing with the database. The communication is handled with a JSON-based API.
+We built the game as a web app based on the \textit{Flask}\footnote{\url{https://pypi.org/project/Flask/}} framework for \textit{Python}\footnote{\url{https://www.python.org/}}. The architecture as shown in \Cref{g14:fig:architecture} consists of a backend handling the game logic, the communication with the front end as well as the interfacing with the database. The communication is handled with a JSON-based API.
+
+\begin{figure}[!]
+	\centering
+	\includegraphics[width=\textwidth]{g14-architecture.png}
+	\caption{architecture of the game}
+	\label{g14:fig:architecture}
+\end{figure}
 
 \subsection{Game Logic}
 \label{g14:sec:implementation:game}
@@ -17,7 +23,7 @@ Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth]{g14-semantics_pipeline.png}
-	\caption{GUI for desktop screens}
+	\caption{semantics pipeline}
 	\label{g14:fig:semanticpipeline}
 \end{figure}
 
@@ -28,7 +34,7 @@ Together with \textit{Flask-Migrate} we defined a relational schema that contain
 
 \subsection{Login}
 \label{g14:sec:implementation:login}
-\textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filessystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. The way XSRF protection works is decribed in \cite{4198791}. 
+\textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filessystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. The way XSRF protection works is decribed in \cite{4198791}.
 
 During the sign up we made a client side request to the Have I Been Pwned\footnote{\url{https://haveibeenpwned.com/API/v3\#PwnedPasswords}} API and give feedback if a match is found.
 
