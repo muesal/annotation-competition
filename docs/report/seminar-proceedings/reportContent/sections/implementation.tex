@@ -2,7 +2,7 @@
 \label{g14:sec:implementation}
 
 g1
-We built the game as a web app based on the \textit{Flask} \footnote{\url{https://pypi.org/project/Flask/}} framework for \textit{Python} \footnote{\url{https://www.python.org/}}. The architecture consists of a backend handling the game logic, the communication with the front end as well as the interfacing with the database. The communication is handled with a JSON-based API
+We built the game as a web app based on the \textit{Flask} \footnote{\url{https://pypi.org/project/Flask/}} framework for \textit{Python} \footnote{\url{https://www.python.org/}}. The architecture consists of a backend handling the game logic, the communication with the front end as well as the interfacing with the database. The communication is handled with a JSON-based API.
 
 \subsection{Game Logic}
 \label{g14:sec:implementation:game}
@@ -12,7 +12,7 @@ The most interesting parts of the game are the linguistics features. The rest is
 \subsubsection{Linguistics}
 \label{g14:sec:implementation:linguistics}
 The suggestion is first translated to English, if necessary. This is handled by \textit{Googletrans}\footnote{\url{https://pypi.org/project/googletrans/}}, this already provides spell checking for foreign languages.
-Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted. THis process can be seen in \Cref{g14:fig:semanticpipeline}
+Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted. THis process can be seen in \Cref{g14:fig:semanticpipeline}.
 
 \begin{figure}[tb]
 	\centering
