@@ -42,7 +42,7 @@ Crowdsourcing can have problems with people seeking to cause mischief. We have t
 
 \subsubsection{Entry Quiz}
 \label{g14:sec:concepts:spamprevention:entryquiz}
-As part of the sign up process, users have to play the Reverse Captcha mode until \todo{condition}. This serves the same purpose as \textit{Captcha}, i.e. to keep out bots. This is a type of worker screening as described in \cite{oleson2011programmatic}.
+As part of the sign up process, users have to play the Reverse Captcha mode until they gave 2 more correct answers than wrong ones. This serves the same purpose as \textit{Captcha}, i.e. to keep out bots. This is a type of worker screening as described in \cite{oleson2011programmatic}.
 
 
 \subsubsection{Rate Limit}
@@ -67,7 +67,7 @@ To allow ease of use and more meaningful tags, we have a few linguistic approach
 
 \subsubsection{Stemming}
 \label{g14:sec:concepts:linguistics:stemming}
-Words are reduced to their stems for counting, this allows user to use the inflection they deem appropriate.
+Words are reduced to their stems for counting, this allows user to use the inflection they deem appropriate. We do this with lemmatisation, which uses the part-of-speech of the word to reduce it to its stem instead of cutting of some letters.
 
 
 \subsubsection{Synonyms}
@@ -83,5 +83,4 @@ The application has a set language and tags provided in other languages are tran
 \subsubsection{Phrasal Verbs}
 \label{g14:sec:concepts:linguistics:phraselverbs}
 The game accepts word combinations of up to two words to allow the use of phrasal verbs should the user provide them.
-
 
