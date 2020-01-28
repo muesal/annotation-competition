@@ -29,7 +29,7 @@ class auth:
             usr_id = usr.id
         else:
             app.logger.debug('Failed login: '.format(username))
-            raise Exception('Username/Password combination not found')
+            raise Exception('Username/Password combination not found.')
 
         return usr_id
 
@@ -74,10 +74,10 @@ class auth:
             except Exception as e:
                 app.logger.warn(e)
                 db.session.rollback()
-                raise Exception('Failed to update user')
+                raise Exception('Failed to update user.')
         else:
             app.logger.debug('Failed to verify: '.format(usr.username))
-            raise Exception('Username/Password combination not found')
+            raise Exception('Username/Password combination not found.')
 
         return usr.username
 
@@ -108,7 +108,7 @@ class auth:
                 raise Exception('Failed to update user')
         else:
             app.logger.debug('Failed to verify: '.format(usr.username))
-            raise Exception('Username/Password combination not found')
+            raise Exception('Username/Password combination not found.')
 
         return usr_id
 
@@ -130,9 +130,9 @@ class auth:
             except Exception as e:
                 app.logger.warn(e)
                 db.session.rollback()
-                raise Exception('Failed to drop user')
+                raise Exception('Failed to drop user.')
         else:
             app.logger.debug('Failed to verify: '.format(usr.username))
-            raise Exception('Username/Password combination not found')
+            raise Exception('Username/Password combination not found.')
 
         return usr.username

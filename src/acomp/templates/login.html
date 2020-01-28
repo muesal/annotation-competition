@@ -29,8 +29,8 @@ mdl-navigation__link--current
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <div class="notification is-danger">
-                {{ messages[0] }}</a>.
+            <div class="notification is-danger mdl-chip">
+                <span class="mdl-chip__text">{{ messages[0] }}</span>
             </div>
         {% endif %}
     {% endwith %}

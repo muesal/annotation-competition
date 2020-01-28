@@ -276,7 +276,7 @@ def settings():
         try:
             app.logger.debug('Change name to {}'.format(nameform.newloginname.data))
             usrname = auth.changename(current_user.get_id(), nameform.newloginname.data, nameform.loginpswd.data)
-            flash('Name change successful')
+            flash('Name change successful.')
             app.logger.debug('Current user id {}'.format(current_user.get_id()))
             app.logger.debug('Name change for {}'.format(usrname))
         except Exception as e:
@@ -287,7 +287,7 @@ def settings():
             usr_id = auth.changetoken(current_user.get_id(), passwordform.oldpswd.data, passwordform.newpswd.data,
                                       passwordform.newpswdConfirm.data)
             if usr_id > 0:
-                flash('Password change successful')
+                flash('Password change successful.')
                 app.logger.debug('Current user id {}'.format(current_user.get_id()))
                 app.logger.debug('Change password for {}'.format(usr_id))
         except Exception as e:
@@ -298,7 +298,7 @@ def settings():
             app.logger.debug('Delete user id {}'.format(current_user.get_id()))
             usrname = auth.delete(current_user.get_id(), deleteform.loginpswddelform.data)
             app.logger.debug('Deleted user {}'.format(usrname))
-            flash('User deleted')
+            flash('User deleted.')
             return redirect(url_for('login'))
         except Exception as e:
             flash(e)
