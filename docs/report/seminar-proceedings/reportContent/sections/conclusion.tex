@@ -2,7 +2,30 @@
 \label{g1:sec:conclusion}
 
 \subsection{What could be improved}
+\label{g1:sec:conclusion:improved}
 On the technical side we have not maintained our initial unit tests very well. For the frontend we have no automated tests at all. Both should be considered before making further changes in core functionallities.
 A core functionallity that is currently missing is a penalty for misclassified images. At the time of writing, useless tags or user that provide useless tags are just ignored. The number of missing verified tags in the databse could be an indicator for bad tags, so it is questionable if this information is useful or if they should be removed from the dataset.
 
 There are several ways to improove the user interface or to make it backward compatible for older clients. We just did a tiny field study. A more detailed study with a diverse group of participant and a specific questionnaire would give better results and could therefore highlight specific design issues.
+
+\subsection{Field study}
+\label{g1:sec:conclusion:fieldstudy}
+We let a hand ful of people from different age  groups from differnet fields test our final product.
+Although they all enjoied playing, they also gave us some constructive feedback.
+Based on this, we should make the scoring function more visible, as the probands did not note any difference for the given tags.
+If we gave the same amount of points for each tag regardless of the level of the image it would have made no difference for the users.
+As we developed the scoring function to animate the plaers to give us obvious or obscure tags, wed have to adjust it.
+
+Further, the response of the server was sometimes not easy to understand in the classic mode.
+This has two reasons.
+First, some of our testers don't understand english, and asked why we did not translate it in other languages. 
+Secondly, sometimes it was not obvious why a tag changed to something else without knowing how our lemmatisation works.
+The lemmatiser can misinterpret the part-of-speech of a tag and then stemm it in a unexpected way.
+while 'looking after' is accepted as 'to look after', whereas 'look after' is not accepted since 'look' is misinterpreted as a noun, which does not make no sense in combination with 'after'.
+
+But when they realised, that this does not really matters for them, and focused on looking for as much fitting tags as possible, they thaought the classic mode was really nice to play.
+
+Regarding the Captcha mode, they had only positive feedback. The game is understandable realy fast, and funny to play.
+As the users aleady knew the gamemode from the entry quiz, after playing some rounds in the classic mode, they liked seeing theyr own tags afterwards in the captcha mode.
+One user then even realised, that his tag was not as good as he thought, and changed his startegy of finding new tags when again playing the classic mode.
+This is a nice feedback\-effect of which we did not think of.
