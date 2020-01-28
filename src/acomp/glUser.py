@@ -103,7 +103,6 @@ class GLUser:
             'timelimit': app.config['ACOMP_CLASSIC_TIMELIMIT'],
             'forbidden': gl_image.getForbiddenTags(),
             'score': self.getScore(),
-            'user': self.user.id
         }
         return data
 
