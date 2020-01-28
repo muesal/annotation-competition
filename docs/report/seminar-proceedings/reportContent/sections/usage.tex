@@ -19,14 +19,14 @@ managed by your distobution package manager, for the natural language toolkit fi
 Run the following commands in the \texttt{src} directory to install all dependencies and
 database initialisation:
 
-\begin{lstlisting}
+\begin{verbatim}
 pip install -r requirements.txt
 flask nltk-data
 flask db initrequirements
 flask db migrate
 flask db uprade
 flask run
-\end{lstlisting}
+\end{verbatim}
 
 Use \texttt{uwsgi -w app:app --socket 0.0.0.0:5000} and a webserver for production environments.
 
@@ -46,10 +46,10 @@ We recommend playing in English.
 Docker provides an easy way to deploy platform indipendent containers on Linux.
 Run the following commands in the root directory of the source code:
 
-\begin{lstlisting}
+\begin{verbatim}
 docker build -t acomp src/
 docker run --rm -v \$PWD/src:/app -p127.0.0.1:5000:5000 acomp
-\end{lstlisting}
+\end{verbatim}
 
 You can use environment variables to pass configuration options.
 
