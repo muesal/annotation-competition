@@ -60,7 +60,7 @@ Fig.
 \subsection{Web API}
 \label{g14:sec:implementation:API}
 We use a \textit{JSON} API to responnd to dynamic requests. This includes the data and results for the gmae modes and form validation.
-For the classic mode, a (authenticated) \texttt{GET} request to the API returns an image url, the time limit, a list of forbidden tags,  the user id and score.
+For the classic mode, a (authenticated) \texttt{GET} request to the API returns an image url, the time limit, a list of forbidden tags and score.
 An (authenticated) \texttt{POST} request should contain a \textit{JSON} with a \texttt{tag} field and the entered tag. The respond will contain an accepted code, the name of the (maybe corrected) tag and the updated score.
 
 For the cpatcha mode, a (authenticated) \texttt{GET} request to the API returns a list of image urls, the time limit, a list of tags and the user score.
