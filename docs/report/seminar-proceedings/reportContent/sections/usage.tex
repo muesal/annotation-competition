@@ -10,10 +10,10 @@ There is also a \textit{README.md} for the most recent instructions.
 \subsection{Installation}
 \label{gXLII:sec:usage:instllation}  % TODO Adopt group prefix
 First you have to create a file \textit{src/acomp/config.py} that conatins
-a random \textit{SECRET_KEY}, a \textit{SQLALCHEMY_DATABASE_URI}
-(e.g. \textit{SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/acomp.sqlite3'}) and
-a \textit{SESSION_TYPE} (e.g. \textit{SESSION_TYPE = 'filesystem'}).
-You may want to set \textit{NLTK_DATA} to use a custom location, e.g. to the data
+a random \textit{SECRET\_KEY}, a \textit{SQLALCHEMY\_DATABASE\_URI}
+(e.g. \textit{SQLALCHEMY\_DATABASE\_URI = 'sqlite:////tmp/acomp.sqlite3'}) and
+a \textit{SESSION\_TYPE} (e.g. \textit{SESSION\_TYPE = 'filesystem'}).
+You may want to set \textit{NLTK\_DATA} to use a custom location, e.g. to the data
 managed by your distobution package manager, for the natural language toolkit files.
 
 Run the following commands in the \textit{src} directory to install all dependencies and
@@ -35,7 +35,7 @@ You can also use your package manager or \textit{virtualenv} to install them.
 If you have any existing images to import you can run
 \textit{flask prefill /my/image/folder}.
 If you'd like to provide tags in another language than english, you may change
-\textit{ACOMP_LANGUAGE_DEFAULT} in \textit{src/acomp/config.py} to the
+\textit{ACOMP\_LANGUAGE\_DEFAULT} in \textit{src/acomp/config.py} to the
 ISO-639-1 \todo{reference} code of your preferred language.
 However, all messages are not yet provided in other languages than english,
 and the response to your provided tags may be confusing.
