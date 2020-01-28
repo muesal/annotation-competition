@@ -229,9 +229,11 @@ def signup_post():
         return bad_request('Missing key in JSON.')
     else:
         if (auth.exists(data['name'])):
-            return '{"available":"0", "message":"Username not available"}'
+            res = make_response('{"available":"0", "message":"Username not available"}')
         else:
-            return '{"available":"1", "message":"Username available"}'
+            res = make_response('{"available":"1", "message":"Username available"}')
+        res.headers.set('Content-Type', 'application/json')
+        return res
 
 
 @app.route('/', methods=['GET', 'POST'])
