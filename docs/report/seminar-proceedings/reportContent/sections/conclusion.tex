@@ -1,4 +1,8 @@
 \section{Conclusion}
 \label{g1:sec:conclusion}
 
-\lipsum[1-2] % TODO: DELETE ME (\lipsum[1-2])
+\subsection{What could be improved}
+On the technical side we have not maintained our initial unit tests very well. For the frontend we have no automated tests at all. Both should be considered before making further changes in core functionallities.
+A core functionallity that is currently missing is a penalty for misclassified images. At the time of writing, useless tags or user that provide useless tags are just ignored. The number of missing verified tags in the databse could be an indicator for bad tags, so it is questionable if this information is useful or if they should be removed from the dataset.
+
+There are several ways to improove the user interface or to make it backward compatible for older clients. We just did a tiny field study. A more detailed study with a diverse group of participant and a specific questionnaire would give better results and could therefore highlight specific design issues.
