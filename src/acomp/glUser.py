@@ -319,3 +319,22 @@ class GLUser:
             'tags': tags,
         }
         return data
+
+    def getOpenData(self) -> dict:
+        """
+        Get the data where a has user contributed to.
+
+        :return: dictionary with list of the data (filename, name, successful_verified, frequency)
+        """
+
+        my_images = Image.query.join(user_image).join(User).filter(user_image.c.user_id == self.id).all()
+        opendata = []
+        # TODO: replace for loops with more efficient sql query
+        for image in my_images:
+            imagetag = ImageTag.query.filter_by(image_id=image.id).all()
+            for tag in imagetag:
+                name = Tag.query.filter_by(id=tag.tag_id).one_or_none().name
+                opendata.append((image.filename, name, tag.successful_verified, tag.frequency))
+        app.logger.debug(opendata)
+
+        return opendata
