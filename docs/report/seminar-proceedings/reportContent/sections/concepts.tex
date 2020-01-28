@@ -26,6 +26,10 @@ There is a scoring function. The number of points per accepted tag depends on ho
 
 A tutorial is available for this game mode, it is accessed from the help menu.
 
+\subsection{Scoring Function}
+\label{g14:sec:concepts:scoring function}
+We separated the images into three levels: not yet annotated, rarely annotated, and often annotated. For level 1 images the user recieves each tag will give the user one point per tag. In level 2 we differ between new tags, which give one point, and old tags ,which give two points. This way, users will rather give tags others would also think of and we get a basis of words which descrieb the image well. If the image was often tagged, we suppose it has been tagged with a lot of different tags and forbid some tags. We do this, to annimate the users to think a little out of the box, and try to find tags no one else thought about before. Each tag gives 2 points in level 3.
+
 \subsubsection{Reverse Captcha}
 
 The user is shown a number of images and the tags for one of the images. The user has to match the tags to an image.
@@ -35,17 +39,16 @@ This allows us to gauge the quality of the tags. If users have trouble selecting
 
 
 \subsection{Spam Prevention}
-
 Crowdsourcing can have problems with people seeking to cause mischief. We have taken steps to hinder disruptive behavior that could lead to low-quality results. In particular, we try to limit the participation of bots and  of low-quality tags to increase user scores.
 
 
 \subsubsection{Entry Quiz}
-
 As part of the sign up process, users have to play the Reverse Captcha mode until \todo{condition}. This serves the same purpose as \textit{Captcha}, i.e. to keep out bots.
 
 
 \subsubsection{Rate Limit}
 Users may only tag images at a certain rate. We chose this approach as there is no real time mechanism to assess the quality of tags.
+
 
 \subsubsection{Global Frequency Limit}
 If a tag occurs for a certain fraction of images, currently 20\%, it is not accepted. This is done to keep the number of tags that are either obvious or nonsense down.
@@ -54,7 +57,6 @@ If a tag occurs for a certain fraction of images, currently 20\%, it is not acce
 
 
 \subsection{Linguistics}
-
 To allow ease of use and more meaningful tags, we have a few linguistic approaches to prevent redundant tags. We currently allow verbs, nouns and adjectives.
 
 
