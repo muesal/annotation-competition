@@ -307,6 +307,21 @@ def settings():
                            username=user_name)
 
 
+@app.route('/settings/data', methods=['GET'])
+@login_required
+def opendata():
+    usr = GLUser(current_user.get_id())
+    try:
+        data = usr.getOpenData()
+        app.logger.debug(data)
+        res = make_response(json.dumps(data))
+    except Exception as e:
+        return bad_request(e)
+    else:
+        res.headers.set('Content-Type', 'application/json')
+        return res
+
+
 @app.route('/help')
 def help():
     return render_template('help.html')
