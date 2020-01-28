@@ -43,7 +43,7 @@ class auth:
         if token != tokenVerify:
             raise Exception('The given passwords do not match.')
 
-        tokenHash = bcrypt.generate_password_hash(token)
+        tokenHash = bcrypt.generate_password_hash(token).decode('utf8')
 
         try:
             new_usr = User(username, tokenHash)
@@ -93,7 +93,7 @@ class auth:
         if newToken != newTokenVerify:
             raise Exception('The given passwords do not match.')
 
-        newTokenHash = bcrypt.generate_password_hash(newToken)
+        newTokenHash = bcrypt.generate_password_hash(newToken).decode('utf8')
 
         if bcrypt.check_password_hash(usr.secret, token):
             app.logger.debug('Verify: {}'.format(usr.username))
