@@ -1,21 +1,18 @@
 \section{Implementation}
 \label{g14:sec:implementation}
 
-
+g1
 We built the game as a web app based on the \textit{Flask} \footnote{\url{https://pypi.org/project/Flask/}} framework for \textit{Python} \footnote{\url{https://www.python.org/}}. The architecture consists of a backend handling the game logic, the communication with the front end as well as the interfacing with the database. The communication is handled with a JSON-based API
 
 \subsection{Game Logic}
 \label{g14:sec:implementation:game}
-\todo{Write}
 
-
+The most interesting parts of the game are the linguistics features. The rest is fairly straightforward and connects to the database.
 
 \subsubsection{Linguistics}
 \label{g14:sec:implementation:linguistics}
 The suggestion is first translated to English, if necessary. This is handled by \textit{Googletrans}\footnote{\url{https://pypi.org/project/googletrans/}}, this already provides spell checking for foreign languages.
 Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted.
-
-\subsection{Scoring Function}
 
 \subsection{Database}
 \label{g14:sec:implementation:database}
@@ -24,7 +21,7 @@ Together with \textit{Flask-Migrate} we defined a relational schema that contain
 
 \subsection{Login}
 \label{g14:sec:implementation:login}
-\textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filessystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. \todo{cite xsrf}
+\textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filessystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. The way XSRF protection works is decribed in \cite{4198791}. 
 
 During the sign up we made a client side request to the Have I Been Pwned\footnote{\url{https://haveibeenpwned.com/API/v3\#PwnedPasswords}} API and give feedback if a match is found.
 
@@ -33,7 +30,7 @@ During the sign up we made a client side request to the Have I Been Pwned\footno
 
 The user interface uses web technologies. Specifically, its design is built on Google's Material Design in the form of Material Design Lite \footnote{\url{https://getmdl.io/}}.
 
-The interface has adaptive/responsive features to look okay on a variety of screen sizes, e.g. desktop formats or smart phones. The desktop GUI is shown in \Cref{fig:guiclassicdesktop}, the mobile GUI in \Cref{fig:guiclassicmobile}
+The interface has adaptive/responsive features to look okay on a variety of screen sizes, e.g. desktop formats or smart phones. The desktop GUI is shown in \Cref{fig:guiclassicdesktop}, the mobile GUI in \Cref{fig:guiclassicmobile}.
 The markup is rendered with \textit{Jinja2} templates.
 
 
@@ -68,4 +65,3 @@ An (authenticated) \texttt{POST} request should contain a \textit{JSON} with a \
 
 For the settings and the sign up form the API is used to check wheter a username is available or not. You can simply send the name and get a boolean reponse with an error message.
 
-\todo{Actually write stuff, lol}
