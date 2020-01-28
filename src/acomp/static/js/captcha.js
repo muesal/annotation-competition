@@ -64,8 +64,8 @@ async function sendSelection(num) {
             hightlightImages(json.message, num);
             if (isQuiz()) {
                 if (parseInt(json.OK) === 1) {
-                    signupParagraph.style.display = "block";
-                    quizParagraph.style.display = "none";
+                    signupParagraph.hidden = false;
+                    quizParagraph.hidden = true;
                 }
             } else {
                 setScore(json.score);

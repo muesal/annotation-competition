@@ -13,6 +13,13 @@ mdl-navigation__link--current
 {% endblock %}
 
 {% block main %}
+   <div id="starttext" class="notification is-danger mdl-chip">
+       <span class="mdl-chip__text">Welcome to the tutorial for our Annotation Competition!</span>
+   </div>
+   <br>
+   <div id="starttext" class="notification is-danger mdl-chip">
+       <span class="mdl-chip__text">Press enter to continue.</span>
+   </div>
     <div class="page-content" id="imageWrapper">
         <div id="taggingImage">
             <img class="myImg" id="tagImage" src={{ source }}>
@@ -41,10 +48,6 @@ mdl-navigation__link--current
                 <input id="btnSubmit" type="submit" value="Submit"
                        class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
                 <input id="btnSkip" type="reset" value="Skip"
-                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-                <input id="btnNext" type="button" value="Next Step" hidden
-                       class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                <input id="btnStart" type="button" value="Start Tutorial"
                        class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
             </form>
         </div>

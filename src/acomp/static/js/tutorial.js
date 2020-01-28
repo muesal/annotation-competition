@@ -2,12 +2,11 @@
 
 const img = document.getElementById('tagImage');
 const initialTime = 34;
-const nextButton = document.getElementById("btnNext");
 const score = document.getElementById('score');
 const skipButton = document.getElementById("btnSkip");
 const snackbar = document.getElementById('snackbar');
+const starttext = document.getElementById("starttext");
 const submitButton = document.getElementById("btnSubmit");
-const startButton = document.getElementById("btnStart");
 const tagField = document.getElementById("searchTxt");
 const tagForm = document.getElementById("tagForm");
 const timemeter = document.getElementById('timemeter');
@@ -16,8 +15,6 @@ var deadline = 30;
 
 skipButton.addEventListener("click", handleSkip);
 submitButton.addEventListener("click", handleSubmit);
-startButton.addEventListener("click", setInitialSate);
-nextButton.addEventListener("click", advanceState);
 
 var tutorialState = 0;
 
@@ -45,15 +42,14 @@ function clearTags() {
 function setInitialSate() {
     timemeter.value = initialTime;
     timer.innerText = initialTime.toString() + " s";
-    notifyUser("Welcome to the tutorial for our Annotation Competition!\n Press enter to continue.");
+    //notifyUser("Welcome to the tutorial for our Annotation Competition!\n Press enter to continue.");
     submitButton.disabled = true;
     skipButton.disabled = true;
     tagField.disabled = true;
-    startButton.value = "Restart Tutorial"
-    nextButton.hidden = false;
 }
 
 function explainPurpose() {
+    starttext.hidden = true;
     notifyUser("The goal of this game is to crowdsource the tagging of images\n" +
         "To make it more exciting, we give you points!\n Press enter to continue");
 }
@@ -134,7 +130,6 @@ function advanceState() {
             explainPurpose();
             break;
         case tutorialState = 2:
-            nextButton.hidden = false;
             promptTag();
             break;
         case tutorialState = 3:
@@ -145,7 +140,6 @@ function advanceState() {
             explainTimer();
             break;
         case tutorialState = 5:
-            nextButton.hidden = false;
             setImgToSkip();
             promptSkip();
             break;
@@ -154,7 +148,6 @@ function advanceState() {
             displayDone();
             break;
         case tutorialState = 7:
-            nextButton.hidden = false;
             redirectToClassic();
         default:
             return;

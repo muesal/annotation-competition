@@ -5,10 +5,6 @@
     width: auto;
 }
 
-.captchaimageDisabled {
-
-}
-
 .captchaimageCorrect {
     border-color: green;
     border-style: solid;
@@ -25,8 +21,4 @@
 
 .captchaimageNotChosen {
     opacity: 0.5;
-}
-
-#signupparagraph{
-    display: none;
 }

@@ -17,7 +17,7 @@ mdl-navigation__link--current
      <p id="quizparagraph">Before signing up, please take the quiz. Once you have enough points, we will show you to the
      sign up process.
      We don't mean to waste your time. We intend our game for humans and not bots.</p>
-     <p id="signupparagraph">Well done! You may <a href="{{ url_for('signup') }}">register</a> to play our Classic game-mode.</p>
+     <p id="signupparagraph" hidden>Well done! You may <a href="{{ url_for('signup') }}">register</a> to play our Classic game-mode.</p>
     {% endif %}
 
     {% with messages = get_flashed_messages() %}
@@ -28,8 +28,13 @@ mdl-navigation__link--current
         {% endif %}
     {% endwith %}
 
-    <p>Choose the image that best matches the tags<p>
-    <p id="captchaTags"></p>
+   <div id="starttext" class="notification is-danger mdl-chip">
+       <span class="mdl-chip__text">Choose the image that best matches the tags</span>
+   </div>
+   <br>
+   <div id="starttext" class="notification is-danger mdl-chip">
+       <span id="captchaTags" class="mdl-chip__text">Press enter to continue.</span>
+   </div>
 
     <div class="page-content" id="imageWrapper">
         <div id="captchaImages">
