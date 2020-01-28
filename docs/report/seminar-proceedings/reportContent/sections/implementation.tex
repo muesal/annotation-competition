@@ -18,7 +18,7 @@ The most interesting parts of the game are the linguistics features. The rest is
 \subsubsection{Linguistics}
 \label{gacomphs19:sec:implementation:linguistics}
 The suggestion is first translated to English, if necessary. This is handled by \textit{Googletrans}\footnote{\url{https://pypi.org/project/googletrans/}}, this already provides spell checking for foreign languages.
-Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted. This process can be seen in \Cref{gacomphs19:fig:semanticpipeline}.
+Simple typos in English tags are fixed using \textit{SpellChecker}\footnote{\url{https://pyspellchecker.readthedocs.io/}}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted. This process can be seen in \Cref{gacomphs19:fig:semanticpipeline}.
 
 \begin{figure}[tb]
 	\centering
@@ -29,12 +29,12 @@ Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \
 
 \subsection{Database}
 \label{gacomphs19:sec:implementation:database}
-\textit{Flask-SQLAlchemy} provides an interface for common database systems. \textit{PostgreSQL}, \textit{MariaDB} and \textit{SQLite} are all compatible.
+\textit{Flask-SQLAlchemy}\footnote{\url{https://flask-sqlalchemy.palletsprojects.com/}} provides an interface for common database systems. \textit{PostgreSQL}, \textit{MariaDB} and \textit{SQLite} are all compatible.
 Together with \textit{Flask-Migrate} we defined a relational schema that contains entries for users, images and tags. We store the relation between users and images to ensure, that they are not shown an image twice in classic mode. The relation between tags and images is stored together with their frequency and quality.
 
 \subsection{Login}
 \label{gacomphs19:sec:implementation:login}
-\textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filesystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. The way XSRF protection works is described in \cite{4198791}.
+\textit{Flask-Login}\footnote{\url{https://flask-login.readthedocs.io/}} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}\footnote{\url{https://pythonhosted.org/Flask-Session/}}. This allows us to support various session backends, like Redis, Memcached, Database or filesystem based. The credentials are hashed with \textit{Flask-Bcrypt}\footnote{\url{https://flask-bcrypt.readthedocs.io/}} and the forms are XSRF protected by \textit{Flask-WTF}\footnote{\url{https://flask-wtf.readthedocs.io/}}. The way XSRF protection works is described in \cite{4198791}.
 
 During the sign up we made a client side request to the Have I Been Pwned\footnote{\url{https://haveibeenpwned.com/API/v3\#PwnedPasswords}} API and give feedback if a match is found.
 
