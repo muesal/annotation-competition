@@ -18,7 +18,7 @@ The most interesting parts of the game are the linguistics features. The rest is
 \subsubsection{Linguistics}
 \label{gacomphs19:sec:implementation:linguistics}
 The suggestion is first translated to English, if necessary. This is handled by \textit{Googletrans}\footnote{\url{https://pypi.org/project/googletrans/}}, this already provides spell checking for foreign languages.
-Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted. THis process can be seen in \Cref{gacomphs19:fig:semanticpipeline}.
+Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted. This process can be seen in \Cref{gacomphs19:fig:semanticpipeline}.
 
 \begin{figure}[tb]
 	\centering
@@ -30,18 +30,18 @@ Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \
 \subsection{Database}
 \label{gacomphs19:sec:implementation:database}
 \textit{Flask-SQLAlchemy} provides an interface for common database systems. \textit{PostgreSQL}, \textit{MariaDB} and \textit{SQLite} are all compatible.
-Together with \textit{Flask-Migrate} we defined a relational schema that contains enities for users, images and tags. We store the relation between users and images to ensure, that they are not shown an image twice in classic mode. The relation between tags and images is stored together with their frequency and quality.
+Together with \textit{Flask-Migrate} we defined a relational schema that contains entries for users, images and tags. We store the relation between users and images to ensure, that they are not shown an image twice in classic mode. The relation between tags and images is stored together with their frequency and quality.
 
 \subsection{Login}
 \label{gacomphs19:sec:implementation:login}
-\textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filessystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. The way XSRF protection works is decribed in \cite{4198791}.
+\textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filesystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. The way XSRF protection works is described in \cite{4198791}.
 
 During the sign up we made a client side request to the Have I Been Pwned\footnote{\url{https://haveibeenpwned.com/API/v3\#PwnedPasswords}} API and give feedback if a match is found.
 
 \subsection{User Interface}
 \label{gacomphs19:sec:implementation:UI}
 
-The user interface uses web technologies. Specifically, its design is built on Google's Material Design in the form of Material Design Lite \footnote{\url{https://getmdl.io/}}.
+The user interface uses web technologies. Specifically, its design is built on Google's Material Design in the form of Material Design Lite\footnote{\url{https://getmdl.io/}}.
 
 The interface has adaptive/responsive features to look okay on a variety of screen sizes, e.g. desktop formats or smart phones. The desktop GUI is shown in \Cref{gacomphs19:fig:guiclassicdesktop}, the mobile GUI in \Cref{gacomphs19:fig:guiclassicmobile}.
 The markup is rendered with \textit{Jinja2} templates.
@@ -66,14 +66,14 @@ The markup is rendered with \textit{Jinja2} templates.
 
 \subsection{Web API}
 \label{gacomphs19:sec:implementation:API}
-We use a \textit{JSON} API to responnd to dynamic requests. This includes the data and results for the gmae modes and form validation.
-For the classic mode, a (authenticated) \texttt{GET} request to the API returns an image url, the time limit, a list of forbidden tags and score.
-An (authenticated) \texttt{POST} request should contain a \textit{JSON} with a \texttt{tag} field and the entered tag. The respond will contain an accepted code, the name of the (maybe corrected) tag and the updated score.
+We use a JSON API to respond to dynamic requests. This includes the data and results for the game modes and form validation.
+For the classic mode, a (authenticated) \texttt{GET} request to the API returns an image URL, the time limit, a list of forbidden tags and score.
+A (authenticated) \texttt{POST} request should contain a JSON with a \texttt{tag} field and the entered tag. The respond will contain an accepted code, the name of the (maybe corrected) tag and the updated score.
 
-For the cpatcha mode, a (authenticated) \texttt{GET} request to the API returns a list of image urls, the time limit, a list of tags and the user score.
-An (authenticated) \texttt{POST} request should contain a \textit{JSON} with a \texttt{joker} or \texttt{captcha} field with a number. The respond will contain a selection of wrong images for the joker or the numbers of the accpted image, the correct solution and the updated score.
+For the cpatcha mode, a (authenticated) \texttt{GET} request to the API returns a list of image URLs, the time limit, a list of tags and the user score.
+A (authenticated) \texttt{POST} request should contain a JSON with a \textit{joker} or \textit{captcha} field, together with a number. The respond will contain a selection of wrong images for the joker or the numbers of the accepted image, the correct solution and the updated score.
 
-For the settings and the sign up form the API is used to check wheter a username is available or not. You can simply \texttt{POST} the name and to get a boolean reponse with an error message.
+For the settings and the sign up form the API is used to check whether a username is available or not. You can simply \texttt{POST} the name and to get a boolean response with an error message.
 
 Additionally, a \texttt{GET} request to the settings API returns all the data a user has contributed to (\Cref{gacomphs19:fig:webapi}).
 

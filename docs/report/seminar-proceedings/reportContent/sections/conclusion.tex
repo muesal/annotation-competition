@@ -3,10 +3,10 @@
 
 \subsection{What could be improved}
 \label{gacomphs19:sec:conclusion:improved}
-On the technical side we have not maintained our initial unit tests very well. For the frontend we have no automated tests at all. Both should be considered before making further changes in core functionallities.
-A core functionallity that is currently missing is a penalty for misclassified images. At the time of writing, useless tags or user that provide useless tags are just ignored. The number of missing verified tags in the databse could be an indicator for bad tags, so it is questionable if this information is useful or if they should be removed from the dataset.
+On the technical side we have not maintained our initial unit tests very well. For the frontend we have no automated tests at all. Both should be considered before making further changes in core functionalities.
+A core functionality that is currently missing is a penalty for misclassified images. At the time of writing, useless tags or user that provide useless tags are just ignored. The number of missing verified tags in the database could be an indicator for bad tags, so it is questionable if this information is useful or if they should be removed from the dataset.
 
-There are several ways to improove the user interface or to make it backward compatible for older clients. We just did a tiny field study. A more detailed study with a diverse group of participant and a specific questionnaire would give better results and could therefore highlight specific design issues.
+There are several ways to improve the user interface or to make it backward compatible for older clients. We just did a tiny field study. A more detailed study with a diverse group of participant and a specific questionnaire would give better results and could therefore highlight specific design issues.
 
 There could also be support for English terms that consist of more than two words, e.g. we had an image with multiple coats of arms.
 
@@ -15,12 +15,12 @@ As a pie-in-the-sky suggestion, Reverse Captcha could use semantic distance that
 
 \subsection{Pretraining}
 \label{gacomphs19:sec:conclusion:pretraining}
-There are pretraining approaches using software that provides tags for given images, e.g. \cite{simonyan2014very}. With semantic distance it is possible to build a dictionary of allowed words. These dicitionaries would allow us to filter out certain low quality suggestions.
+There are pretraining approaches using software that provides tags for given images, e.g. \cite{simonyan2014very}. With semantic distance it is possible to build a dictionary of allowed words. These dictionaries would allow us to filter out certain low quality suggestions.
 
 \subsection{Field study}
 \label{gacomphs19:sec:conclusion:fieldstudy}
 We let a handful of people from different age  groups from different backgrounds test our final product.
-Although they all enjoied playing, they also gave us some constructive feedback.
+Although they all enjoyed playing, they also gave us some constructive feedback.
 Based on this, we should make the scoring function more visible, as the participants did not note any difference for the given tags.
 If we gave the same amount of points for each tag regardless of the level of the image it would have made no difference for the users.
 As we developed the scoring function to animate the players to give us either less or more common tags depending on the image's annotation state.
@@ -30,11 +30,11 @@ This has two reasons.
 Firstly, some of our testers didn't understand English, and asked why we did not translate it to other languages.
 Secondly, sometimes it was not obvious why a tag had been changed to something else without knowing how our lemmatisation works.
 The lemmatiser can misinterpret the part-of-speech of a tag and then stem it in a unexpected way.
-while 'looking after' is accepted as 'to look after', whereas 'look after' is not accepted since 'look' is misinterpreted as a noun, which does not make no sense in combination with 'after'.
+while \textit{looking after} is accepted as \textit{to look after}, whereas \textit{look after} is not accepted since \textit{look} is misinterpreted as a noun, which does not make no sense in combination with \textit{after}.
 
-But when they realised,that this does not really matters for them, and focused on looking for as many fitting tags as possible, they thought the classic mode was really nice to play.
+But when they realized,that this does not really matters for them, and focused on looking for as many fitting tags as possible, they thought the classic mode was really nice to play.
 
 Regarding the Captcha mode, they had only positive feedback. The game is quickly understandable, and fun to play.
 As the users already knew the gamemode from the entry quiz, after playing some rounds in the classic mode, they liked seeing their own tags afterwards in the captcha mode.
-One user then even realised, that his tag was not as good as he thought, and changed his strategy of finding new tags when again playing the classic mode.
+One user then even realized, that his tag was not as good as he thought, and changed his strategy of finding new tags when again playing the classic mode.
 This is a nice feedback-effect we did not think of.
