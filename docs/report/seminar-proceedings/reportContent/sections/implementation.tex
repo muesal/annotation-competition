@@ -1,33 +1,33 @@
 \section{Implementation}
-\label{gXLII:sec:implementation}  % TODO Adopt group prefix
+\label{g14:sec:implementation}
 
 
 We built the game as a web app based on the \textit{Flask} \footnote{\url{https://pypi.org/project/Flask/}} framework for \textit{Python} \footnote{\url{https://www.python.org/}}. The architecture consists of a backend handling the game logic, the communication with the front end as well as the interfacing with the database. The communication is handled with a JSON-based API
 
 \subsection{Game Logic}
-\label{gXLII:sec:implementation:game}  % TODO Adopt group prefix
+\label{g14:sec:implementation:game}
 \todo{Write}
 
 
 
 \subsubsection{Linguistics}
-\label{gXLII:sec:implementation:linguistics}  % TODO Adopt group prefix
+\label{g14:sec:implementation:linguistics}
 The suggestion is first translated to English, if necessary. This is handled by \textit{Googletrans}\footnote{\url{https://pypi.org/project/googletrans/}}, this already provides spell checking for foreign languages.
 Simple typos in English tags are fixed using \textit{SpellChecker}. We use the \textit{NLTK}\footnote{\url{https://pypi.org/project/nltk/}} library for stemming, lemmatizing and finding synonyms. If the the tag was translated, it is translated into its original language and if the tag is accepted by the game, the user is notified which word was accepted.
 
 \subsection{Scoring Function}
 
 \subsection{Database}
-\label{gXLII:sec:implementation:database}  % TODO Adopt group prefix
+\label{g14:sec:implementation:database}
 \textit{Flask-SQLAlchemy} provides an interface for common database systems. \textit{PostgreSQL}, \textit{MariaDB} and \textit{SQLite} are all compatible.
 Together with \textit{Flask-Migrate} we defined a relational schema that contains enities for users, images and tags. We store the relation between users and images to ensure, that they are not shown an image twice in classic mode. The relation between tags and images is stored together with their frequency and quality.
 
 \subsection{Login}
-\label{gXLII:sec:implementation:login}  % TODO Adopt group prefix
+\label{g14:sec:implementation:login}
 \textit{Flask-Login} guarantees a stable user handling, while the current sessions are stored with \textit{Flask-Session}. This allows us to support various session backends, like Redis, Memcached, Database or filessystem based. The credentials are hashed with \textit{Flask-Bcrypt} and the forms are XSRF protected by \textit{Flask-WTF}. \todo{cite xsrf}
 
 \subsection{User Interface}
-\label{gXLII:sec:implementation:UI}  % TODO Adopt group prefix
+\label{g14:sec:implementation:UI}
 
 The user interface uses web technologies. Specifically, its design is built on Google's Material Design in the form of Material Design Lite \footnote{\url{https://getmdl.io/}}.
 
@@ -56,7 +56,7 @@ Fig.
 
 
 \subsection{Web API}
-\label{gXLII:sec:implementation:API}  % TODO Adopt group prefix
+\label{g14:sec:implementation:API}
 
 
 
