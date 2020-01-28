@@ -23,10 +23,8 @@ Run the following commands in the `src` directory:
 
 1. `pip install -r requirements.txt`
 2. `flask nltk-data`
-2. `flask db init`
-3. `flask db migrate`
-4. `flask db uprade`
-5. `flask run`
+3. `flask db uprade`
+4. `flask run`
 
 If you have any existing images to import you can run 
 `flask prefill /my/image/folder`.
