@@ -1,11 +1,11 @@
-h1 {
-    align-self: center;
+.highscoretitle {
+    text-align: center;
 }
 
 .highscorelist {
     list-style-type: upper-roman;
     font-size: xx-large;
-    align-self: center;
+    text-align: center;
 }
 
 .highscoreitem:first-child {
@@ -20,13 +20,7 @@ h1 {
     list-style-type: "\1F949";
 }
 
-#user {
-    text-align: center;
-    margin-top: 50px;
-    font-size: 15px;
-}
-
-#information {
+#information, #user {
     text-align: center;
     margin-top: 50px;
     font-size: 15px;

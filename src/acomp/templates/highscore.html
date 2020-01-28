@@ -9,19 +9,18 @@
 {% endblock %}
 
 {% block main %}
+<div class="page-content" id="imageWrapper">
+    <div id="column">
+        <h1 class="highscoretitle">&#x1F3C6;</h1>
 
-    <h1>&#x1F3C6;</h1>
+        <ol class="highscorelist">
+            {% for item in data.highscores %}
+                <li class="highscoreitem"> {{ item[0] }}: {{ item[1] }} </li>
+            {% endfor %}
+        </ol>
 
-    <ol class="highscorelist">
-        {% for item in data.highscores %}
-            <li class="highscoreitem"> {{ item[0] }}: {{ item[1] }} </li>
-        {% endfor %}
-    </ol>
+        <p id="user">You: {{data.user[0]}}, {{data.user[1]}} </p>
 
-<p id="user"> You: {{data.user[0]}}, {{data.user[1]}} </p>
-
-<p id="information"> At the moment, our database consists of {{data.images}} images, for which {{data.users}} users provided {{data.tags}} tags.</p>
-
-
-
+        <p id="information">At the moment, our database consists of {{data.images}} images, for which {{data.users}} users provided {{data.tags}} tags.</p>
+    </div>
 {% endblock %}
