@@ -1,0 +1,14 @@
+body {
+    background-color: #001ba8;
+    color: white;
+    font-family: monospace, monospace;
+}
+
+#stuff {
+    color: #001ba8;
+}
+
+h1 {
+    text-align: center;
+    background-color: lightgray;
+}
