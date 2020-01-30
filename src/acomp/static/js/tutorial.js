@@ -7,6 +7,7 @@ const skipButton = document.getElementById("btnSkip");
 const snackbar = document.getElementById('snackbar');
 const starttext = document.getElementById("starttext");
 const submitButton = document.getElementById("btnSubmit");
+const enterButton = document.getElementById("enterBtn");
 const tagField = document.getElementById("searchTxt");
 const tagForm = document.getElementById("tagForm");
 const timemeter = document.getElementById('timemeter');
@@ -15,6 +16,8 @@ var deadline = 30;
 
 skipButton.addEventListener("click", handleSkip);
 submitButton.addEventListener("click", handleSubmit);
+submitButton.addEventListener("click", handleSubmit);
+
 
 var tutorialState = 0;
 
@@ -166,7 +169,7 @@ function writeToMentionedTags(tag) {
 
 document.onkeydown = function (evt) {
     var evt = evt || window.event;
-    if (tutorialState == 2 || tutorialState == 5 || tutorialState == 7) {
+    if (cannotBeAdvancedWithEnter) {
         return;
     }
 
@@ -174,6 +177,21 @@ document.onkeydown = function (evt) {
         advanceState();
     }
 };
+
+function handleMyEnter(e) {
+    e.preventDefault();
+    if (cannotBeAdvancedWithEnter) {
+        return;
+    }
+    advanceState();
+
+}
+
+
+function cannotBeAdvancedWithEnter() {
+    return (tutorialState == 2 || tutorialState == 5 || tutorialState == 7);
+}
+
 
 function notifyUser(msg) {
     const snackbar = document.getElementById('snackbar');
