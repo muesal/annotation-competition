@@ -16,7 +16,7 @@ var deadline = 30;
 
 skipButton.addEventListener("click", handleSkip);
 submitButton.addEventListener("click", handleSubmit);
-submitButton.addEventListener("click", handleSubmit);
+enterButton.addEventListener("click", handleMyEnter);
 
 
 var tutorialState = 0;
