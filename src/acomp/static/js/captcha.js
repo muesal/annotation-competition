@@ -66,6 +66,7 @@ async function sendSelection(num) {
                 if (parseInt(json.OK) === 1) {
                     signupParagraph.hidden = false;
                     quizParagraph.hidden = true;
+                    notifyUser("Well done, registration is now available!");
                 }
             } else {
                 setScore(json.score);
@@ -251,6 +252,14 @@ function setScore(score) {
     document.getElementById("score").innerText = score.toString();
 }
 
+function notifyUser(msg) {
+    const snackbar = document.getElementById('snackbar');
+    const data = {
+        message: msg,
+        timeout: 7500
+    };
+    snackbar.MaterialSnackbar.showSnackbar(data);
+}
 
 skipButton.addEventListener("click", handleSkip);
 jokerButton.addEventListener("click", handleJoker);
